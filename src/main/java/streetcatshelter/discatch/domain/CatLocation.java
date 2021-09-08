@@ -5,23 +5,22 @@ import lombok.NoArgsConstructor;
 import streetcatshelter.discatch.dto.CatRequestDto;
 
 import javax.persistence.*;
+import java.awt.*;
 
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class CatTag {
+public class CatLocation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long catTagId;
+    private Long catLocationId;
 
     @Column(nullable = false)
-    private String tag;
+    private Point catLocation;
 
-/*
-    public CatTag(CatRequestDto catRequestDto) {
-        this.tag = catRequestDto.getCatTags();
+    public CatLocation(CatRequestDto catRequestDto) {
+        this.catLocation = catRequestDto.getLocation();
     }
-*/
 }

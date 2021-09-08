@@ -1,12 +1,17 @@
 package streetcatshelter.discatch.domain;
 
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import streetcatshelter.discatch.dto.CatRequestDto;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Cat {
-
+@Getter
+@NoArgsConstructor
+public class Cat extends TimeStamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,6 +26,18 @@ public class Cat {
 
     @Column
     @OneToMany
-    private List<CatTag> catTag;
+    private List<CatTag> Tags;
 
+    @Column
+    @OneToMany
+    private List<CatLocation> catLocations;
+
+    @Column
+    @OneToMany
+    private List<CatImage> catImages;
+
+    public Cat(CatRequestDto catRequestDto) {
+        this.catName = catRequestDto.getCatName();
+        this.neutering = catRequestDto.getNeutering();
+    }
 }
