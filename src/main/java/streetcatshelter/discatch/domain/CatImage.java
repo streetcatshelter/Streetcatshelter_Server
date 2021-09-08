@@ -18,9 +18,6 @@ public class CatImage {
     private Long catImageId;
 
     @Column(nullable = false)
-    private Long catId;
-
-    @Column(nullable = false)
     private String catImage;
 
 /*    public CatImage(CatRequestDto catRequestDto) {
