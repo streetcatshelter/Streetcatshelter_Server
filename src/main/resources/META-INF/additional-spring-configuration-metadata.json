@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "database-platform",
+      "type": "java.lang.String",
+      "description": "Description for database-platform."
+    },
+    {
+      "name": "database-platform",
+      "type": "java.lang.String",
+      "description": "Description for database-platform."
+    }
+  ] }
