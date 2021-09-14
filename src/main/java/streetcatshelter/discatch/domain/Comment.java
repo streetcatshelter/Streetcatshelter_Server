@@ -1,5 +1,6 @@
 package streetcatshelter.discatch.domain;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,28 +11,16 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
-public class User {
-    @Id
+@Table(name = "comment")
+public class Comment  extends TimeStamped { // 생성,수정 시간을 자동으로 만들어줍니다.
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Long id;
 
-    @Column
-    private String password;
-
     @Column(nullable = false)
-    private String name;
+    private String contents;
 
     @Column(nullable = false)
     private String username;
-
-    @Column(nullable = true)
-    private String email;
-
-    public User(String name, String username, String password) {
-        this.password = password;
-        this.name = name;
-        this.username = username;
-
-    }
 }
