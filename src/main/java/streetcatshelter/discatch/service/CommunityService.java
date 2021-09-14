@@ -5,9 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.domain.Community;
 import streetcatshelter.discatch.domain.CommunityImage;
+import streetcatshelter.discatch.dto.CommentRequestDto;
 import streetcatshelter.discatch.dto.CommunityRequestDto;
+import streetcatshelter.discatch.repository.CommentRepository;
 import streetcatshelter.discatch.repository.CommunityImageRepository;
 import streetcatshelter.discatch.repository.CommunityRepository;
 
@@ -21,11 +24,22 @@ public class CommunityService {
 
     private final CommunityRepository communityRepository;
     private final CommunityImageRepository communityImageRepository;
+    private final CommentRepository commentRepository;
 
-
+    //1페이지 문제 해결완료
     public Page<Community> getCommunityByCategory(int page, int size, String category, String location) {
+        page -= 1;
         Pageable pageable = PageRequest.of(page, size);
         return communityRepository.findAllByCategoryAndLocation(pageable, category, location);
+    }
+
+    @Transactional
+    public Community getCommunityById(Long communityId) {
+        Community community = getCommunity(communityId);
+        int cntView = community.getCntView();
+        cntView += 1;
+        community.updateCntView(cntView);
+        return communityRepository.findById(communityId).orElseThrow(()-> new IllegalArgumentException("communityId가 존재하지 않습니다."));
     }
 
     public void createCommunity(CommunityRequestDto requestDto) {
@@ -37,6 +51,34 @@ public class CommunityService {
         community.addCommunityImageList(communityImageList);
     }
 
+    @Transactional
+    public void createComment(Long communityId, CommentRequestDto requestDto) {
+        Community community = getCommunity(communityId);
+        Comment comment = new Comment(community, requestDto);
+        commentRepository.save(comment);
+        int cntComment = commentRepository.countAllByCommunityId(communityId);
+        community.updateCntComment(cntComment);
+
+    }
+
+    @Transactional
+    public void updateComment(Long commentId, CommentRequestDto requestDto) {
+        Comment comment = commentRepository.getById(commentId);
+        comment.update(requestDto);
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Comment comment = commentRepository.getById(commentId);
+        Long communityId = comment.getCommunity().getId();
+        commentRepository.deleteById(commentId);
+        Community community = getCommunity(communityId);
+        int cntComment = commentRepository.countAllByCommunityId(communityId);
+        community.updateCntComment(cntComment);
+    }
+
+    //update 커뮤니티
+    //나중에 코멘트 갯수 세는거는 AOP 기능으로 따로 뺴서 만들어야할듯 코드중복;
     @Transactional
     public Community update(Long communityId, CommunityRequestDto requestDto) {
         Community community = getCommunity(communityId);
