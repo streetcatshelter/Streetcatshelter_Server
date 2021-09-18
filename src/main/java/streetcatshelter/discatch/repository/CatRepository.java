@@ -8,6 +8,5 @@ import streetcatshelter.discatch.domain.Cat;
 import java.awt.*;
 
 public interface CatRepository extends JpaRepository<Cat, Long> {
-    Page<Cat> findAllByLocationAndOrderByCreatedAtDesc(Pageable pageable, Point location);
-    Page<Cat> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
 }
