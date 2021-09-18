@@ -1,5 +1,6 @@
 package streetcatshelter.discatch.domain;
 
+
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import streetcatshelter.discatch.oauth.entity.ProviderType;
 import streetcatshelter.discatch.oauth.entity.RoleType;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+
 
 @Entity
 @NoArgsConstructor
@@ -30,8 +31,10 @@ public class User extends TimeStamped{
     @Column
     private String password;
 
+
     @Column(nullable = true)
     private String email;
+
 
     @Column
     private String emailVerifiedYn;

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import streetcatshelter.discatch.config.properties.AppProperties;
 import streetcatshelter.discatch.config.properties.CorsProperties;
 
+
 @SpringBootApplication
 @EnableConfigurationProperties({
         CorsProperties.class,
