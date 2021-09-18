@@ -81,4 +81,5 @@ public class Community extends TimeStamped {
     public void updateCntComment(int cntComment) {
         this.cntComment = cntComment;
     }
+
 }
