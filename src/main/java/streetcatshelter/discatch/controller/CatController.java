@@ -10,6 +10,7 @@ import streetcatshelter.discatch.domain.CatDetail;
 import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.dto.CatDetailRequestDto;
 import streetcatshelter.discatch.dto.CatRequestDto;
+import streetcatshelter.discatch.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.service.CatDetailService;
 import streetcatshelter.discatch.service.CatService;
 
@@ -37,8 +38,8 @@ public class CatController {
     }
 
     @PostMapping("/catDetail/create/{catId}")
-    public void createCatDetail(@RequestBody CatDetailRequestDto requestDto, @PathVariable Long catId, @AuthenticationPrincipal UserDetails userDetails) {
-        catDetailService.createCatDetail(requestDto,catId, userDetails);
+    public void createCatDetail(@RequestBody CatDetailRequestDto requestDto, @PathVariable Long catId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        catDetailService.createCatDetail(requestDto, catId, userPrincipal);
     }
     @GetMapping("/cat/calendar/{catId}")
     public List<CatDetail> getCatCalendarByCat(@PathVariable Long catId) {

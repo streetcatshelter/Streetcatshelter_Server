@@ -5,7 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.Cat;
 import streetcatshelter.discatch.domain.CatDetail;
+import streetcatshelter.discatch.domain.User;
 import streetcatshelter.discatch.dto.CatDetailRequestDto;
+import streetcatshelter.discatch.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.repository.CatDetailRepository;
 import streetcatshelter.discatch.repository.CatRepository;
 import streetcatshelter.discatch.repository.CommentRepository;
@@ -20,9 +22,7 @@ public class CatDetailService {
 
     public void createCatDetail(CatDetailRequestDto requestDto, Long catId, UserPrincipal userPrincipal) {
         Cat cat = getCat(catId);
-        User user =
-        CatDetail catDetail = new CatDetail(requestDto, cat);
-        catDetailRepository.save(catDetail);
+        User user = userPrincipal.getUser();
     }
 
     private Cat getCat(Long catId) {

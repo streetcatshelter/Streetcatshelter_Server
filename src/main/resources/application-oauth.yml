@@ -26,7 +26,7 @@ spring:
             clientSecret: 6eMFfjdbzKOISXUgbD9HIjAJHvVhAfFJ
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
-            redirectUri: http://localhost:8080/login/oauth2/code/kakao
+            redirectUri: http://52.78.241.50/login/oauth2/code/kakao
             scope:
               - profile_nickname
               - profile_image
