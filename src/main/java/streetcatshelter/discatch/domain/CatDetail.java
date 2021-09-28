@@ -46,8 +46,8 @@ public class CatDetail extends TimeStamped{
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "catdetail", cascade = {CascadeType.REMOVE})
-    private List<Comment> commentList = new ArrayList<>();
+    @OneToMany(mappedBy = "catDetail", cascade = {CascadeType.REMOVE})
+    private List<Comment> comments = new ArrayList<>();
 
     @JoinColumn(name = "CAT_ID")
     @ManyToOne(fetch = FetchType.LAZY)
