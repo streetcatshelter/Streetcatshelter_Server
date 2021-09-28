@@ -1,11 +1,11 @@
 package streetcatshelter.discatch.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import streetcatshelter.discatch.dto.CommentRequestDto;
+import streetcatshelter.discatch.dto.*;
+
 
 import javax.persistence.*;
 
@@ -30,6 +30,16 @@ public class Comment  extends TimeStamped { // 생성,수정 시간을 자동으
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Community community;
+
+    @JoinColumn(name = "CAT_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Cat cat;
+
+    @JoinColumn(name = "CATDETAIL_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private CatDetail catDetail;
 
     public Comment(Community community, CommentRequestDto requestDto) {
         this.community = community;

@@ -14,12 +14,12 @@ public class CommunityController {
 
     private final CommunityService communityService;
 
-    @GetMapping("/community/category/{location}")
+    @GetMapping("/community/category/{category}")
     public Page<Community> getCommunityByCategory(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
-            @RequestParam ("category") String category,
-            @PathVariable String location) {
+            @RequestParam ("location") String location,
+            @PathVariable String category) {
         return communityService.getCommunityByCategory(page, size, category, location);
     }
 

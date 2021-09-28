@@ -1,43 +1,81 @@
 package streetcatshelter.discatch.domain;
 
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import streetcatshelter.discatch.dto.CatRequestDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Getter
 @NoArgsConstructor
-public class Cat extends TimeStamped{
-
+@AllArgsConstructor
+@Entity
+public class Cat extends TimeStamped {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long catId;
+    private Long id;
 
     @Column(nullable = false)
     private String catName;
 
-    @Enumerated
+    @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String location;
+
+    @Column(nullable = false)
+    private double latitude;
+
+    @Column(nullable = false)
+    private double longitude;
+
+    @Column(nullable = false)
+    private String catImage;
+
     @Column(nullable = false)
     private Neutering neutering;
 
-    @Column
-    @OneToMany
-    private List<CatTag> Tags;
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private int cntComment;
 
-    @Column
-    @OneToMany
-    private List<CatLocation> catLocations;
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private int cntLikeIt;
 
-    @Column
-    @OneToMany
-    private List<CatImage> catImages;
+    //조회수
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private int cntView;
 
-    public Cat(CatRequestDto catRequestDto) {
-        this.catName = catRequestDto.getCatName();
-        this.neutering = catRequestDto.getNeutering();
+    public void updateCntView(int cntView) {
+        this.cntView = cntView;
+    }
+    public void updateCntComment(int cntComment) {
+        this.cntComment = cntComment;
+    }
+
+    @OneToMany(mappedBy = "cat", cascade = {CascadeType.REMOVE})
+    private List<CatDetail> catDetailList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cat", cascade = {CascadeType.REMOVE})
+    private List<CatTag> catTagList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cat", cascade = {CascadeType.REMOVE})
+    private List<Comment> commentList = new ArrayList<>();
+
+    public Cat(CatRequestDto requestDto) {
+        this.neutering = requestDto.getNeutering();
+        this.catName = requestDto.getCatName();
+        this.location = requestDto.getLocation();
+        this.username = requestDto.getUsername();
+        this.catImage = requestDto.getCatImage();
+        this.latitude = requestDto.getLatitude();
+        this.longitude = requestDto.getLongitude();
+    }
+
+    public void addCatTagList(List<CatTag> catTagList) {
+        this.catTagList = catTagList;
     }
 }
