@@ -1,27 +1,37 @@
 package streetcatshelter.discatch.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import streetcatshelter.discatch.dto.CatRequestDto;
 
 import javax.persistence.*;
 
-
-@Entity
 @Getter
 @NoArgsConstructor
-public class CatTag {
+@AllArgsConstructor
+@Entity
+public class CatTag extends TimeStamped {
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long catTagId;
+    private Long id;
 
     @Column(nullable = false)
     private String tag;
 
-/*
-    public CatTag(CatRequestDto catRequestDto) {
-        this.tag = catRequestDto.getCatTags();
+    @JoinColumn(name = "CAT_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Cat cat;
+
+    @JoinColumn(name = "CATDETAIL_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private CatDetail catDetail;
+
+    public CatTag(Cat cat, String tag) {
+        this.cat = cat;
+        this.tag = tag;
     }
-*/
 }
