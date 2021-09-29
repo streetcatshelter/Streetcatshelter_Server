@@ -37,7 +37,7 @@ public class Cat extends TimeStamped {
     private String catImage;
 
     @Column(nullable = false)
-    private Neutering neutering;
+    private String neutering;
 
     @Column(nullable = false, columnDefinition = "integer default 0")
     private int cntComment;

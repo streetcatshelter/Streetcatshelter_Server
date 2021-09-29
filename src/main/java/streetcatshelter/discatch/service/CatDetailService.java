@@ -1,10 +1,8 @@
 package streetcatshelter.discatch.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.Cat;
-import streetcatshelter.discatch.domain.CatDetail;
 import streetcatshelter.discatch.domain.User;
 import streetcatshelter.discatch.dto.CatDetailRequestDto;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
@@ -26,6 +24,6 @@ public class CatDetailService {
     }
 
     private Cat getCat(Long catId) {
-        return catRepository.findById(catId).orElseThrow(()-> new IllegalArgumentException("communityId가 존재하지 않습니다."));
+        return catRepository.findById(catId).orElseThrow(()-> new IllegalArgumentException("catId가 존재하지 않습니다."));
     }
 }
