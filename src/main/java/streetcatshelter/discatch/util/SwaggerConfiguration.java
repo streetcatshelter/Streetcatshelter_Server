@@ -1,8 +1,7 @@
 package streetcatshelter.discatch.util;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -18,34 +17,28 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Arrays;
 import java.util.List;
 
+@Configuration
 @EnableSwagger2
-public class SwaggerConfig extends WebMvcConfigurationSupport {
-
-    @Override
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/"); registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
-    //    swagger 접속 링크
-//    http://localhost:8080/swagger-ui/index.html
+public class SwaggerConfiguration {
     @Bean
-    public Docket api() {
+    public Docket api(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                .build();
+                .build().apiInfo(apiInfo())
+                .securityContexts(Arrays.asList(securityContext()))
+                .securitySchemes(Arrays.asList(apiKey()));
+
     }
 
     private ApiInfo apiInfo() {
-        String description = "Welcome DisCats";
+        String description = "Welcome Log Company";
         return new ApiInfoBuilder()
-                .title("DisCats Api Test")
+                .title("SWAGGER TEST")
                 .description(description)
                 .version("1.0")
                 .build();
-
     }
 
     private ApiKey apiKey() {
