@@ -1,5 +1,6 @@
 package streetcatshelter.discatch.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,15 +41,15 @@ public class Community extends TimeStamped {
     private int cntComment;
 
     @Column(nullable = false, columnDefinition = "integer default 0")
-    private int cntLikeIt;
+    private int cntLikeit;
 
     //조회수
     @Column(nullable = false, columnDefinition = "integer default 0")
     private int cntView;
 
-/*    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User user;
 
     @OneToMany(mappedBy = "community", cascade = {CascadeType.REMOVE})
     private List<CommunityImage> communityImageList = new ArrayList<>();
@@ -56,7 +57,11 @@ public class Community extends TimeStamped {
     @OneToMany(mappedBy = "community", cascade = {CascadeType.REMOVE})
     private List<Comment> commentList = new ArrayList<>();
 
-    public Community(CommunityRequestDto requestDto) {
+   /* @OneToMany(mappedBy = "communitylikeit", cascade = {CascadeType.REMOVE})
+    private List<CommunityLikeit> communityLikeitList = new ArrayList<>();*/
+
+    public Community(CommunityRequestDto requestDto, User user) {
+        this.user = user;
         this.category = requestDto.getCategory();
         this.username = requestDto.getUsername();
         this.title = requestDto.getTitle();
@@ -64,7 +69,8 @@ public class Community extends TimeStamped {
         this.location = requestDto.getLocation();
     }
 
-    public void update(CommunityRequestDto requestDto) {
+    public void update(CommunityRequestDto requestDto, User user) {
+        this.user = user;
         this.category = requestDto.getCategory();
         this.username = requestDto.getUsername();
         this.title = requestDto.getTitle();
@@ -82,5 +88,6 @@ public class Community extends TimeStamped {
     public void updateCntComment(int cntComment) {
         this.cntComment = cntComment;
     }
+    public void updateCntLikeit(int count) {this.cntLikeit += count;}
 
 }

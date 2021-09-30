@@ -11,27 +11,23 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class CatTag {
-
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CommunityLikeit {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String tag;
-
-    @JoinColumn(name = "CAT_ID")
+    @JoinColumn(name = "USER_USER_SEQ")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private Cat cat;
+    private User user;
 
-    @JoinColumn(name = "CATDETAIL_ID")
+    @JoinColumn(name = "COMMUNITY_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private CatDetail catDetail;
+    private Community community;
 
-    public CatTag(Cat cat, String tag) {
-        this.cat = cat;
-        this.tag = tag;
+    public CommunityLikeit(Community community, User user) {
+        this.user = user;
+        this.community = community;
     }
 }

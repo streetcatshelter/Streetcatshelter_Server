@@ -40,7 +40,6 @@ public class CatService {
         List<CatTag> catTagList = convertTag(cat, requestDto.getCatTag());
         saveCatTagList(catTagList);
         cat.addCatTagList(catTagList);
-
     }
 
     public List<CatTag> convertTag(Cat cat, List<String> catTagStringList) {
