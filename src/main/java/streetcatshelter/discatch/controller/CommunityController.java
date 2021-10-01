@@ -1,12 +1,12 @@
 package streetcatshelter.discatch.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.domain.Community;
 import streetcatshelter.discatch.dto.CommentRequestDto;
 import streetcatshelter.discatch.dto.CommunityRequestDto;
+import streetcatshelter.discatch.dto.responseDto.CommunityResponseDto;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.service.CommunityService;
 
@@ -17,18 +17,19 @@ public class CommunityController {
     private final CommunityService communityService;
 
     @GetMapping("/community/category/{category}")
-    public Page<Community> getCommunityByCategory(
+    public CommunityResponseDto getCommunityByCategory(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam ("location") String location,
-            @PathVariable String category) {
-        return communityService.getCommunityByCategory(page, size, category, location);
+            @PathVariable String category,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return communityService.getCommunityByCategory(page, size, category, location, userPrincipal);
     }
 
     //detail page 들어갈떄 쓰는 api
     @GetMapping("/community/{communityId}")
-    public Community getCommunityById(@PathVariable Long communityId) {
-        return communityService.getCommunityById(communityId);
+    public CommunityResponseDto getCommunityById(@PathVariable Long communityId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return communityService.getCommunityById(communityId, userPrincipal);
     }
 
     @PostMapping("/community/create")
