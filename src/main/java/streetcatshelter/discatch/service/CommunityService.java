@@ -11,11 +11,9 @@ import streetcatshelter.discatch.domain.CommunityImage;
 import streetcatshelter.discatch.domain.User;
 import streetcatshelter.discatch.dto.CommentRequestDto;
 import streetcatshelter.discatch.dto.CommunityRequestDto;
+import streetcatshelter.discatch.dto.responseDto.CommunityResponseDto;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
-import streetcatshelter.discatch.repository.CommentRepository;
-import streetcatshelter.discatch.repository.CommunityImageRepository;
-import streetcatshelter.discatch.repository.CommunityRepository;
-import streetcatshelter.discatch.repository.UserRepository;
+import streetcatshelter.discatch.repository.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -28,22 +26,44 @@ public class CommunityService {
     private final CommunityRepository communityRepository;
     private final CommunityImageRepository communityImageRepository;
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
+    private final CommunityLikeitRepository communityLikeitRepository;
 
-    //1페이지 문제 해결완료
-    public Page<Community> getCommunityByCategory(int page, int size, String category, String location) {
-        page -= 1;
-        Pageable pageable = PageRequest.of(page, size);
-        return communityRepository.findAllByCategoryAndLocation(pageable, category, location);
+    public CommunityResponseDto getCommunityByCategory(int page, int size, String category, String location,UserPrincipal userPrincipal) {
+        //1페이지 문제 해결완료
+        User user = userPrincipal.getUser();
+        Pageable pageable = PageRequest.of(page -1, size);
+        Page<Community> communities = communityRepository.findAllByCategoryAndLocation(pageable, category, location);
+        //마지막 페이지 여부
+        Boolean isLast = communities.isLast();
+
+        List<CommunityResponseDto> responseDtoList = new ArrayList<>();
+
+        for(Community community : communities) {
+            boolean isLiked = false;
+            if(user != null) {
+                isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
+            }
+            CommunityResponseDto responseDto = new CommunityResponseDto(community, isLiked);
+            responseDtoList.add(responseDto);
+        }
+        return new CommunityResponseDto(responseDtoList, "커뮤니티 동네별 조회에 성공하였습니다.", isLast);
+
     }
 
     @Transactional
-    public Community getCommunityById(Long communityId) {
-        Community community = getCommunity(communityId);
+    public CommunityResponseDto getCommunityById(Long communityId, UserPrincipal userPrincipal) {
+        Community community = communityRepository.findById(communityId).orElseThrow(()-> new IllegalArgumentException("communityId가 존재하지 않습니다."));
+        User user = userPrincipal.getUser();
         int cntView = community.getCntView();
         cntView += 1;
         community.updateCntView(cntView);
-        return communityRepository.findById(communityId).orElseThrow(()-> new IllegalArgumentException("communityId가 존재하지 않습니다."));
+        Boolean isLiked = true;
+        if(communityLikeitRepository.existsByCommunityAndUser(community, user) != null) {
+            isLiked = true;
+        } else {
+            isLiked = false;
+        }
+        return new CommunityResponseDto(community, isLiked, "커뮤니티" + communityId + "번 조회가 성공했습니다");
     }
 
     public void createCommunity(CommunityRequestDto requestDto, UserPrincipal userPrincipal) {
