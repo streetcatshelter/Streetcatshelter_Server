@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 import streetcatshelter.discatch.dto.CatDetailRequestDto;
 
 import javax.persistence.*;
@@ -28,17 +29,26 @@ public class CatDetail extends TimeStamped{
     @Column(nullable = false)
     private boolean snack;
 
-    @Column(nullable = false)
-    private String catDetailImage;
+    @Column
+    private Long likeCnt;
+
+    @Column
+    private Long viewCnt;
+
+    @Column
+    private Long commentCnt;
+
+    @OneToMany(mappedBy = "catDetail",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CatImage> catImages = new ArrayList<>();
 
     @Column(nullable = false)
     private String diary;
 
     // 위도 경도 따로 db를 만들지 생각해보자..
-    @Column(nullable = false)
+    @Column
     private double latitude;
 
-    @Column(nullable = false)
+    @Column
     private double longitude;
 
     @JoinColumn(name = "USER_ID")
@@ -46,7 +56,7 @@ public class CatDetail extends TimeStamped{
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "catDetail", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "catDetail", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @JoinColumn(name = "CAT_ID")
@@ -54,14 +64,38 @@ public class CatDetail extends TimeStamped{
     @JsonIgnore
     private Cat cat;
 
-    public CatDetail(CatDetailRequestDto requestDto, Cat cat, User user) {
+//    public CatDetail(CatDetailRequestDto requestDto, Cat cat, User user) {
+//
+//        this.cat = cat;
+//        this.food = requestDto.isFood();
+//        this.snack = requestDto.isSnack();
+//        this.water = requestDto.isWater();
+//        this.diary = requestDto.getDiary();
+//        this.user = user;
+//    }
+
+    public CatDetail(CatDetailRequestDto requestDto, Cat cat, User user){
+
         this.cat = cat;
         this.food = requestDto.isFood();
         this.snack = requestDto.isSnack();
         this.water = requestDto.isWater();
-        this.catDetailImage = requestDto.getCatDetailImage();
         this.diary = requestDto.getDiary();
         this.user = user;
+        for(String image : requestDto.getCatImages()){
+            this.catImages.add(new CatImage(cat,this,image));
+        }
+        this.commentCnt = 0L;
+        this.viewCnt = 0L;
+        this.likeCnt = 0L;
+    }
+
+    public void updateView() {
+        this.viewCnt += 1;
+    }
+
+    public void updateCommentCnt() {
+        this.commentCnt += 1;
     }
 
 /*    @OneToMany(mappedBy = "CatDetail", cascade = {CascadeType.REMOVE})

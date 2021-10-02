@@ -5,15 +5,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import streetcatshelter.discatch.domain.Cat;
-import streetcatshelter.discatch.domain.CatDetail;
-import streetcatshelter.discatch.domain.CatTag;
-import streetcatshelter.discatch.domain.Comment;
+import org.springframework.transaction.annotation.Transactional;
+import streetcatshelter.discatch.domain.*;
 import streetcatshelter.discatch.dto.CatRequestDto;
-import streetcatshelter.discatch.repository.CatDetailRepository;
-import streetcatshelter.discatch.repository.CatRepository;
-import streetcatshelter.discatch.repository.CatTagRepository;
-import streetcatshelter.discatch.repository.CommentRepository;
+import streetcatshelter.discatch.dto.CommentRequestDto;
+import streetcatshelter.discatch.dto.response.CatDetailResponseDto;
+import streetcatshelter.discatch.dto.response.CatDiaryResponseDto;
+import streetcatshelter.discatch.dto.response.CatGalleryResponseDto;
+import streetcatshelter.discatch.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +25,7 @@ public class CatService {
     private final CatTagRepository catTagRepository;
     private final CatDetailRepository catDetailRepository;
     private final CommentRepository commentRepository;
+    private final CatImageRepository catImageRepository;
 
     public Page<Cat> getCatByLocation(int page, int size, String location) {
         page -= 1;
@@ -57,15 +57,80 @@ public class CatService {
         }
     }
 
-    public List<CatDetail> getCatDetailByCat(Long catId) {
-        return catDetailRepository.findAllByCat(catId);
+
+
+    @Transactional
+    public CatDetailResponseDto getCatDetail(Long catDetailId) {
+        CatDetail catDetail = catDetailRepository.findById(catDetailId).orElseThrow(
+                () -> new NullPointerException("No Such Data")
+        );
+        catDetail.updateView();
+        return CatDetailResponseDto.builder()
+                .food(catDetail.isFood())
+                .snack(catDetail.isSnack())
+                .water(catDetail.isWater())
+                .commentCnt(catDetail.getCommentCnt())
+                .diary(catDetail.getDiary())
+                .likeCnt(catDetail.getLikeCnt())
+                .viewCnt(catDetail.getViewCnt())
+                .build();
     }
 
-    public List<Comment> getCatCommentByCat(Long catId) {
-        return commentRepository.findAllByCatId(catId);
+
+    public List<CatGalleryResponseDto> getCatPhotos(int page, int size, Long catId) {
+        page -= 1;
+        Pageable pageable = PageRequest.of(page, size);
+        List<CatImage> allByCatId = catImageRepository.findAllByCatId(pageable, catId);
+        List<CatGalleryResponseDto> catGalleryResponseDtos = new ArrayList<>();
+        for (CatImage catImage : allByCatId) {
+            catGalleryResponseDtos.add(CatGalleryResponseDto.builder()
+                    .CatDetailId(catImage.getCatDetail().getId())
+                    .CatImages(catImage.getImage())
+                    .build());
+        }
+        return catGalleryResponseDtos;
     }
 
-    public Optional<CatDetail> getCatDetail(Long catDetailId) {
-        return catDetailRepository.findById(catDetailId);
+    @Transactional
+    public void createDetailComment(Long catDetailId,CommentRequestDto commentRequestDto, User user) {
+        CatDetail catDetail = catDetailRepository.findById(catDetailId).orElseThrow(
+                () -> new NullPointerException("No Such Data")
+        );
+        catDetail.updateCommentCnt();
+        Comment comment = new Comment(catDetail,commentRequestDto,user);
+        commentRepository.save(comment);
+    }
+
+    public void createComment(Long catId, CommentRequestDto commentRequestDto, User user) {
+        Cat cat = catRepository.findById(catId).orElseThrow(
+                ()-> new NullPointerException("NO SUCH DATA")
+        );
+
+        Comment comment = new Comment(cat,commentRequestDto,user);
+        commentRepository.save(comment);
+
+    }
+
+    public Page<Comment> getCatCommentByCatDetail(Long catDetailId, int page, int size) {
+        page -= 1;
+        Pageable pageable = PageRequest.of(page, size);
+        return commentRepository.findAllByCatDetailId(pageable,catDetailId);
+    }
+
+    public List<CatDiaryResponseDto> getCatDiaryByCat(Long catId, int page, int size) {
+        page -= 1;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CatDetail> allByCatId = catDetailRepository.findAllByCatId(pageable, catId);
+        List<CatDiaryResponseDto> catDiaryResponseDtos = new ArrayList<>();
+        for (CatDetail catDetail : allByCatId) {
+            catDiaryResponseDtos.add(CatDiaryResponseDto.builder()
+                    .diary(catDetail.getDiary())
+                    .catDetailId(catDetail.getId())
+                    .commentCnt(catDetail.getCommentCnt())
+                    .likeCnt(catDetail.getLikeCnt())
+                    .viewCnt(catDetail.getViewCnt())
+                    .user(catDetail.getUser())
+                    .build());
+        }return catDiaryResponseDtos;
     }
 }

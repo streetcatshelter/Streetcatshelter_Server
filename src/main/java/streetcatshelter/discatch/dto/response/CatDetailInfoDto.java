@@ -1,4 +1,4 @@
-package streetcatshelter.discatch.dto.request;
+package streetcatshelter.discatch.dto.response;
 
 import streetcatshelter.discatch.domain.CatTag;
 

@@ -44,7 +44,6 @@ public class Cat extends TimeStamped {
 
     @Column(nullable = false, columnDefinition = "integer default 0")
     private int cntLikeIt;
-
     //조회수
     @Column(nullable = false, columnDefinition = "integer default 0")
     private int cntView;
@@ -56,7 +55,7 @@ public class Cat extends TimeStamped {
         this.cntComment = cntComment;
     }
 
-    @OneToMany(mappedBy = "cat", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "cat", cascade = {CascadeType.REMOVE},orphanRemoval = true)
     private List<CatDetail> catDetailList = new ArrayList<>();
 
     @OneToMany(mappedBy = "cat", cascade = {CascadeType.REMOVE})
@@ -64,6 +63,9 @@ public class Cat extends TimeStamped {
 
     @OneToMany(mappedBy = "cat", cascade = {CascadeType.REMOVE})
     private List<Comment> commentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cat")
+    private List<CatImage> catImages = new ArrayList<>();
 
     public Cat(CatRequestDto requestDto) {
         this.neutering = requestDto.getNeutering();

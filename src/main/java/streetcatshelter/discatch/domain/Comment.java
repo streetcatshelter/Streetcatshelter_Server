@@ -41,11 +41,31 @@ public class Comment  extends TimeStamped { // 생성,수정 시간을 자동으
     @JsonIgnore
     private CatDetail catDetail;
 
+    @JoinColumn(name = "USER_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+
     public Comment(Community community, CommentRequestDto requestDto) {
         this.community = community;
         this.contents = requestDto.getContents();
         this.username = requestDto.getUsername();
     }
+
+    public Comment(CatDetail catDetail,CommentRequestDto requestDto,User user) {
+        this.user = user;
+        this.catDetail = catDetail;
+        this.contents = requestDto.getContents();
+        this.username = requestDto.getUsername();
+    }
+
+    public Comment(Cat cat,CommentRequestDto requestDto,User user) {
+        this.user = user;
+        this.cat = cat;
+        this.contents = requestDto.getContents();
+        this.username = requestDto.getUsername();
+    }
+
     public void update(CommentRequestDto requestDto) {
         this.contents = requestDto.getContents();
     }
