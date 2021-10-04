@@ -1,10 +1,14 @@
 package streetcatshelter.discatch.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import streetcatshelter.discatch.domain.CatDetail;
 
 import java.util.List;
 
 public interface CatDetailRepository extends JpaRepository<CatDetail, Long> {
-    List<CatDetail>findAllByCat(Long catId);
+
+    List<CatDetail>findAllByCatId(Long catId);
+    Page<CatDetail> findAllByCatId(Pageable pageable, Long catId);
 }

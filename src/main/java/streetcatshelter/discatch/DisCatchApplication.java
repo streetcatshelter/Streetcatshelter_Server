@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.HttpMethod;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import streetcatshelter.discatch.config.properties.AppProperties;
@@ -18,6 +19,7 @@ import streetcatshelter.discatch.config.properties.CorsProperties;
         AppProperties.class
 })
 @EnableJpaAuditing
+@EnableScheduling
 public class DisCatchApplication {
 
     public static void main(String[] args) {

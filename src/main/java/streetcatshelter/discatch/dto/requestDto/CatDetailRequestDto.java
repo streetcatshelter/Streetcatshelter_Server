@@ -1,13 +1,18 @@
-package streetcatshelter.discatch.dto;
+package streetcatshelter.discatch.dto.requestDto;
 
 import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 @Getter
+@Setter
 public class CatDetailRequestDto {
     private boolean water;
     private boolean food;
     private boolean snack;
-    private String catDetailImage;
+    private List<String> catImages;
+    private List<String> catTags;
     private String diary;
     private double latitude;
     private double longitude;
