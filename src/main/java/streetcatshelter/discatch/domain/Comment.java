@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import streetcatshelter.discatch.dto.CommentRequestDto;
+import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
+
+
 
 import javax.persistence.*;
 
@@ -22,9 +24,6 @@ public class Comment  extends TimeStamped { // 생성,수정 시간을 자동으
     @Column(nullable = false)
     private String contents;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    private User user;
 
     @JoinColumn(name = "COMMUNITY_ID")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,11 +40,31 @@ public class Comment  extends TimeStamped { // 생성,수정 시간을 자동으
     @JsonIgnore
     private CatDetail catDetail;
 
+
+    @JoinColumn(name = "USER_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+
+
     public Comment(Community community, CommentRequestDto requestDto, User user) {
         this.community = community;
         this.contents = requestDto.getContents();
         this.user = user;
     }
+
+    public Comment(CatDetail catDetail,CommentRequestDto requestDto,User user) {
+        this.user = user;
+        this.catDetail = catDetail;
+        this.contents = requestDto.getContents();
+    }
+
+    public Comment(Cat cat,CommentRequestDto requestDto,User user) {
+        this.user = user;
+        this.cat = cat;
+        this.contents = requestDto.getContents();
+    }
+
     public void update(CommentRequestDto requestDto) {
         this.contents = requestDto.getContents();
     }

@@ -8,12 +8,16 @@ import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.domain.Community;
 import streetcatshelter.discatch.domain.CommunityImage;
+import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
+import streetcatshelter.discatch.dto.requestDto.CommunityRequestDto;
+import streetcatshelter.discatch.repository.CommentRepository;
+import streetcatshelter.discatch.repository.CommunityImageRepository;
+import streetcatshelter.discatch.repository.CommunityRepository;
 import streetcatshelter.discatch.domain.User;
-import streetcatshelter.discatch.dto.CommentRequestDto;
-import streetcatshelter.discatch.dto.CommunityRequestDto;
 import streetcatshelter.discatch.dto.responseDto.CommunityResponseDto;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.repository.*;
+
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;

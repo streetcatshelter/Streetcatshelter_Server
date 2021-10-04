@@ -5,16 +5,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.domain.Cat;
-import streetcatshelter.discatch.domain.CatDetail;
 import streetcatshelter.discatch.domain.Comment;
-import streetcatshelter.discatch.dto.CatDetailRequestDto;
-import streetcatshelter.discatch.dto.CatRequestDto;
+import streetcatshelter.discatch.dto.requestDto.CatDetailRequestDto;
+import streetcatshelter.discatch.dto.requestDto.CatRequestDto;
+import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
+import streetcatshelter.discatch.dto.responseDto.CatDetailResponseDto;
+import streetcatshelter.discatch.dto.responseDto.CatDiaryResponseDto;
+import streetcatshelter.discatch.dto.responseDto.CatGalleryResponseDto;
+import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.service.CatDetailService;
 import streetcatshelter.discatch.service.CatService;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,39 +35,78 @@ public class CatController {
         return catService.getCatByLocation(page, size, location);
     }
 
+    @GetMapping("/cat/comment/{catId}")
+    public List<CommentResponseDto> getCatComment(@PathVariable Long catId,
+                              @RequestParam int page,
+                              @RequestParam int size){
+
+        return catService.getCatComment(catId,page,size);
+    }
+
     @PostMapping("/cat/create")
     public void createCat(@RequestBody CatRequestDto requestDto) {
         catService.createCat(requestDto);
     }
 
-    @PostMapping("/catDetail/create/{catId}")
-    public void createCatDetail(@RequestBody CatDetailRequestDto requestDto, @PathVariable Long catId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    @PostMapping("/cat/detail/{catId}")
+    public void createCatDetail(@RequestBody CatDetailRequestDto requestDto,
+                                @PathVariable Long catId,
+                                @AuthenticationPrincipal UserPrincipal userPrincipal) {
         catDetailService.createCatDetail(requestDto, catId, userPrincipal);
     }
-    @GetMapping("/cat/calendar/{catId}")
-    public List<CatDetail> getCatCalendarByCat(@PathVariable Long catId) {
-        return catService.getCatDetailByCat(catId);
+
+    @GetMapping("/cat/gallery/{catId}")
+    public List<CatGalleryResponseDto> getCatPhotoByCat(@PathVariable Long catId,
+                                                        @RequestParam int page,
+                                                        @RequestParam int size) {
+        return catService.getCatPhotos(page,size,catId);
     }
 
-    @GetMapping("/cat/comment/{catId}")
-    public List<Comment> getCatCommentByCat(@PathVariable Long catId) {
-        return catService.getCatCommentByCat(catId);
+    @PostMapping("/cat/detail/comment/{catDetailId}")
+    public void createCatDetailComment(@PathVariable Long catDetailId,
+                                       @RequestBody CommentRequestDto commentRequestDto,
+                                       @AuthenticationPrincipal UserPrincipal userPrincipal){
+        catService.createDetailComment(catDetailId,commentRequestDto, userPrincipal.getUser());
     }
-    //캘린더  집사일기(좋아요 조회수 코멘트수)  고양이사진   이렇게 세개 디비로 나눌까? db검색 속도가 빨라질려나?
-    // 차라리 responseDto를 이용해서 필요한것만 내려주는 방식이 어떨지.. 나중에 고민 ㄱ
+
+    @PostMapping("/cat/comment/{catId}")
+    public void createCatComment(@PathVariable Long catId,
+                                 @RequestBody CommentRequestDto commentRequestDto,
+                                 @AuthenticationPrincipal UserPrincipal userPrincipal){
+        catService.createComment(catId,commentRequestDto, userPrincipal.getUser());
+    }
+
+
+    @GetMapping("/cat/detail/comment/{catDetailId}")
+    public List<CommentResponseDto> getCatCommentByCat(@PathVariable Long catDetailId,
+                                                       @RequestParam int page,
+                                                       @RequestParam int size) {
+        return catService.getCatCommentByCatDetail(catDetailId,page,size);
+    }
+
     @GetMapping("/cat/diary/{catId}")
-    public List<CatDetail> getCatDiaryByCat(@PathVariable Long catId) {
-        return catService.getCatDetailByCat(catId);
+    public List<CatDiaryResponseDto> getCatDiaryByCat(@PathVariable Long catId,
+                                                      @RequestParam int page,
+                                                      @RequestParam int size) {
+        return catService.getCatDiaryByCat(catId,page,size);
     }
 
-    @GetMapping("/cat/photo/{catId}")
-    public List<CatDetail> getCatPhotoByCat(@PathVariable Long catId) {
-        return catService.getCatDetailByCat(catId);
+    @GetMapping("/cat/detail/{catDetailId}")
+    public CatDetailResponseDto getCatDetail(@PathVariable Long catDetailId,
+                                             @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return catService.getCatDetail(catDetailId, userPrincipal.getUser());
     }
 
-    @GetMapping("/cat/catDetail/{catDetailId}")
-    public Optional<CatDetail> getCatDetail(@PathVariable Long catDetailId) {
-        return catService.getCatDetail(catDetailId);
+    @PostMapping("/cat/detail/like/{catDetailId}")
+    public Map<String,Long> likeCatDetail(@PathVariable Long catDetailId,
+                                          @AuthenticationPrincipal UserPrincipal userPrincipal){
+        return catDetailService.addlike(catDetailId,userPrincipal.getUser());
+    }
+
+    @DeleteMapping("/cat/detail/{catDetailId}")
+    public void deleteCatDetail(@PathVariable Long catDetailId,
+                                @AuthenticationPrincipal UserPrincipal userPrincipal){
+        catDetailService.deleteCatDetail(catDetailId, userPrincipal.getUser());
     }
 
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import streetcatshelter.discatch.dto.*;
+import streetcatshelter.discatch.dto.requestDto.CommunityRequestDto;
 
 
 import javax.persistence.*;
