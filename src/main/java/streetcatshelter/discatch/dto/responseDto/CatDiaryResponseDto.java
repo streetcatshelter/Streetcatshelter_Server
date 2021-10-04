@@ -1,4 +1,4 @@
-package streetcatshelter.discatch.dto.response;
+package streetcatshelter.discatch.dto.responseDto;
 
 
 import lombok.Builder;
@@ -12,11 +12,13 @@ import streetcatshelter.discatch.domain.User;
 @Builder
 public class CatDiaryResponseDto {
 
-    private User user;
     private Long catDetailId;
     private String diary;
     private Long likeCnt;
     private Long viewCnt;
     private Long commentCnt;
+    private Long userId;
+    private String username;
+    private String profileImageUrl;
 
 }

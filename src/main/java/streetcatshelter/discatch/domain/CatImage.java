@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class CatImage extends TimeStamped{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

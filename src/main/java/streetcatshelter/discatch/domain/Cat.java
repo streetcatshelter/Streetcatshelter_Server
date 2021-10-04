@@ -3,7 +3,7 @@ package streetcatshelter.discatch.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import streetcatshelter.discatch.dto.CatRequestDto;
+import streetcatshelter.discatch.dto.requestDto.CatRequestDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;

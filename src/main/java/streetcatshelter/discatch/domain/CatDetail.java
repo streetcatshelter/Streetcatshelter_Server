@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
-import streetcatshelter.discatch.dto.CatDetailRequestDto;
+import streetcatshelter.discatch.dto.requestDto.CatDetailRequestDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -59,6 +58,9 @@ public class CatDetail extends TimeStamped{
     @OneToMany(mappedBy = "catDetail", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "catDetail", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Liked> likeds = new ArrayList<>();
+
     @JoinColumn(name = "CAT_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
@@ -96,6 +98,11 @@ public class CatDetail extends TimeStamped{
 
     public void updateCommentCnt() {
         this.commentCnt += 1;
+    }
+
+    public Long updateLikeCnt(Long cnt) {
+        this.likeCnt += cnt;
+        return this.likeCnt;
     }
 
 /*    @OneToMany(mappedBy = "CatDetail", cascade = {CascadeType.REMOVE})

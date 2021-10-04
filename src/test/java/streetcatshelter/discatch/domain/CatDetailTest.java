@@ -2,7 +2,7 @@ package streetcatshelter.discatch.domain;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import streetcatshelter.discatch.dto.CatDetailRequestDto;
+import streetcatshelter.discatch.dto.requestDto.CatDetailRequestDto;
 import streetcatshelter.discatch.repository.CatDetailRepository;
 import streetcatshelter.discatch.repository.CatImageRepository;
 

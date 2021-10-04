@@ -7,16 +7,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import streetcatshelter.discatch.domain.*;
-import streetcatshelter.discatch.dto.CatRequestDto;
-import streetcatshelter.discatch.dto.CommentRequestDto;
-import streetcatshelter.discatch.dto.response.CatDetailResponseDto;
-import streetcatshelter.discatch.dto.response.CatDiaryResponseDto;
-import streetcatshelter.discatch.dto.response.CatGalleryResponseDto;
+import streetcatshelter.discatch.dto.requestDto.CatRequestDto;
+import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
+import streetcatshelter.discatch.dto.responseDto.CatDetailResponseDto;
+import streetcatshelter.discatch.dto.responseDto.CatDiaryResponseDto;
+import streetcatshelter.discatch.dto.responseDto.CatGalleryResponseDto;
+import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
 import streetcatshelter.discatch.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +26,7 @@ public class CatService {
     private final CatDetailRepository catDetailRepository;
     private final CommentRepository commentRepository;
     private final CatImageRepository catImageRepository;
+    private final LikedRepository likedRepository;
 
     public Page<Cat> getCatByLocation(int page, int size, String location) {
         page -= 1;
@@ -60,15 +61,17 @@ public class CatService {
 
 
     @Transactional
-    public CatDetailResponseDto getCatDetail(Long catDetailId) {
+    public CatDetailResponseDto getCatDetail(Long catDetailId,User user) {
         CatDetail catDetail = catDetailRepository.findById(catDetailId).orElseThrow(
                 () -> new NullPointerException("No Such Data")
         );
+        boolean b = likedRepository.existsByUser_UserSeqAndCatDetailId( user.getUserSeq(),catDetailId);
         catDetail.updateView();
         return CatDetailResponseDto.builder()
                 .food(catDetail.isFood())
                 .snack(catDetail.isSnack())
                 .water(catDetail.isWater())
+                .isUserLiked(b)
                 .commentCnt(catDetail.getCommentCnt())
                 .diary(catDetail.getDiary())
                 .likeCnt(catDetail.getLikeCnt())
@@ -111,11 +114,13 @@ public class CatService {
 
     }
 
-    public Page<Comment> getCatCommentByCatDetail(Long catDetailId, int page, int size) {
+    public List<CommentResponseDto> getCatCommentByCatDetail(Long catDetailId, int page, int size) {
         page -= 1;
         Pageable pageable = PageRequest.of(page, size);
-        return commentRepository.findAllByCatDetailId(pageable,catDetailId);
+        Page<Comment> allByCatDetailId = commentRepository.findAllByCatDetailId(pageable, catDetailId);
+        return getCommentResponseDtos(allByCatDetailId);
     }
+
 
     public List<CatDiaryResponseDto> getCatDiaryByCat(Long catId, int page, int size) {
         page -= 1;
@@ -129,8 +134,31 @@ public class CatService {
                     .commentCnt(catDetail.getCommentCnt())
                     .likeCnt(catDetail.getLikeCnt())
                     .viewCnt(catDetail.getViewCnt())
-                    .user(catDetail.getUser())
+                    .profileImageUrl(catDetail.getUser().getProfileImageUrl())
+                    .userId(catDetail.getUser().getUserSeq())
+                    .username(catDetail.getUser().getUsername())
                     .build());
         }return catDiaryResponseDtos;
     }
+
+    public List<CommentResponseDto> getCatComment(Long catId, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Comment> allByCatDetailId = commentRepository.findAllByCatId(pageable, catId);
+        return getCommentResponseDtos(allByCatDetailId);
+    }
+
+    private List<CommentResponseDto> getCommentResponseDtos(Page<Comment> allByCatDetailId) {
+        List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
+        for (Comment comment : allByCatDetailId) {
+            commentResponseDtos.add(CommentResponseDto.builder()
+                    .commentId(comment.getId())
+                    .contents(comment.getContents())
+                    .username(comment.getUser().getUsername())
+                    .userId(comment.getUser().getUserSeq())
+                    .profileImageUrl(comment.getUser().getProfileImageUrl())
+                    .build());
+        }
+        return commentResponseDtos;
+    }
+
 }

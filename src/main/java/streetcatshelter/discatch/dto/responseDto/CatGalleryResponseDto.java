@@ -1,4 +1,4 @@
-package streetcatshelter.discatch.dto.response;
+package streetcatshelter.discatch.dto.responseDto;
 
 
 import lombok.Builder;

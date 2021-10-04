@@ -9,6 +9,7 @@ import streetcatshelter.discatch.oauth.entity.ProviderType;
 import streetcatshelter.discatch.oauth.entity.RoleType;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 
 @Entity
@@ -68,5 +69,18 @@ public class User extends TimeStamped{
         this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
         this.providerType = providerType;
         this.roleType = roleType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(getUserSeq(), user.getUserSeq()) && Objects.equals(getUserId(), user.getUserId()) && Objects.equals(getUsername(), user.getUsername()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getEmailVerifiedYn(), user.getEmailVerifiedYn()) && Objects.equals(getProfileImageUrl(), user.getProfileImageUrl()) && getProviderType() == user.getProviderType() && getRoleType() == user.getRoleType();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUserSeq(), getUserId(), getUsername(), getPassword(), getEmail(), getEmailVerifiedYn(), getProfileImageUrl(), getProviderType(), getRoleType());
     }
 }

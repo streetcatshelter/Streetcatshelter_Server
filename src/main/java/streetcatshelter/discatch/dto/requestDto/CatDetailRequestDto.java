@@ -1,4 +1,4 @@
-package streetcatshelter.discatch.dto;
+package streetcatshelter.discatch.dto.requestDto;
 
 import lombok.Getter;
 import lombok.Setter;
