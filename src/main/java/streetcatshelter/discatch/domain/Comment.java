@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
 
 
+
 import javax.persistence.*;
 
 @Getter
@@ -39,14 +40,17 @@ public class Comment  extends TimeStamped { // 생성,수정 시간을 자동으
     @JsonIgnore
     private CatDetail catDetail;
 
+
     @JoinColumn(name = "USER_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
 
-    public Comment(Community community, CommentRequestDto requestDto) {
+
+    public Comment(Community community, CommentRequestDto requestDto, User user) {
         this.community = community;
         this.contents = requestDto.getContents();
+        this.user = user;
     }
 
     public Comment(CatDetail catDetail,CommentRequestDto requestDto,User user) {

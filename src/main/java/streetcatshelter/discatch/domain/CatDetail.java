@@ -50,7 +50,7 @@ public class CatDetail extends TimeStamped{
     @Column
     private double longitude;
 
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_USER_SEQ")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private User user;
