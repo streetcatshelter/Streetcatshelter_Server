@@ -1,11 +1,15 @@
 package streetcatshelter.discatch.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class Liked {
 
     @Id
@@ -13,8 +17,12 @@ public class Liked {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_USER_SEQ")
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CAT_ID")
+    private Cat cat;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CAT_DETAIL_ID")
@@ -22,6 +30,11 @@ public class Liked {
 
     public Liked(CatDetail catDetail, User user){
         this.catDetail =catDetail;
+        this.user = user;
+    }
+
+    public Liked(Cat cat, User user){
+        this.cat =cat;
         this.user = user;
     }
 

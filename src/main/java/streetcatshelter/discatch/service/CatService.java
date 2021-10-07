@@ -57,6 +57,22 @@ public class CatService {
         }
     }
 
+    @Transactional
+    public String addlike(Long catId, User user) {
+        Cat cat = catRepository.findById(catId).orElseThrow(
+                () -> new NullPointerException("No Such Data")
+        );
+        Liked byCatIdAndUser_userSeq = likedRepository.findByCatIdAndUser_UserSeq(catId, user.getUserSeq());
+
+        if(byCatIdAndUser_userSeq == null ){
+            Liked liked = new Liked(cat,user);
+            likedRepository.save(liked);
+            return "좋아요 완료";
+        }else{
+            likedRepository.delete(byCatIdAndUser_userSeq);
+            return "좋아요 취소 완료";
+        }
+    }
 
 
     @Transactional
