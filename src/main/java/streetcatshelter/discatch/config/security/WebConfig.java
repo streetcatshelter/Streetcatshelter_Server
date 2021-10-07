@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import streetcatshelter.discatch.oauth.filter.CORSFilter;
 
-
 @EnableWebMvc
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.domain.Cat;
-import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.dto.requestDto.CatDetailRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CatRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
@@ -95,6 +94,12 @@ public class CatController {
     public CatDetailResponseDto getCatDetail(@PathVariable Long catDetailId,
                                              @AuthenticationPrincipal UserPrincipal userPrincipal) {
         return catService.getCatDetail(catDetailId, userPrincipal.getUser());
+    }
+
+    @PostMapping("/cat/like/{catId}")
+    public String likeCat(@PathVariable Long catId,
+                                    @AuthenticationPrincipal UserPrincipal userPrincipal){
+        return catService.addlike(catId,userPrincipal.getUser());
     }
 
     @PostMapping("/cat/detail/like/{catDetailId}")

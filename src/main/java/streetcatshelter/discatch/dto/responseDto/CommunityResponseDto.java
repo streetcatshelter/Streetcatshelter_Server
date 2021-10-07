@@ -1,34 +1,31 @@
 package streetcatshelter.discatch.dto.responseDto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
-import streetcatshelter.discatch.domain.Community;
+
+import java.time.LocalDateTime;
 
 @Getter
 public class CommunityResponseDto {
 
     private Boolean isLiked;
-    private Boolean isLast;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Community community;
-    private String msg;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Object result;
+    private String title;
+    private String nickname;
+    private LocalDateTime createdAt;
+    private int cntComment;
+    private int cntLikeit;
+    private int cntView;
+    private String profileUrl;
+    private Long communityId;
 
-    public CommunityResponseDto(Community community, Boolean isLiked, String msg) {
-        this.community = community;
+    public CommunityResponseDto(String title, boolean isLiked, String nickname, LocalDateTime createdAt, int cntComment, int cntLikeit, int cntView, String profileUrl, Long communityId) {
+        this.cntComment = cntComment;
         this.isLiked = isLiked;
-        this.msg = msg;
-    }
-
-    public CommunityResponseDto(Community community, boolean isLiked) {
-        this.community = community;
-        this.isLiked = isLiked;
-    }
-
-    public CommunityResponseDto(Object result, String msg, Boolean isLast) {
-        this.result = result;
-        this.msg = msg;
-        this.isLast = isLast;
+        this.nickname = nickname;
+        this.title = title;
+        this.createdAt = createdAt;
+        this.cntLikeit = cntLikeit;
+        this.cntView = cntView;
+        this.profileUrl = profileUrl;
+        this.communityId = communityId;
     }
 }
