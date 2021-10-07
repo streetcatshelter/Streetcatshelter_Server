@@ -2,17 +2,14 @@ package streetcatshelter.discatch.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import streetcatshelter.discatch.domain.Notice;
+import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.dto.requestDto.UserInformationRequestDto;
 import streetcatshelter.discatch.dto.responseDto.MyPageCatsResponseDto;
+import streetcatshelter.discatch.dto.responseDto.MyPageNoticeResponseDto;
+import streetcatshelter.discatch.dto.responseDto.MyPageUserInformationResponseDto;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.service.MyPageService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,17 +19,22 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     @GetMapping("/mypage/mycat")
-    public ArrayList<MyPageCatsResponseDto> findAllCats(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public List<MyPageCatsResponseDto> findAllCats(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return myPageService.findAllCats(userPrincipal);
     }
 
     @GetMapping("/mypage/notice")
-    public List<Notice> getAllNotices() {
+    public List<MyPageNoticeResponseDto> getAllNotices() {
         return myPageService.getAllNotices();
     }
 
+    @GetMapping("/mypage/notice/{noticeId}")
+    public MyPageNoticeResponseDto getNotice(@PathVariable Long noticeId) {
+        return myPageService.getNotice(noticeId);
+    }
+
     @PutMapping("/mypage/user/information")
-    public String putUserInformation(@AuthenticationPrincipal UserPrincipal userPrincipal,
+    public MyPageUserInformationResponseDto putUserInformation(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                                                @RequestBody UserInformationRequestDto requestDto) {
         return myPageService.putUserInformation(userPrincipal, requestDto);
     }

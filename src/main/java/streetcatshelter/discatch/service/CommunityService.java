@@ -11,6 +11,7 @@ import streetcatshelter.discatch.domain.CommunityImage;
 import streetcatshelter.discatch.domain.User;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CommunityRequestDto;
+import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
 import streetcatshelter.discatch.dto.responseDto.CommunityDetailResponseDto;
 import streetcatshelter.discatch.dto.responseDto.CommunityResponseDto;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
@@ -37,32 +38,55 @@ public class CommunityService {
         //1페이지 문제 해결완료
         User user = userPrincipal.getUser();
         Pageable pageable = PageRequest.of(page -1, size);
-        Page<Community> communities = communityRepository.findAllByCategoryAndLocation(pageable, category, location);
-        //마지막 페이지 여부
-        //Boolean isLast = communities.isLast();
-        ArrayList<CommunityResponseDto> responseDtoList = new ArrayList<>();
+        if(category.equals("고양이 정보글"))  {
+            Page<Community> communities = communityRepository.findAllByCategory(pageable, category);
+            ArrayList<CommunityResponseDto> responseDtoList = new ArrayList<>();
+            for (Community community : communities) {
+                boolean isLiked = false;
+                String nickname = null;
+                String profileUrl = null;
+                if (user != null) {
+                    isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
+                    nickname = user.getNickname();
+                    profileUrl = user.getProfileUrl();
+                }
+                String title = community.getTitle();
+                LocalDateTime createdAt = community.getCreatedAt();
+                int cntComment = community.getCntComment();
+                int cntLikeit = community.getCntLikeit();
+                int cntView = community.getCntView();
+                Long communityId = community.getId();
 
-        for(Community community : communities) {
-            boolean isLiked = false;
-            String nickname = null;
-            String profileUrl = null;
-            if(user != null) {
-                isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
-                nickname = user.getNickname();
-                profileUrl = user.getProfileUrl();
+                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileUrl, communityId);
+                responseDtoList.add(responseDto);
             }
-            String title = community.getTitle();
-            LocalDateTime createdAt = community.getCreatedAt();
-            int cntComment = community.getCntComment();
-            int cntLikeit = community.getCntLikeit();
-            int cntView = community.getCntView();
-            Long communityId = community.getId();
+            return responseDtoList;
+        } else {
+            Page<Community> communities = communityRepository.findAllByCategoryAndLocation(pageable, category, location);
+            //마지막 페이지 여부
+            //Boolean isLast = communities.isLast();
+            ArrayList<CommunityResponseDto> responseDtoList = new ArrayList<>();
+            for (Community community : communities) {
+                boolean isLiked = false;
+                String nickname = null;
+                String profileUrl = null;
+                if (user != null) {
+                    isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
+                    nickname = user.getNickname();
+                    profileUrl = user.getProfileUrl();
+                }
+                String title = community.getTitle();
+                LocalDateTime createdAt = community.getCreatedAt();
+                int cntComment = community.getCntComment();
+                int cntLikeit = community.getCntLikeit();
+                int cntView = community.getCntView();
+                Long communityId = community.getId();
 
-            CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileUrl ,communityId);
-            responseDtoList.add(responseDto);
+                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileUrl, communityId);
+                responseDtoList.add(responseDto);
+            }
+            return responseDtoList;
         }
-        return responseDtoList;
-
     }
 
     @Transactional
@@ -76,7 +100,32 @@ public class CommunityService {
         if(user!=null) {
             isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
         }
-        return new CommunityDetailResponseDto(community, isLiked);
+        List<Comment> commentList = community.getCommentList();
+        List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
+        for(Comment comment : commentList) {
+            commentResponseDtos.add(CommentResponseDto.builder()
+                    .nickname(comment.getUser().getNickname())
+                    .contents(comment.getContents())
+                    .commentId(comment.getId())
+                    .createdAt(comment.getCreatedAt())
+                    .modifiedAt(comment.getModifiedAt())
+                    .build());
+        }
+
+        return CommunityDetailResponseDto.builder()
+                .category(community.getCategory())
+                .cntComment(community.getCntComment())
+                .communityId(community.getId())
+                .cntLikeit(community.getCntLikeit())
+                .cntView(community.getCntView())
+                .commentList(commentResponseDtos)
+                .communityImageList(community.getCommunityImageList())
+                .contents(community.getContents())
+                .isLiked(isLiked)
+                .location(community.getLocation())
+                .title(community.getTitle())
+                .username(community.getUsername())
+                .build();
     }
 
     public void createCommunity(CommunityRequestDto requestDto, UserPrincipal userPrincipal) {

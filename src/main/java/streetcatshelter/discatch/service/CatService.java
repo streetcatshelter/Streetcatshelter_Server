@@ -9,10 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import streetcatshelter.discatch.domain.*;
 import streetcatshelter.discatch.dto.requestDto.CatRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
-import streetcatshelter.discatch.dto.responseDto.CatDetailResponseDto;
-import streetcatshelter.discatch.dto.responseDto.CatDiaryResponseDto;
-import streetcatshelter.discatch.dto.responseDto.CatGalleryResponseDto;
-import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
+import streetcatshelter.discatch.dto.responseDto.*;
 import streetcatshelter.discatch.repository.*;
 
 import java.util.ArrayList;
@@ -28,10 +25,20 @@ public class CatService {
     private final CatImageRepository catImageRepository;
     private final LikedRepository likedRepository;
 
-    public Page<Cat> getCatByLocation(int page, int size, String location) {
-        page -= 1;
-        Pageable pageable = PageRequest.of(page, size);
-        return catRepository.findAllByLocation(pageable,location);
+    public List<CatResponseDto> getCatByLocation(int page, int size, String location) {
+        Pageable pageable = PageRequest.of(page -1, size);
+        Page<Cat> cats = catRepository.findAllByLocation(pageable,location);
+        List<CatResponseDto> responseDtoList = new ArrayList<>();
+        for(Cat cat : cats) {
+            responseDtoList.add(CatResponseDto.builder()
+                    .catId(cat.getId())
+                    .catName(cat.getCatName())
+                    .catImage(cat.getCatImage())
+                    .neutering(cat.getNeutering())
+                    .catTagList(cat.getCatTagList())
+                    .build());
+        }
+        return responseDtoList;
     }
 
     public void createCat(CatRequestDto requestDto) {
