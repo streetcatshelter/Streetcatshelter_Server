@@ -4,26 +4,20 @@ package streetcatshelter.discatch.dto.responseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import streetcatshelter.discatch.domain.CatTag;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.List;
+
 
 @Getter
 @Setter
 @Builder
 public class CatResponseDto {
 
-    private Long id;
+    private Long catId;
     private String catName;
-    private String username;
-    private String location;
-    private double latitude;
-    private double longitude;
     private String catImage;
     private String neutering;
-    private int cntComment;
-    private int cntLikeIt;
-    private int cntView;
+    private List<CatTag> catTagList;
+
 }

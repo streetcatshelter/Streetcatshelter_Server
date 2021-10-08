@@ -8,18 +8,20 @@ import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.domain.Community;
 import streetcatshelter.discatch.domain.CommunityImage;
+import streetcatshelter.discatch.domain.User;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CommunityRequestDto;
-import streetcatshelter.discatch.repository.CommentRepository;
-import streetcatshelter.discatch.repository.CommunityImageRepository;
-import streetcatshelter.discatch.repository.CommunityRepository;
-import streetcatshelter.discatch.domain.User;
+import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
+import streetcatshelter.discatch.dto.responseDto.CommunityDetailResponseDto;
 import streetcatshelter.discatch.dto.responseDto.CommunityResponseDto;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
-import streetcatshelter.discatch.repository.*;
-
+import streetcatshelter.discatch.repository.CommentRepository;
+import streetcatshelter.discatch.repository.CommunityImageRepository;
+import streetcatshelter.discatch.repository.CommunityLikeitRepository;
+import streetcatshelter.discatch.repository.CommunityRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,42 +34,98 @@ public class CommunityService {
     private final CommentRepository commentRepository;
     private final CommunityLikeitRepository communityLikeitRepository;
 
-    public CommunityResponseDto getCommunityByCategory(int page, int size, String category, String location,UserPrincipal userPrincipal) {
+    public ArrayList<CommunityResponseDto> getCommunityByCategory(int page, int size, String category, String location,UserPrincipal userPrincipal) {
         //1페이지 문제 해결완료
         User user = userPrincipal.getUser();
         Pageable pageable = PageRequest.of(page -1, size);
-        Page<Community> communities = communityRepository.findAllByCategoryAndLocation(pageable, category, location);
-        //마지막 페이지 여부
-        Boolean isLast = communities.isLast();
+        if(category.equals("고양이 정보글"))  {
+            Page<Community> communities = communityRepository.findAllByCategory(pageable, category);
+            ArrayList<CommunityResponseDto> responseDtoList = new ArrayList<>();
+            for (Community community : communities) {
+                boolean isLiked = false;
+                String nickname = null;
+                String profileUrl = null;
+                if (user != null) {
+                    isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
+                    nickname = user.getNickname();
+                    profileUrl = user.getProfileUrl();
+                }
+                String title = community.getTitle();
+                LocalDateTime createdAt = community.getCreatedAt();
+                int cntComment = community.getCntComment();
+                int cntLikeit = community.getCntLikeit();
+                int cntView = community.getCntView();
+                Long communityId = community.getId();
 
-        List<CommunityResponseDto> responseDtoList = new ArrayList<>();
-
-        for(Community community : communities) {
-            boolean isLiked = false;
-            if(user != null) {
-                isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
+                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileUrl, communityId);
+                responseDtoList.add(responseDto);
             }
-            CommunityResponseDto responseDto = new CommunityResponseDto(community, isLiked);
-            responseDtoList.add(responseDto);
-        }
-        return new CommunityResponseDto(responseDtoList, "커뮤니티 동네별 조회에 성공하였습니다.", isLast);
+            return responseDtoList;
+        } else {
+            Page<Community> communities = communityRepository.findAllByCategoryAndLocation(pageable, category, location);
+            //마지막 페이지 여부
+            //Boolean isLast = communities.isLast();
+            ArrayList<CommunityResponseDto> responseDtoList = new ArrayList<>();
+            for (Community community : communities) {
+                boolean isLiked = false;
+                String nickname = null;
+                String profileUrl = null;
+                if (user != null) {
+                    isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
+                    nickname = user.getNickname();
+                    profileUrl = user.getProfileUrl();
+                }
+                String title = community.getTitle();
+                LocalDateTime createdAt = community.getCreatedAt();
+                int cntComment = community.getCntComment();
+                int cntLikeit = community.getCntLikeit();
+                int cntView = community.getCntView();
+                Long communityId = community.getId();
 
+                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileUrl, communityId);
+                responseDtoList.add(responseDto);
+            }
+            return responseDtoList;
+        }
     }
 
     @Transactional
-    public CommunityResponseDto getCommunityById(Long communityId, UserPrincipal userPrincipal) {
+    public CommunityDetailResponseDto getCommunityById(Long communityId, UserPrincipal userPrincipal) {
         Community community = communityRepository.findById(communityId).orElseThrow(()-> new IllegalArgumentException("communityId가 존재하지 않습니다."));
         User user = userPrincipal.getUser();
         int cntView = community.getCntView();
         cntView += 1;
         community.updateCntView(cntView);
-        Boolean isLiked = true;
-        if(communityLikeitRepository.existsByCommunityAndUser(community, user) != null) {
-            isLiked = true;
-        } else {
-            isLiked = false;
+        Boolean isLiked = false;
+        if(user!=null) {
+            isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
         }
-        return new CommunityResponseDto(community, isLiked, "커뮤니티" + communityId + "번 조회가 성공했습니다");
+        List<Comment> commentList = community.getCommentList();
+        List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
+        for(Comment comment : commentList) {
+            commentResponseDtos.add(CommentResponseDto.builder()
+                    .nickname(comment.getUser().getNickname())
+                    .contents(comment.getContents())
+                    .commentId(comment.getId())
+                    .createdAt(comment.getCreatedAt())
+                    .modifiedAt(comment.getModifiedAt())
+                    .build());
+        }
+
+        return CommunityDetailResponseDto.builder()
+                .category(community.getCategory())
+                .cntComment(community.getCntComment())
+                .communityId(community.getId())
+                .cntLikeit(community.getCntLikeit())
+                .cntView(community.getCntView())
+                .commentList(commentResponseDtos)
+                .communityImageList(community.getCommunityImageList())
+                .contents(community.getContents())
+                .isLiked(isLiked)
+                .location(community.getLocation())
+                .title(community.getTitle())
+                .username(community.getUsername())
+                .build();
     }
 
     public void createCommunity(CommunityRequestDto requestDto, UserPrincipal userPrincipal) {
@@ -94,7 +152,7 @@ public class CommunityService {
     public void updateComment(Long commentId, CommentRequestDto requestDto, UserPrincipal userPrincipal) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(
-                        () -> new IllegalArgumentException("해당 대댓글이 존재하지 않습니다.")
+                        () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
                 );
         User user = userPrincipal.getUser();
         if(user.getUserSeq().equals(comment.getUser().getUserSeq())) {

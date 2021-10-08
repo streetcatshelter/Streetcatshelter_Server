@@ -24,7 +24,6 @@ public class Comment  extends TimeStamped { // 생성,수정 시간을 자동으
     @Column(nullable = false)
     private String contents;
 
-
     @JoinColumn(name = "COMMUNITY_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
@@ -40,8 +39,8 @@ public class Comment  extends TimeStamped { // 생성,수정 시간을 자동으
     @JsonIgnore
     private CatDetail catDetail;
 
-
-    @JoinColumn(name = "USER_ID")
+    @JsonIgnore
+    @JoinColumn(name = "USER_USER_SEQ")
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 

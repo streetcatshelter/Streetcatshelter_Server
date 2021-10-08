@@ -7,4 +7,5 @@ import streetcatshelter.discatch.domain.Community;
 
 public interface CommunityRepository extends JpaRepository<Community, Long> {
     Page<Community> findAllByCategoryAndLocation(Pageable pageable, String category, String location);
+    Page<Community> findAllByCategory(Pageable pageable, String category);
 }

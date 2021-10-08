@@ -5,6 +5,7 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import streetcatshelter.discatch.dto.requestDto.UserInformationRequestDto;
 import streetcatshelter.discatch.oauth.entity.ProviderType;
 import streetcatshelter.discatch.oauth.entity.RoleType;
 
@@ -32,9 +33,27 @@ public class User extends TimeStamped{
     @Column
     private String password;
 
+    @Column(nullable = true, unique = true)
+    private String nickname;
+
+    @Column(nullable = true)
+    private String location;
+
+    @Column(nullable = true)
+    private String location2;
+
+    @Column(nullable = true)
+    private String location3;
+
+    @Column(nullable = true)
+    private String profileUrl;
 
     @Column(nullable = true)
     private String email;
+
+    @Column
+    @Enumerated
+    private UserLevel userLevel;
 
 
     @Column
@@ -82,5 +101,14 @@ public class User extends TimeStamped{
     @Override
     public int hashCode() {
         return Objects.hash(getUserSeq(), getUserId(), getUsername(), getPassword(), getEmail(), getEmailVerifiedYn(), getProfileImageUrl(), getProviderType(), getRoleType());
+    }
+
+    public void update(UserInformationRequestDto requestDto) {
+        this.nickname = requestDto.getNickname();
+        this.location = requestDto.getLocation();
+        this.location2 = requestDto.getLocation2();
+        this.location3 = requestDto.getLocation3();
+        this.profileUrl = requestDto.getProfileUrl();
+
     }
 }
