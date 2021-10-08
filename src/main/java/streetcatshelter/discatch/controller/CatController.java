@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.domain.Cat;
-import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.dto.requestDto.CatDetailRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CatRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
