@@ -6,10 +6,13 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
 public class CommentResponseDto {
+    private LocalDateTime createdAt;
     private Long commentId;
     private String contents;
     private Long userId;

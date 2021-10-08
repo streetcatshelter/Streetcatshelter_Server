@@ -17,16 +17,10 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import streetcatshelter.discatch.config.properties.AppProperties;
 import streetcatshelter.discatch.config.properties.CorsProperties;
+import streetcatshelter.discatch.oauth.filter.JwtAuthenticationFilter;
 import streetcatshelter.discatch.oauth.entity.RoleType;
-import streetcatshelter.discatch.oauth.exception.RestAuthenticationEntryPoint;
-import streetcatshelter.discatch.oauth.filter.TokenAuthenticationFilter;
-import streetcatshelter.discatch.oauth.handler.OAuth2AuthenticationFailureHandler;
-import streetcatshelter.discatch.oauth.handler.OAuth2AuthenticationSuccessHandler;
-import streetcatshelter.discatch.oauth.handler.TokenAccessDeniedHandler;
-import streetcatshelter.discatch.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import streetcatshelter.discatch.oauth.service.CustomOAuth2UserService;
 import streetcatshelter.discatch.oauth.service.CustomUserDetailsService;
-import streetcatshelter.discatch.oauth.token.AuthTokenProvider;
+import streetcatshelter.discatch.oauth.token.JwtTokenProvider;
 import streetcatshelter.discatch.repository.UserRefreshTokenRepository;
 import streetcatshelter.discatch.repository.UserRepository;
 
@@ -38,12 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsProperties corsProperties;
     private final AppProperties appProperties;
-    private final AuthTokenProvider tokenProvider;
     private final CustomUserDetailsService userDetailsService;
-    private final CustomOAuth2UserService oAuth2UserService;
-    private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     /*
      * UserDetailsService 설정
@@ -66,10 +58,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
-                .accessDeniedHandler(tokenAccessDeniedHandler)
-                .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
@@ -77,23 +65,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/product/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
-                .anyRequest().permitAll()
-                .and()
-                .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorization")
-                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
-                .and()
-                .redirectionEndpoint()
-                .baseUri("/*/oauth2/code/*")
-                .and()
-                .userInfoEndpoint()
-                .userService(oAuth2UserService)
-                .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler())
-                .failureHandler(oAuth2AuthenticationFailureHandler());
+                .anyRequest().permitAll();
 
-        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
 
     /*
@@ -111,44 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
 
-    /*
-     * 토큰 필터 설정
-     * */
-    @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider);
-    }
-
-    /*
-     * 쿠키 기반 인가 Repository
-     * 인가 응답을 연계 하고 검증할 때 사용.
-     * */
-    @Bean
-    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
-        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
-    }
-
-    /*
-     * Oauth 인증 성공 핸들러
-     * */
-    @Bean
-    public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
-        return new OAuth2AuthenticationSuccessHandler(
-                tokenProvider,
-                appProperties,
-                userRefreshTokenRepository,
-                oAuth2AuthorizationRequestBasedOnCookieRepository()
-        );
-    }
-
-    /*
-     * Oauth 인증 실패 핸들러
-     * */
-    @Bean
-    public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
-        return new OAuth2AuthenticationFailureHandler(oAuth2AuthorizationRequestBasedOnCookieRepository());
     }
 
     /*
@@ -168,5 +105,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfigSource.registerCorsConfiguration("/**", corsConfig);
         return corsConfigSource;
     }
+
 }
 
