@@ -128,6 +128,7 @@ public class CatService {
         List<CatDiaryResponseDto> catDiaryResponseDtos = new ArrayList<>();
         for (CatDetail catDetail : allByCatId) {
             catDiaryResponseDtos.add(CatDiaryResponseDto.builder()
+                    .createdAt(catDetail.getCreatedAt())
                     .diary(catDetail.getDiary())
                     .catDetailId(catDetail.getId())
                     .commentCnt(catDetail.getCommentCnt())
@@ -155,6 +156,7 @@ public class CatService {
                     .username(comment.getUser().getUsername())
                     .userId(comment.getUser().getUserSeq())
                     .profileImageUrl(comment.getUser().getProfileImageUrl())
+                    .createdAt(comment.getCreatedAt())
                     .build());
         }
         return commentResponseDtos;

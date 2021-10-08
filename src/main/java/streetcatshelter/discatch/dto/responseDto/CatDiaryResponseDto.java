@@ -7,11 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import streetcatshelter.discatch.domain.User;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
 public class CatDiaryResponseDto {
 
+    private LocalDateTime createdAt;
     private Long catDetailId;
     private String diary;
     private Long likeCnt;
