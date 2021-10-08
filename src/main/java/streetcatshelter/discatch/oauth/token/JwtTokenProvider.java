@@ -19,7 +19,7 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private String secretKey = "TooniverseWebkey";
+    private String secretKey = "Discatch";
 
     // 토큰 유효시간
     private long tokenValidTime = 120 * 60 * 1000L;
