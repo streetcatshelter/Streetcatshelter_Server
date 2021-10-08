@@ -24,9 +24,6 @@ public class Comment  extends TimeStamped { // 생성,수정 시간을 자동으
     @Column(nullable = false)
     private String contents;
 
-    @Column(nullable = false)
-    private String nickname;
-
     @JoinColumn(name = "COMMUNITY_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
