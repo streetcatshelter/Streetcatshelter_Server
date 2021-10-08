@@ -8,10 +8,7 @@ import streetcatshelter.discatch.dto.responseDto.MyPageCatsResponseDto;
 import streetcatshelter.discatch.dto.responseDto.MyPageNoticeResponseDto;
 import streetcatshelter.discatch.dto.responseDto.MyPageUserInformationResponseDto;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
-import streetcatshelter.discatch.repository.CatDetailRepository;
-import streetcatshelter.discatch.repository.LikedRepository;
-import streetcatshelter.discatch.repository.NoticeRepository;
-import streetcatshelter.discatch.repository.UserRepository;
+import streetcatshelter.discatch.repository.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -26,6 +23,7 @@ public class MyPageService {
     private final LikedRepository likedRepository;
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     public List<MyPageCatsResponseDto> findAllCats(UserPrincipal userPrincipal) {
         Long userSeq = userPrincipal.getUser().getUserSeq();
@@ -42,8 +40,8 @@ public class MyPageService {
             String catName = cat.getCatName();
             String catImage = cat.getCatImage();
             Long catId = cat.getId();
-            int cntComment = cat.getCntComment();
-            int cntCatDetail = catDetailRepository.findAllByCatId(cat.getId()).size();
+            int cntComment = commentRepository.countAllByUser_UserSeqAndCatId(userSeq, catId);
+            int cntCatDetail = catDetailRepository.countAllByUser_UserSeqAndCatId(userSeq, catId);
             MyPageCatsResponseDto myPageCatsResponseDto = new MyPageCatsResponseDto(lastActivity, myActivity, catName, catImage, catId, cntComment, cntCatDetail);
             responseDtoList.add(myPageCatsResponseDto);
         }

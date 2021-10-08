@@ -15,4 +15,5 @@ public interface CatDetailRepository extends JpaRepository<CatDetail, Long> {
     Page<CatDetail> findAllByCatId(Pageable pageable, Long catId);
     ArrayList<CatDetail> findAllByUser(User user);
     CatDetail findFirstByOrderByIdDesc();
+    int countAllByUser_UserSeqAndCatId(Long userSeq, Long catId);
 }
