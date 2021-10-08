@@ -1,18 +1,12 @@
 package streetcatshelter.discatch.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import streetcatshelter.discatch.domain.Cat;
-import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.dto.requestDto.CatDetailRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CatRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
-import streetcatshelter.discatch.dto.responseDto.CatDetailResponseDto;
-import streetcatshelter.discatch.dto.responseDto.CatDiaryResponseDto;
-import streetcatshelter.discatch.dto.responseDto.CatGalleryResponseDto;
-import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
+import streetcatshelter.discatch.dto.responseDto.*;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.service.CatDetailService;
 import streetcatshelter.discatch.service.CatService;
@@ -28,7 +22,7 @@ public class CatController {
     private final CatDetailService catDetailService;
 
     @GetMapping("/cat/{location}")
-    public Page<Cat> getCatByLocation(
+    public List<CatResponseDto> getCatByLocation(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @PathVariable String location) {
@@ -95,6 +89,12 @@ public class CatController {
     public CatDetailResponseDto getCatDetail(@PathVariable Long catDetailId,
                                              @AuthenticationPrincipal UserPrincipal userPrincipal) {
         return catService.getCatDetail(catDetailId, userPrincipal.getUser());
+    }
+
+    @PostMapping("/cat/like/{catId}")
+    public String likeCat(@PathVariable Long catId,
+                                    @AuthenticationPrincipal UserPrincipal userPrincipal){
+        return catService.addlike(catId,userPrincipal.getUser());
     }
 
     @PostMapping("/cat/detail/like/{catDetailId}")

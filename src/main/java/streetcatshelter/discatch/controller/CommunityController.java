@@ -6,9 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.domain.Community;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CommunityRequestDto;
+import streetcatshelter.discatch.dto.responseDto.CommunityDetailResponseDto;
 import streetcatshelter.discatch.dto.responseDto.CommunityResponseDto;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.service.CommunityService;
+
+import java.util.ArrayList;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,7 +20,7 @@ public class CommunityController {
     private final CommunityService communityService;
 
     @GetMapping("/community/category/{category}")
-    public CommunityResponseDto getCommunityByCategory(
+    public ArrayList<CommunityResponseDto> getCommunityByCategory(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam ("location") String location,
@@ -28,7 +31,7 @@ public class CommunityController {
 
     //detail page 들어갈떄 쓰는 api
     @GetMapping("/community/{communityId}")
-    public CommunityResponseDto getCommunityById(@PathVariable Long communityId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public CommunityDetailResponseDto getCommunityById(@PathVariable Long communityId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         return communityService.getCommunityById(communityId, userPrincipal);
     }
 

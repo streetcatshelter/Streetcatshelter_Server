@@ -9,10 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import streetcatshelter.discatch.domain.*;
 import streetcatshelter.discatch.dto.requestDto.CatRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
-import streetcatshelter.discatch.dto.responseDto.CatDetailResponseDto;
-import streetcatshelter.discatch.dto.responseDto.CatDiaryResponseDto;
-import streetcatshelter.discatch.dto.responseDto.CatGalleryResponseDto;
-import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
+import streetcatshelter.discatch.dto.responseDto.*;
 import streetcatshelter.discatch.repository.*;
 
 import java.util.ArrayList;
@@ -28,10 +25,20 @@ public class CatService {
     private final CatImageRepository catImageRepository;
     private final LikedRepository likedRepository;
 
-    public Page<Cat> getCatByLocation(int page, int size, String location) {
-        page -= 1;
-        Pageable pageable = PageRequest.of(page, size);
-        return catRepository.findAllByLocation(pageable,location);
+    public List<CatResponseDto> getCatByLocation(int page, int size, String location) {
+        Pageable pageable = PageRequest.of(page -1, size);
+        Page<Cat> cats = catRepository.findAllByLocation(pageable,location);
+        List<CatResponseDto> responseDtoList = new ArrayList<>();
+        for(Cat cat : cats) {
+            responseDtoList.add(CatResponseDto.builder()
+                    .catId(cat.getId())
+                    .catName(cat.getCatName())
+                    .catImage(cat.getCatImage())
+                    .neutering(cat.getNeutering())
+                    .catTagList(cat.getCatTagList())
+                    .build());
+        }
+        return responseDtoList;
     }
 
     public void createCat(CatRequestDto requestDto) {
@@ -57,6 +64,22 @@ public class CatService {
         }
     }
 
+    @Transactional
+    public String addlike(Long catId, User user) {
+        Cat cat = catRepository.findById(catId).orElseThrow(
+                () -> new NullPointerException("No Such Data")
+        );
+        Liked byCatIdAndUser_userSeq = likedRepository.findByCatIdAndUser_UserSeq(catId, user.getUserSeq());
+
+        if(byCatIdAndUser_userSeq == null ){
+            Liked liked = new Liked(cat,user);
+            likedRepository.save(liked);
+            return "좋아요 완료";
+        }else{
+            likedRepository.delete(byCatIdAndUser_userSeq);
+            return "좋아요 취소 완료";
+        }
+    }
 
 
     @Transactional
