@@ -44,6 +44,8 @@ public class KakaoUserInfo {
     public static class Properties {
 
         public String nickname;
+        public String profile_image;
+        public String thumbnail_image;
 
     }
 

@@ -49,10 +49,10 @@ public class UserService {
 
             kakaoUser = new User(
                     kakaoUserInfo.getId().toString(),
-                    kakaoUserInfo.getProperties().nickname,
+                    kakaoUserInfo.getProperties().getNickname(),
                     kakaoUserInfo.getKakao_account().getEmail(),
                     "y",
-                    kakaoUserInfo.getKakao_account().getProfile().profile_image_url,
+                    kakaoUserInfo.getKakao_account().getProfile().getProfile_image_url(),
                     ProviderType.KAKAO,
                     RoleType.USER);
 
