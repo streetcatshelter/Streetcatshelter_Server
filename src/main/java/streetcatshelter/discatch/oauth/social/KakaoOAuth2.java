@@ -86,8 +86,10 @@ public class KakaoOAuth2 {
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
+        KakaoUserInfo kakaoUserInfo = new KakaoUserInfo();
         try {
-            return objectMapper.readValue(response.getBody(), KakaoUserInfo.class);
+            kakaoUserInfo = objectMapper.readValue(response.getBody(), KakaoUserInfo.class);
+            return kakaoUserInfo;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
