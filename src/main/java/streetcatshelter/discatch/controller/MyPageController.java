@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.dto.requestDto.UserInformationRequestDto;
+import streetcatshelter.discatch.dto.responseDto.MyPageCalendarResponseDto;
 import streetcatshelter.discatch.dto.responseDto.MyPageCatsResponseDto;
 import streetcatshelter.discatch.dto.responseDto.MyPageNoticeResponseDto;
 import streetcatshelter.discatch.dto.responseDto.MyPageUserInformationResponseDto;
@@ -34,13 +35,19 @@ public class MyPageController {
     }
 
     @PutMapping("/mypage/user/information")
-    public MyPageUserInformationResponseDto putUserInformation(@AuthenticationPrincipal UserPrincipal userPrincipal,
+    public String putUserInformation(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                                                @RequestBody UserInformationRequestDto requestDto) {
         return myPageService.putUserInformation(userPrincipal, requestDto);
     }
 
-/*    @GetMapping("/mypage/calendar")
-    public MyPageCalendarResponseDto myAllActivities(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    @GetMapping("/mypage/user/information")
+    public MyPageUserInformationResponseDto getUserInformation(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return myPageService.getUserInformation(userPrincipal);
+    }
+
+    @GetMapping("/mypage/calendar")
+    public List<MyPageCalendarResponseDto> myAllActivities(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return myPageService.myAllActivities(userPrincipal);
-    }*/
+    }
+
 }

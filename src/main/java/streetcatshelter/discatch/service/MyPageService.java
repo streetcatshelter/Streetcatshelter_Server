@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.*;
 import streetcatshelter.discatch.dto.requestDto.UserInformationRequestDto;
+import streetcatshelter.discatch.dto.responseDto.MyPageCalendarResponseDto;
 import streetcatshelter.discatch.dto.responseDto.MyPageCatsResponseDto;
 import streetcatshelter.discatch.dto.responseDto.MyPageNoticeResponseDto;
 import streetcatshelter.discatch.dto.responseDto.MyPageUserInformationResponseDto;
@@ -54,8 +55,14 @@ public class MyPageService {
         List<Notice> noticeList = noticeRepository.findAllByOrderByIdDesc();
         List<MyPageNoticeResponseDto> responseDtoList = new ArrayList<>();
         for(Notice notice : noticeList) {
-            MyPageNoticeResponseDto myPageNoticeResponseDto = new MyPageNoticeResponseDto(notice);
-            responseDtoList.add(myPageNoticeResponseDto);
+            responseDtoList.add(MyPageNoticeResponseDto.builder()
+                    .title(notice.getTitle())
+                    .id(notice.getId())
+                    .contents(notice.getContents())
+                    .writer(notice.getWriter())
+                    .modifiedAt(String.valueOf(notice.getModifiedAt()).replace('T',' '))
+                    .createdAt(String.valueOf(notice.getCreatedAt()).replace('T',' '))
+                    .build());
         }
         return responseDtoList;
     }
@@ -63,21 +70,62 @@ public class MyPageService {
     public MyPageNoticeResponseDto getNotice(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 notice는 존재하지 않습니다"));
-        return new MyPageNoticeResponseDto(notice);
+        return MyPageNoticeResponseDto.builder()
+                .title(notice.getTitle())
+                .id(notice.getId())
+                .contents(notice.getContents())
+                .writer(notice.getWriter())
+                .modifiedAt(String.valueOf(notice.getModifiedAt()).replace('T',' '))
+                .createdAt(String.valueOf(notice.getCreatedAt()).replace('T',' '))
+                .build();
     }
 
     @Transactional
-    public MyPageUserInformationResponseDto putUserInformation(UserPrincipal userPrincipal, UserInformationRequestDto requestDto) {
+    public String putUserInformation(UserPrincipal userPrincipal, UserInformationRequestDto requestDto) {
         User user = userPrincipal.getUser();
         if(requestDto.getNickname() == null) {
-            return new MyPageUserInformationResponseDto("닉네임을 입력해주세요");
+            return "닉네임을 입력해주세요";
         } else if (requestDto.getLocation() == null && requestDto.getLocation2() == null && requestDto.getLocation3()==null) {
-            return new MyPageUserInformationResponseDto("최소 1곳 이상의 동네를 입력해주세요");
+            return "최소 1곳 이상의 동네를 입력해주세요";
         } else {
             user.update(requestDto);
             userRepository.save(user);
-            return new MyPageUserInformationResponseDto("회원 정보 등록/수정이 완료되었습니다.");
+            return "회원 정보 등록/수정이 완료되었습니다.";
         }
+    }
+
+    public MyPageUserInformationResponseDto getUserInformation(UserPrincipal userPrincipal) {
+        User user = userPrincipal.getUser();
+        LocalDateTime start = LocalDateTime.now().minusMonths(2);
+        LocalDateTime end = LocalDateTime.now();
+        int cntActivity = catDetailRepository.countAllByUserAndModifiedAtBetween(user, start, end);
+        return MyPageUserInformationResponseDto.builder()
+                .location(user.getLocation())
+                .location2(user.getLocation2())
+                .location3(user.getLocation3())
+                .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
+                .userLevel(user.getUserLevel())
+                .cntActivity(cntActivity)
+                .build();
+    }
+
+    public List<MyPageCalendarResponseDto> myAllActivities(UserPrincipal userPrincipal) {
+        User user = userPrincipal.getUser();
+        LocalDateTime start = LocalDateTime.now().minusMonths(2);
+        LocalDateTime end = LocalDateTime.now();
+        ArrayList<CatDetail> catDetails = catDetailRepository.findAllByUserAndModifiedAtBetween(user, start, end);
+        List<MyPageCalendarResponseDto> myPageCalendarResponseDtoList = new ArrayList<>();
+        for(CatDetail catDetail : catDetails) {
+            myPageCalendarResponseDtoList.add(MyPageCalendarResponseDto.builder()
+                    .food(catDetail.isFood())
+                    .snack(catDetail.isSnack())
+                    .water(catDetail.isWater())
+                    .createdAt(catDetail.getCreatedAt())
+                    .modifiedAt(catDetail.getModifiedAt())
+                    .build());
+        }
+        return myPageCalendarResponseDtoList;
     }
 
 

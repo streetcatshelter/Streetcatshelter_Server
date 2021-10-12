@@ -5,9 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import streetcatshelter.discatch.domain.CommunityImage;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -25,5 +22,5 @@ public class CommunityDetailResponseDto {
     private int cntComment;
     private int cntLikeit;
     private int cntView;
-    private List<CommunityImage> communityImageList = new ArrayList<>();
+    private List<CommunityImage> communityImageList ;
 }
