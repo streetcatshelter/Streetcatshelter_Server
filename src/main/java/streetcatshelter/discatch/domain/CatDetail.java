@@ -61,6 +61,9 @@ public class CatDetail extends TimeStamped{
     @OneToMany(mappedBy = "catDetail", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Liked> likeds = new ArrayList<>();
 
+    @OneToMany(mappedBy = "catDetail",cascade = CascadeType.PERSIST)
+    private List<CatTag> catTags = new ArrayList<>();
+
     @JoinColumn(name = "CAT_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
@@ -84,6 +87,9 @@ public class CatDetail extends TimeStamped{
         this.water = requestDto.isWater();
         this.diary = requestDto.getDiary();
         this.user = user;
+        for(String tag : requestDto.getCatTags()){
+            this.catTags.add(CatTag.createTagByCatDetail(cat,this,tag));
+        }
         for(String image : requestDto.getCatImages()){
             this.catImages.add(new CatImage(cat,this,image));
         }
