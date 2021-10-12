@@ -89,6 +89,14 @@ public class CatService {
         );
         boolean b = likedRepository.existsByUser_UserSeqAndCatDetailId( user.getUserSeq(),catDetailId);
         catDetail.updateView();
+        List<String > catImages = new ArrayList<>();
+        for(CatImage catImage : catDetail.getCatImages()){
+            catImages.add(catImage.getImage());
+        }
+        List<String> catTags = new ArrayList<>();
+        for(CatTag catTag : catDetail.getCatTags()){
+            catTags.add(catTag.getTag());
+        }
         return CatDetailResponseDto.builder()
                 .food(catDetail.isFood())
                 .snack(catDetail.isSnack())
@@ -98,6 +106,9 @@ public class CatService {
                 .diary(catDetail.getDiary())
                 .likeCnt(catDetail.getLikeCnt())
                 .viewCnt(catDetail.getViewCnt())
+                .catImages(catImages)
+                .catTags(catTags)
+                .createdAt(catDetail.getCreatedAt())
                 .build();
     }
 

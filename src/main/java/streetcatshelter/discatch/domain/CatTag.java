@@ -34,4 +34,12 @@ public class CatTag {
         this.cat = cat;
         this.tag = tag;
     }
+
+    public static CatTag createTagByCatDetail(Cat cat, CatDetail catDetail, String tag){
+        CatTag catTag = new CatTag();
+        catTag.cat = cat;
+        catTag.catDetail = catDetail;
+        catTag.tag = tag;
+        return catTag;
+    }
 }

@@ -25,6 +25,5 @@ public class CommunityDetailResponseDto {
     private int cntComment;
     private int cntLikeit;
     private int cntView;
-    @OneToMany(mappedBy = "community", cascade = {CascadeType.REMOVE})
     private List<CommunityImage> communityImageList = new ArrayList<>();
 }

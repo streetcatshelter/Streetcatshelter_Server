@@ -34,6 +34,4 @@ public class CatImage extends TimeStamped{
         this.catDetail = catDetail;
         this.image = image;
     }
-
-
 }
