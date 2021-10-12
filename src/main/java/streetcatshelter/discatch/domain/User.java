@@ -51,8 +51,8 @@ public class User extends TimeStamped{
     @Column(nullable = true)
     private String email;
 
-    @Column
-    @Enumerated
+    @Column(columnDefinition = "varchar(255) default '아깽이'")
+    @Enumerated(EnumType.STRING)
     private UserLevel userLevel;
 
 

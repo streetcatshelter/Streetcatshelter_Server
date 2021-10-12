@@ -1,13 +1,17 @@
 package streetcatshelter.discatch.dto.responseDto;
 
+import lombok.Builder;
 import lombok.Getter;
-import streetcatshelter.discatch.domain.Notice;
+import lombok.Setter;
 
 @Getter
+@Builder
+@Setter
 public class MyPageNoticeResponseDto {
-    private Notice notice;
-
-    public MyPageNoticeResponseDto(Notice notice) {
-        this.notice = notice;
-    }
+    private Long id;
+    private String title;
+    private String contents;
+    private String writer;
+    private String createdAt;
+    private String modifiedAt;
 }
