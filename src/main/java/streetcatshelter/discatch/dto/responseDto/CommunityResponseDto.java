@@ -16,8 +16,9 @@ public class CommunityResponseDto {
     private int cntView;
     private String profileUrl;
     private Long communityId;
+    private String username;
 
-    public CommunityResponseDto(String title, boolean isLiked, String nickname, LocalDateTime createdAt, int cntComment, int cntLikeit, int cntView, String profileUrl, Long communityId) {
+    public CommunityResponseDto(String title, boolean isLiked, String nickname, LocalDateTime createdAt, int cntComment, int cntLikeit, int cntView, String profileUrl, Long communityId, String username) {
         this.cntComment = cntComment;
         this.isLiked = isLiked;
         this.nickname = nickname;
@@ -27,5 +28,6 @@ public class CommunityResponseDto {
         this.cntView = cntView;
         this.profileUrl = profileUrl;
         this.communityId = communityId;
+        this.username = username;
     }
 }

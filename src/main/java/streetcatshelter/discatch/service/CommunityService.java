@@ -45,10 +45,12 @@ public class CommunityService {
                 boolean isLiked = false;
                 String nickname = null;
                 String profileUrl = null;
+                String username = null;
                 if (user != null) {
                     isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
                     nickname = user.getNickname();
                     profileUrl = user.getProfileUrl();
+                    username = user.getUsername();
                 }
                 String title = community.getTitle();
                 LocalDateTime createdAt = community.getCreatedAt();
@@ -57,7 +59,7 @@ public class CommunityService {
                 int cntView = community.getCntView();
                 Long communityId = community.getId();
 
-                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileUrl, communityId);
+                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileUrl, communityId, username);
                 responseDtoList.add(responseDto);
             }
             return responseDtoList;
@@ -70,10 +72,12 @@ public class CommunityService {
                 boolean isLiked = false;
                 String nickname = null;
                 String profileUrl = null;
+                String username = null;
                 if (user != null) {
                     isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
                     nickname = user.getNickname();
                     profileUrl = user.getProfileUrl();
+                    username = user.getUsername();
                 }
                 String title = community.getTitle();
                 LocalDateTime createdAt = community.getCreatedAt();
@@ -82,7 +86,7 @@ public class CommunityService {
                 int cntView = community.getCntView();
                 Long communityId = community.getId();
 
-                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileUrl, communityId);
+                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileUrl, communityId, username);
                 responseDtoList.add(responseDto);
             }
             return responseDtoList;
@@ -104,6 +108,7 @@ public class CommunityService {
         List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
         for(Comment comment : commentList) {
             commentResponseDtos.add(CommentResponseDto.builder()
+                    .username(comment.getUser().getUsername())
                     .nickname(comment.getUser().getNickname())
                     .contents(comment.getContents())
                     .commentId(comment.getId())
@@ -125,6 +130,9 @@ public class CommunityService {
                 .location(community.getLocation())
                 .title(community.getTitle())
                 .username(community.getUsername())
+                .nickname(community.getUser().getNickname())
+                .createdAt(community.getCreatedAt())
+                .modifiedAt(community.getModifiedAt())
                 .build();
     }
 

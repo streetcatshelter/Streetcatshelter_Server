@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import streetcatshelter.discatch.domain.CommunityImage;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -23,4 +24,7 @@ public class CommunityDetailResponseDto {
     private int cntLikeit;
     private int cntView;
     private List<CommunityImage> communityImageList ;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
+    private String nickname;
 }
