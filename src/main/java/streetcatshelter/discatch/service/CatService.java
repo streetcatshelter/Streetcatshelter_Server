@@ -196,4 +196,16 @@ public class CatService {
         return commentResponseDtos;
     }
 
+    public void deleteComment(Long commentId, User user) {
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new NullPointerException("NO SUCH COMMENT")
+        );
+
+        if(!comment.getUser().getUserSeq().equals(user.getUserSeq())){
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
+        commentRepository.delete(comment);
+    }
 }

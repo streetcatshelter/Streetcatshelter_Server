@@ -5,10 +5,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.config.properties.AppProperties;
 import streetcatshelter.discatch.domain.User;
+import streetcatshelter.discatch.dto.responseDto.LoginResponseDto;
 import streetcatshelter.discatch.oauth.entity.ProviderType;
 import streetcatshelter.discatch.oauth.entity.RoleType;
 import streetcatshelter.discatch.oauth.social.KakaoOAuth2;
 import streetcatshelter.discatch.oauth.social.KakaoUserInfo;
+import streetcatshelter.discatch.oauth.social.NaverOAuth2;
 import streetcatshelter.discatch.oauth.token.JwtTokenProvider;
 import streetcatshelter.discatch.repository.UserRepository;
 
@@ -22,8 +24,9 @@ public class UserService {
     private final KakaoOAuth2 kakaoOAuth2;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NaverOAuth2 naverOAuth2;
 
-    public String kakaoLogin(String code) {
+    public LoginResponseDto kakaoLogin(String code) {
         KakaoUserInfo kakaoUserInfo = kakaoOAuth2.getUserInfo(code);
         String kakaoId = kakaoUserInfo.getId().toString();
         // 패스워드 = 카카오 Id + ADMIN TOKEN
@@ -59,10 +62,13 @@ public class UserService {
             userRepository.save(kakaoUser);
         }
 
-        return jwtTokenProvider.createToken(kakaoId);
+        return new LoginResponseDto(kakaoUser,jwtTokenProvider.createToken(kakaoId));
     }
 
     public String naverLogin(String code) {
+        naverOAuth2.getUserInfo(code);
+
+
         return null;
     }
 }

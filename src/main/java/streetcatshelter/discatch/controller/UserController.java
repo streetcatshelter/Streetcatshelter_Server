@@ -5,6 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import streetcatshelter.discatch.dto.responseDto.LoginResponseDto;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.service.UserService;
 
@@ -20,7 +21,8 @@ public class UserController {
     }
 
     @GetMapping("user/kakao/callback")
-    public String kakaoLogin(@RequestParam String code) {
+    public LoginResponseDto kakaoLogin(@RequestParam String code) {
+        System.out.println(code);
         return userService.kakaoLogin(code);
     }
 
