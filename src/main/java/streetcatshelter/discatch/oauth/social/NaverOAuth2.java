@@ -1,7 +1,5 @@
 package streetcatshelter.discatch.oauth.social;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,20 +14,24 @@ import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
 @Component
-public class KakaoOAuth2 {
+public class NaverOAuth2 {
 
-    @Value("${kakao.clientId}")
-    private String kaKaoClientId;
+    @Value("${naver.clientId}")
+    private String naverClientId;
 
-    public KakaoUserInfo getUserInfo(String authorizedCode) {
+    @Value("${naver.secret}")
+    private String naverSecret;
+
+    public NaverUserInfo getUserInfo(String authorizedCode) {
         // 1. 인가코드 -> 액세스 토큰
         String accessToken = getAccessToken(authorizedCode);
         // 2. 액세스 토큰 -> 카카오 사용자 정보
-        return getUserInfoByToken(accessToken);
+        getUserInfoByToken(accessToken);
 
+        return null;
     }
 
-    public String getAccessToken(String authorizedCode) {
+    private String getAccessToken(String authorizedCode) {
         // HttpHeader 오브젝트 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -37,11 +39,13 @@ public class KakaoOAuth2 {
         // HttpBody 오브젝트 생성
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", kaKaoClientId);
-//        params.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
-
+        params.add("client_id", naverClientId);
+        params.add("client_secret", naverSecret);
+//      params.add("redirect_uri", "http://localhost:8080/api/v1/user/naver/callback");
+//      params.add("redirect_uri", "http://localhost:3000/user/naver");
         params.add("redirect_uri", "http://localhost:3000/user/login/callback");
         params.add("code", authorizedCode);
+
 
         // HttpHeader와 HttpBody를 하나의 오브젝트에 담기
         RestTemplate rt = new RestTemplate();
@@ -50,7 +54,7 @@ public class KakaoOAuth2 {
 
         // Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음.
         ResponseEntity<String> response = rt.exchange(
-                "https://kauth.kakao.com/oauth/token",
+                "https://nid.naver.com/oauth2.0/token",
                 HttpMethod.POST,
                 kakaoTokenRequest,
                 String.class
@@ -60,11 +64,10 @@ public class KakaoOAuth2 {
         String tokenJson = response.getBody();
         JSONObject rjson = new JSONObject(tokenJson);
         String accessToken = rjson.getString("access_token");
-
         return accessToken;
     }
 
-    public KakaoUserInfo getUserInfoByToken(String accessToken){
+    private void getUserInfoByToken(String accessToken) {
         // HttpHeader 오브젝트 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -77,22 +80,15 @@ public class KakaoOAuth2 {
 
         // Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음.
         ResponseEntity<String> response = rt.exchange(
-                "https://kapi.kakao.com/v2/user/me",
+                "https://openapi.naver.com/v1/nid/me",
                 HttpMethod.POST,
                 kakaoProfileRequest,
                 String.class
         );
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        KakaoUserInfo kakaoUserInfo = new KakaoUserInfo();
-        try {
-            kakaoUserInfo = objectMapper.readValue(response.getBody(), KakaoUserInfo.class);
-            return kakaoUserInfo;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return null;
+        JSONObject body = new JSONObject(response.getBody());
+        JSONObject object = body.getJSONObject("response");
+        String id = object.getString("id");
 
     }
-
 }

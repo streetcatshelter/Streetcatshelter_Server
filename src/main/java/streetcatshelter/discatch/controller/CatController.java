@@ -109,4 +109,11 @@ public class CatController {
         catDetailService.deleteCatDetail(catDetailId, userPrincipal.getUser());
     }
 
+    @DeleteMapping("/cat/comment/{commentId}")
+    public void deleteComment(@PathVariable Long commentId,
+                              @AuthenticationPrincipal UserPrincipal userPrincipal){
+        catService.deleteComment(commentId,userPrincipal.getUser());
+
+    }
+
 }
