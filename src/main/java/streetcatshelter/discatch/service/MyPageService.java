@@ -104,6 +104,7 @@ public class MyPageService {
                 .location2(user.getLocation2())
                 .location3(user.getLocation3())
                 .nickname(user.getNickname())
+                .username(user.getUsername())
                 .profileImageUrl(user.getProfileImageUrl())
                 .userLevel(user.getUserLevel())
                 .cntActivity(cntActivity)

@@ -16,4 +16,5 @@ public class MyPageUserInformationResponseDto {
     private UserLevel userLevel;
     private String profileImageUrl;
     private int cntActivity;
+    private String username;
 }
