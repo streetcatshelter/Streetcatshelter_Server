@@ -43,15 +43,12 @@ public class CommunityService {
             ArrayList<CommunityResponseDto> responseDtoList = new ArrayList<>();
             for (Community community : communities) {
                 boolean isLiked = false;
-                String nickname = null;
-                String profileUrl = null;
-                String username = null;
                 if (user != null) {
                     isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
-                    nickname = user.getNickname();
-                    profileUrl = user.getProfileUrl();
-                    username = user.getUsername();
                 }
+                String nickname = community.getUser().getNickname();
+                String profileUrl = community.getCategory();
+                String username = community.getUser().getUsername();
                 String title = community.getTitle();
                 LocalDateTime createdAt = community.getCreatedAt();
                 int cntComment = community.getCntComment();
@@ -70,14 +67,11 @@ public class CommunityService {
             ArrayList<CommunityResponseDto> responseDtoList = new ArrayList<>();
             for (Community community : communities) {
                 boolean isLiked = false;
-                String nickname = null;
-                String profileUrl = null;
-                String username = null;
+                String nickname = community.getUser().getNickname();
+                String profileUrl = community.getCategory();
+                String username = community.getUser().getUsername();
                 if (user != null) {
                     isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
-                    nickname = user.getNickname();
-                    profileUrl = user.getProfileUrl();
-                    username = user.getUsername();
                 }
                 String title = community.getTitle();
                 LocalDateTime createdAt = community.getCreatedAt();
