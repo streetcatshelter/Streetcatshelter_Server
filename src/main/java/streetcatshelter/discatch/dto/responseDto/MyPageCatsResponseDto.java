@@ -7,15 +7,15 @@ import java.time.LocalDateTime;
 @Getter
 public class MyPageCatsResponseDto {
 
-    private LocalDateTime lastActivity;
-    private LocalDateTime myActivity;
+    private String lastActivity;
+    private String myActivity;
     private String catName;
     private String catImage;
     private int cntComment;
     private int cntCatDetail;
     private Long catId;
 
-    public MyPageCatsResponseDto(LocalDateTime lastActivity, LocalDateTime myActivity, String catName, String catImage, Long catId,  int cntComment, int cntCatDetail) {
+    public MyPageCatsResponseDto(String lastActivity, String myActivity, String catName, String catImage, Long catId,  int cntComment, int cntCatDetail) {
         this.catImage = catImage;
         this.catName = catName;
         this.cntCatDetail = cntCatDetail;
