@@ -36,8 +36,8 @@ public class MyPageService {
             CatDetail catDetail = catDetailRepository.findFirstByOrderByIdDesc();
             ArrayList<CatDetail> myCatDetailList = catDetailRepository.findAllByUser(userPrincipal.getUser());
             CatDetail myCatDetail = myCatDetailList.get(myCatDetailList.size() -1);
-            LocalDateTime lastActivity = catDetail.getCreatedAt();
-            LocalDateTime myActivity = myCatDetail.getCreatedAt();
+            String lastActivity = String.valueOf(catDetail.getCreatedAt()).replace('T',' ');
+            String myActivity = String.valueOf(myCatDetail.getCreatedAt()).replace('T',' ');
             String catName = cat.getCatName();
             String catImage = cat.getCatImage();
             Long catId = cat.getId();
@@ -122,8 +122,9 @@ public class MyPageService {
                     .food(catDetail.isFood())
                     .snack(catDetail.isSnack())
                     .water(catDetail.isWater())
-                    .createdAt(catDetail.getCreatedAt())
-                    .modifiedAt(catDetail.getModifiedAt())
+                    .modifiedAt(String.valueOf(catDetail.getModifiedAt()).replace('T',' '))
+                    .createdAt(String.valueOf(catDetail.getCreatedAt()).replace('T',' '))
+                    .id(catDetail.getId())
                     .build());
         }
         return myPageCalendarResponseDtoList;
