@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("user/naver/callback")
-    public String naverLogin(@RequestParam String code) {
+    public LoginResponseDto naverLogin(@RequestParam String code) {
         return userService.naverLogin(code);
     }
 

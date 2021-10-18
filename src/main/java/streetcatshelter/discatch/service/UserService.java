@@ -11,6 +11,7 @@ import streetcatshelter.discatch.oauth.entity.RoleType;
 import streetcatshelter.discatch.oauth.social.KakaoOAuth2;
 import streetcatshelter.discatch.oauth.social.KakaoUserInfo;
 import streetcatshelter.discatch.oauth.social.NaverOAuth2;
+import streetcatshelter.discatch.oauth.social.NaverUserInfo;
 import streetcatshelter.discatch.oauth.token.JwtTokenProvider;
 import streetcatshelter.discatch.repository.UserRepository;
 
@@ -65,10 +66,34 @@ public class UserService {
         return new LoginResponseDto(kakaoUser,jwtTokenProvider.createToken(kakaoId));
     }
 
-    public String naverLogin(String code) {
-        naverOAuth2.getUserInfo(code);
 
 
-        return null;
+    public LoginResponseDto naverLogin(String code) {
+
+
+        NaverUserInfo naverUserInfo = naverOAuth2.getUserInfo(code);
+
+        String id = naverUserInfo.getId();
+
+        User naverUser= userRepository.findByUserId(id);
+
+        if (naverUser == null) {
+            // 패스워드 인코딩
+
+            naverUser = new User(
+                    naverUserInfo.getId(),
+                    naverUserInfo.getName(),
+                    naverUserInfo.getNickname(),
+                    naverUserInfo.getEmail(),
+                    "y",
+                    naverUserInfo.getProfile_image(),
+                    ProviderType.NAVER,
+                    RoleType.USER);
+
+            userRepository.save(naverUser);
+        }
+
+
+        return new LoginResponseDto(naverUser,jwtTokenProvider.createToken(id));
     }
 }

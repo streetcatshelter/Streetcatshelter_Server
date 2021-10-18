@@ -46,7 +46,9 @@ public class CatController {
     public void createCatDetail(@RequestBody CatDetailRequestDto requestDto,
                                 @PathVariable Long catId,
                                 @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
         catDetailService.createCatDetail(requestDto, catId, userPrincipal);
+        // osiv 끄면 쿼리 2방??
     }
 
     @GetMapping("/cat/gallery/{catId}")
@@ -114,6 +116,16 @@ public class CatController {
                               @AuthenticationPrincipal UserPrincipal userPrincipal){
         catService.deleteComment(commentId,userPrincipal.getUser());
 
+    }
+
+    @GetMapping("/cat/calender/{catId}")
+    public Result<CalendarResponseDto> getCalender(@PathVariable Long catId,
+                                                   @RequestParam int year,
+                                                   @RequestParam int month){
+        List<CalendarResponseDto> calender = catDetailService.getCalender(catId, year, month);
+        Result<CalendarResponseDto> result = new Result<>();
+        result.setDate(calender);
+        return result;
     }
 
 }

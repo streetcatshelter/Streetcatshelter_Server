@@ -1,5 +1,7 @@
 package streetcatshelter.discatch.oauth.social;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,9 +28,7 @@ public class NaverOAuth2 {
         // 1. 인가코드 -> 액세스 토큰
         String accessToken = getAccessToken(authorizedCode);
         // 2. 액세스 토큰 -> 카카오 사용자 정보
-        getUserInfoByToken(accessToken);
-
-        return null;
+        return getUserInfoByToken(accessToken);
     }
 
     private String getAccessToken(String authorizedCode) {
@@ -41,9 +41,9 @@ public class NaverOAuth2 {
         params.add("grant_type", "authorization_code");
         params.add("client_id", naverClientId);
         params.add("client_secret", naverSecret);
-//      params.add("redirect_uri", "http://localhost:8080/api/v1/user/naver/callback");
-//      params.add("redirect_uri", "http://localhost:3000/user/naver");
-        params.add("redirect_uri", "http://localhost:3000/user/login/callback");
+//        params.add("redirect_uri", "http://localhost:8080/api/v1/user/naver/callback");
+//        params.add("redirect_uri", "http://localhost:3000/user/naver");
+        params.add("redirect_uri", "http://localhost:3000/user/naver/callback");
         params.add("code", authorizedCode);
 
 
@@ -67,7 +67,7 @@ public class NaverOAuth2 {
         return accessToken;
     }
 
-    private void getUserInfoByToken(String accessToken) {
+    private NaverUserInfo getUserInfoByToken(String accessToken) {
         // HttpHeader 오브젝트 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -76,19 +76,31 @@ public class NaverOAuth2 {
         // HttpHeader와 HttpBody를 하나의 오브젝트에 담기
         RestTemplate rt = new RestTemplate();
 
-        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
+        HttpEntity<MultiValueMap<String, String>> ProfileRequest = new HttpEntity<>(headers);
 
         // Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음.
         ResponseEntity<String> response = rt.exchange(
                 "https://openapi.naver.com/v1/nid/me",
                 HttpMethod.POST,
-                kakaoProfileRequest,
+                ProfileRequest,
                 String.class
         );
 
         JSONObject body = new JSONObject(response.getBody());
         JSONObject object = body.getJSONObject("response");
         String id = object.getString("id");
+        ObjectMapper objectMapper = new ObjectMapper();
+        NaverUserInfo naverUserInfo = new NaverUserInfo();
+        try {
+
+            naverUserInfo = objectMapper.readValue(object.toString(), NaverUserInfo.class);
+            return naverUserInfo;
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return naverUserInfo;
 
     }
 }
