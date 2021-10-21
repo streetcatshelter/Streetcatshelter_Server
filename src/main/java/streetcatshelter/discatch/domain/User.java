@@ -27,7 +27,7 @@ public class User extends TimeStamped{
     @Column
     private String userId;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String username;
 
     @Column
@@ -73,7 +73,7 @@ public class User extends TimeStamped{
 
     public User(
             @NotNull String userId,
-            @NotNull String username,
+            String username,
             @NotNull String email,
             @NotNull String emailVerifiedYn,
             @NotNull String profileImageUrl,
@@ -82,6 +82,26 @@ public class User extends TimeStamped{
     ) {
         this.userId = userId;
         this.username = username;
+        this.password = "NO_PASS";
+        this.email = email != null ? email : "NO_EMAIL";
+        this.emailVerifiedYn = emailVerifiedYn;
+        this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
+        this.providerType = providerType;
+        this.roleType = roleType;
+    }
+    public User(
+            @NotNull String userId,
+            String username,
+            @NotNull String nickname,
+            @NotNull String email,
+            @NotNull String emailVerifiedYn,
+            @NotNull String profileImageUrl,
+            @NotNull ProviderType providerType,
+            @NotNull RoleType roleType
+    ) {
+        this.userId = userId;
+        this.username = username;
+        this.nickname = nickname;
         this.password = "NO_PASS";
         this.email = email != null ? email : "NO_EMAIL";
         this.emailVerifiedYn = emailVerifiedYn;

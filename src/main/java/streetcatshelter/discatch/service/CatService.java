@@ -24,6 +24,7 @@ public class CatService {
     private final CommentRepository commentRepository;
     private final CatImageRepository catImageRepository;
     private final LikedRepository likedRepository;
+    private final CatCalenderRepository catCalenderRepository;
 
     public List<CatResponseDto> getCatByLocation(int page, int size, String location) {
         Pageable pageable = PageRequest.of(page -1, size);
@@ -208,4 +209,6 @@ public class CatService {
 
         commentRepository.delete(comment);
     }
+
+
 }
