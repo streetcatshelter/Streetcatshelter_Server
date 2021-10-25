@@ -19,6 +19,7 @@ public class CommunityDetailResponseDto {
     private String username;
     private String title;
     private String contents;
+    private String profileImageUrl;
     private String location;
     private int cntComment;
     private int cntLikeit;

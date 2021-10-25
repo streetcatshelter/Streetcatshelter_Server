@@ -111,9 +111,9 @@ public class MyPageService {
                 .build();
     }
 
-    public List<MyPageCalendarResponseDto> myAllActivities(UserPrincipal userPrincipal) {
+    public List<MyPageCalendarResponseDto> myAllActivities(UserPrincipal userPrincipal, String month) {
         User user = userPrincipal.getUser();
-        LocalDateTime start = LocalDateTime.now().minusMonths(2);
+        LocalDateTime start = LocalDateTime.now().minusMonths(1);
         LocalDateTime end = LocalDateTime.now();
         ArrayList<CatDetail> catDetails = catDetailRepository.findAllByUserAndModifiedAtBetween(user, start, end);
         List<MyPageCalendarResponseDto> myPageCalendarResponseDtoList = new ArrayList<>();
@@ -122,9 +122,11 @@ public class MyPageService {
                     .food(catDetail.isFood())
                     .snack(catDetail.isSnack())
                     .water(catDetail.isWater())
+                    .catName(catDetail.getCat().getCatName())
                     .modifiedAt(String.valueOf(catDetail.getModifiedAt()).replace('T',' '))
                     .createdAt(String.valueOf(catDetail.getCreatedAt()).replace('T',' '))
-                    .id(catDetail.getId())
+                    .catDetailId(catDetail.getId())
+                    .catId(catDetail.getCat().getId())
                     .build());
         }
         return myPageCalendarResponseDtoList;
