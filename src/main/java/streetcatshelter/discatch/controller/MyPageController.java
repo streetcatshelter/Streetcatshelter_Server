@@ -45,9 +45,9 @@ public class MyPageController {
         return myPageService.getUserInformation(userPrincipal);
     }
 
-    @GetMapping("/mypage/calendar")
-    public List<MyPageCalendarResponseDto> myAllActivities(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return myPageService.myAllActivities(userPrincipal);
+    @GetMapping("/mypage/calendar/{month}")
+    public List<MyPageCalendarResponseDto> myAllActivities(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable String month) {
+        return myPageService.myAllActivities(userPrincipal, month);
     }
 
 }

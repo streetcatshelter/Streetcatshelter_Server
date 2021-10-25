@@ -36,14 +36,14 @@ dependencies {
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     implementation 'org.jetbrains:annotations:20.1.0'
     //채팅용 gradle 추가
-/*    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'it.ozimov:embedded-redis:0.7.2'
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.boot:spring-boot-starter-freemarker'
     implementation 'org.webjars:sockjs-client:1.1.2'
     implementation 'org.webjars:stomp-websocket:2.3.3-1'
     implementation 'com.google.code.gson:gson:2.8.0'
-    implementation 'javax.xml.bind:jaxb-api'*/
+    implementation 'javax.xml.bind:jaxb-api'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
 

@@ -8,10 +8,12 @@ import lombok.Setter;
 @Builder
 @Setter
 public class MyPageCalendarResponseDto {
-    private Long id;
+    private Long catId;
+    private Long catDetailId;
     private boolean water;
     private boolean food;
     private boolean snack;
     private String createdAt;
     private String modifiedAt;
+    private String catName;
 }

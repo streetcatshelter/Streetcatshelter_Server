@@ -47,7 +47,7 @@ public class CommunityService {
                     isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
                 }
                 String nickname = community.getUser().getNickname();
-                String profileUrl = community.getCategory();
+                String profileImageUrl = community.getUser().getProfileImageUrl();
                 String username = community.getUser().getUsername();
                 String title = community.getTitle();
                 LocalDateTime createdAt = community.getCreatedAt();
@@ -56,7 +56,7 @@ public class CommunityService {
                 int cntView = community.getCntView();
                 Long communityId = community.getId();
 
-                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileUrl, communityId, username);
+                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileImageUrl, communityId, username);
                 responseDtoList.add(responseDto);
             }
             return responseDtoList;
@@ -68,7 +68,7 @@ public class CommunityService {
             for (Community community : communities) {
                 boolean isLiked = false;
                 String nickname = community.getUser().getNickname();
-                String profileUrl = community.getCategory();
+                String profileImageUrl = community.getUser().getProfileImageUrl();
                 String username = community.getUser().getUsername();
                 if (user != null) {
                     isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
@@ -80,7 +80,7 @@ public class CommunityService {
                 int cntView = community.getCntView();
                 Long communityId = community.getId();
 
-                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileUrl, communityId, username);
+                CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileImageUrl, communityId, username);
                 responseDtoList.add(responseDto);
             }
             return responseDtoList;
@@ -113,6 +113,7 @@ public class CommunityService {
 
         return CommunityDetailResponseDto.builder()
                 .category(community.getCategory())
+                .profileImageUrl(community.getUser().getProfileImageUrl())
                 .cntComment(community.getCntComment())
                 .communityId(community.getId())
                 .cntLikeit(community.getCntLikeit())

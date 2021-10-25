@@ -2,6 +2,7 @@ package streetcatshelter.discatch.oauth.token;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import java.util.Date;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class JwtTokenProvider {
 
     private String secretKey = "Discatch";
@@ -71,6 +73,30 @@ public class JwtTokenProvider {
             return !claims.getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             return false;
+        }
+    }
+    public String getUserNameFromJwt(String jwt) {
+        return getClaims(jwt).getBody().getId();
+    }
+
+    private Jws<Claims> getClaims(String jwt) {
+        try {
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt);
+        } catch (SignatureException ex) {
+            log.error("Invalid JWT signature");
+            throw ex;
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token");
+            throw ex;
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+            throw ex;
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token");
+            throw ex;
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty.");
+            throw ex;
         }
     }
 }
