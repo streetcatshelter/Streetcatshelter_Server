@@ -4,15 +4,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import streetcatshelter.discatch.domain.UserLevel;
+import streetcatshelter.discatch.domain.UserLocation;
+
+import java.util.List;
 
 @Getter
 @Setter
 @Builder
 public class MyPageUserInformationResponseDto {
     private String nickname;
-    private String location;
-    private String location2;
-    private String location3;
+    private List<UserLocation> userLocationList;
     private UserLevel userLevel;
     private String profileImageUrl;
     private int cntActivity;

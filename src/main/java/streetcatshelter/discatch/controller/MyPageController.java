@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.dto.requestDto.UserInformationRequestDto;
-import streetcatshelter.discatch.dto.responseDto.MyPageCalendarResponseDto;
-import streetcatshelter.discatch.dto.responseDto.MyPageCatsResponseDto;
-import streetcatshelter.discatch.dto.responseDto.MyPageNoticeResponseDto;
-import streetcatshelter.discatch.dto.responseDto.MyPageUserInformationResponseDto;
+import streetcatshelter.discatch.dto.responseDto.*;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.service.MyPageService;
 
@@ -35,9 +32,9 @@ public class MyPageController {
     }
 
     @PutMapping("/mypage/user/information")
-    public String putUserInformation(@AuthenticationPrincipal UserPrincipal userPrincipal,
+    public void putUserInformation(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                                                @RequestBody UserInformationRequestDto requestDto) {
-        return myPageService.putUserInformation(userPrincipal, requestDto);
+        myPageService.putUserInformation(userPrincipal, requestDto);
     }
 
     @GetMapping("/mypage/user/information")
@@ -45,9 +42,16 @@ public class MyPageController {
         return myPageService.getUserInformation(userPrincipal);
     }
 
-    @GetMapping("/mypage/calendar/{month}")
-    public List<MyPageCalendarResponseDto> myAllActivities(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable String month) {
-        return myPageService.myAllActivities(userPrincipal, month);
+    @GetMapping("/mypage/calendar")
+    public Result<CalendarResponseDto> myAllActivities(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam int year, @RequestParam int month) {
+        List<CalendarResponseDto> calender = myPageService.myAllActivities(userPrincipal, year, month);
+        Result<CalendarResponseDto> result = new Result<>();
+        result.setDate(calender);
+        return result;
     }
 
+    @GetMapping("/mypage/calendar/day/{day}")
+    public List<MyPageCalendarResponseDto> myActivity(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam int year, @RequestParam int month, @PathVariable int day) {
+        return myPageService.myActivity(userPrincipal, year, month, day);
+    }
 }

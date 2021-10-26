@@ -1,22 +1,24 @@
 package streetcatshelter.discatch.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import streetcatshelter.discatch.dto.requestDto.UserInformationRequestDto;
 import streetcatshelter.discatch.oauth.entity.ProviderType;
 import streetcatshelter.discatch.oauth.entity.RoleType;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
-@Entity
-@NoArgsConstructor
 @Getter
-@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "user")
 public class User extends TimeStamped{
 
 
@@ -36,14 +38,9 @@ public class User extends TimeStamped{
     @Column(nullable = true, unique = true)
     private String nickname;
 
-    @Column(nullable = true)
-    private String location;
-
-    @Column(nullable = true)
-    private String location2;
-
-    @Column(nullable = true)
-    private String location3;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user",  cascade = {CascadeType.REMOVE})
+    private List<UserLocation> userLocationList = new ArrayList<>();
 
     @Column(nullable = true)
     private String profileUrl;
@@ -125,10 +122,11 @@ public class User extends TimeStamped{
 
     public void update(UserInformationRequestDto requestDto) {
         this.nickname = requestDto.getNickname();
-        this.location = requestDto.getLocation();
-        this.location2 = requestDto.getLocation2();
-        this.location3 = requestDto.getLocation3();
         this.profileUrl = requestDto.getProfileUrl();
 
+    }
+
+    public void addUserLocationList(List<UserLocation> userLocationList) {
+        this.userLocationList = userLocationList;
     }
 }
