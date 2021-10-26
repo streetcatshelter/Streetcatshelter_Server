@@ -96,6 +96,12 @@ public class MyPageService {
         User user = userRepository.findByUserSeq(userSeq);
         LocalDateTime start = LocalDateTime.now().minusMonths(2);
         LocalDateTime end = LocalDateTime.now();
+
+        List<String> location = new ArrayList<>();
+        List<UserLocation> orgLocationList = user.getUserLocationList();
+        for(UserLocation userLocation : orgLocationList) {
+            location.add(userLocation.getLocation());
+        }
         int cntActivity = catDetailRepository.countAllByUserAndModifiedAtBetween(user, start, end);
         return MyPageUserInformationResponseDto.builder()
                 .nickname(user.getNickname())
@@ -103,7 +109,7 @@ public class MyPageService {
                 .profileImageUrl(user.getProfileImageUrl())
                 .userLevel(user.getUserLevel())
                 .cntActivity(cntActivity)
-                .userLocationList(user.getUserLocationList())
+                .LocationList(location)
                 .build();
     }
 
