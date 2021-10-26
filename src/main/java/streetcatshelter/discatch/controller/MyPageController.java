@@ -3,9 +3,10 @@ package streetcatshelter.discatch.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import streetcatshelter.discatch.dto.requestDto.UserInformationRequestDto;
+import streetcatshelter.discatch.domain.cat.dto.responsedto.CalendarResponseDto;
+import streetcatshelter.discatch.domain.user.dto.UserInformationRequestDto;
 import streetcatshelter.discatch.dto.responseDto.*;
-import streetcatshelter.discatch.oauth.entity.UserPrincipal;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.service.MyPageService;
 
 import java.util.List;

@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.domain.ChatRoom;
 import streetcatshelter.discatch.domain.LoginInfo;
-import streetcatshelter.discatch.oauth.token.JwtTokenProvider;
+import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
 import streetcatshelter.discatch.repository.ChatRoomRepository;
 
 import java.util.List;

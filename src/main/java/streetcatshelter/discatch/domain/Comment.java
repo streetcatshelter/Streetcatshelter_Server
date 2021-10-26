@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import streetcatshelter.discatch.domain.cat.domain.Cat;
+import streetcatshelter.discatch.domain.cat.domain.CatDetail;
+import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
 
 

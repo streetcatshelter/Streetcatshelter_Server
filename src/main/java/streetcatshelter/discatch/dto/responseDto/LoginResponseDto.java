@@ -2,7 +2,7 @@ package streetcatshelter.discatch.dto.responseDto;
 
 
 import lombok.Data;
-import streetcatshelter.discatch.domain.User;
+import streetcatshelter.discatch.domain.user.domain.User;
 
 @Data
 public class LoginResponseDto {

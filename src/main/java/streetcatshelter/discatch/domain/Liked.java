@@ -3,6 +3,9 @@ package streetcatshelter.discatch.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import streetcatshelter.discatch.domain.cat.domain.Cat;
+import streetcatshelter.discatch.domain.cat.domain.CatDetail;
+import streetcatshelter.discatch.domain.user.domain.User;
 
 import javax.persistence.*;
 

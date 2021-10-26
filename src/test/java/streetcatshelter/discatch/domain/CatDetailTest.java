@@ -2,10 +2,10 @@ package streetcatshelter.discatch.domain;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import streetcatshelter.discatch.dto.requestDto.CatDetailRequestDto;
-import streetcatshelter.discatch.repository.CatCalenderRepository;
-import streetcatshelter.discatch.repository.CatDetailRepository;
-import streetcatshelter.discatch.repository.CatImageRepository;
+import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailRequestDto;
+import streetcatshelter.discatch.domain.cat.repository.CatCalenderRepository;
+import streetcatshelter.discatch.domain.cat.repository.CatDetailRepository;
+import streetcatshelter.discatch.domain.cat.repository.CatImageRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

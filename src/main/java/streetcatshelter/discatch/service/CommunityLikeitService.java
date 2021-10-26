@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.Community;
 import streetcatshelter.discatch.domain.CommunityLikeit;
-import streetcatshelter.discatch.domain.User;
-import streetcatshelter.discatch.oauth.entity.UserPrincipal;
+import streetcatshelter.discatch.domain.user.domain.User;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.repository.CommunityLikeitRepository;
 import streetcatshelter.discatch.repository.CommunityRepository;
 
