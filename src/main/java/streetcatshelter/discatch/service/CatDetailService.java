@@ -52,9 +52,9 @@ public class CatDetailService {
     @Transactional
     public void createCatDetail(CatDetailRequestDto requestDto, Long catId, UserPrincipal userPrincipal) {
 
-        Cat cat = getCat(catId);
-        addCallender(requestDto,cat);
         User user = userPrincipal.getUser();
+        Cat cat = getCat(catId);
+        addCallender(requestDto,cat, user);
         CatDetail catDetail = new CatDetail(requestDto,cat,user);
 
 
@@ -99,13 +99,13 @@ public class CatDetailService {
     }
 
     @Transactional
-    public void addCallender(CatDetailRequestDto requestDto, Cat cat) {
+    public void addCallender(CatDetailRequestDto requestDto, Cat cat, User user) {
 
         LocalDate localDate = LocalDate.now();
 
-        CatCalender catCalender = catCalenderRepository.findByLocalDate(localDate);
+        CatCalender catCalender = catCalenderRepository.findByLocalDateAndCatAndUser(localDate, cat, user);
         if(catCalender == null){
-            catCalender = new CatCalender(localDate,requestDto.isFood(),requestDto.isSnack(),requestDto.isWater(),cat);
+            catCalender = new CatCalender(localDate,requestDto.isFood(),requestDto.isSnack(),requestDto.isWater(),cat, user);
             catCalenderRepository.save(catCalender);
         }
         catCalender.update(requestDto);

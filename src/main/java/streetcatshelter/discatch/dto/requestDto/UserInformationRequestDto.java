@@ -2,14 +2,14 @@ package streetcatshelter.discatch.dto.requestDto;
 
 import lombok.Getter;
 
+import java.util.List;
+
 
 @Getter
 public class UserInformationRequestDto {
 
     private String nickname;
-    private String location;
-    private String location2;
-    private String location3;
+    private List<String> location;
     private String profileUrl;
 
 }

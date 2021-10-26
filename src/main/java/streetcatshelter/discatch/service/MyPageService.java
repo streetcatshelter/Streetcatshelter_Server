@@ -4,14 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.*;
 import streetcatshelter.discatch.dto.requestDto.UserInformationRequestDto;
-import streetcatshelter.discatch.dto.responseDto.MyPageCalendarResponseDto;
-import streetcatshelter.discatch.dto.responseDto.MyPageCatsResponseDto;
-import streetcatshelter.discatch.dto.responseDto.MyPageNoticeResponseDto;
-import streetcatshelter.discatch.dto.responseDto.MyPageUserInformationResponseDto;
+import streetcatshelter.discatch.dto.responseDto.*;
 import streetcatshelter.discatch.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.repository.*;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +23,8 @@ public class MyPageService {
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final CatCalenderRepository catCalenderRepository;
+    private final UserLocationRepository userLocationRepository;
 
     public List<MyPageCatsResponseDto> findAllCats(UserPrincipal userPrincipal) {
         Long userSeq = userPrincipal.getUser().getUserSeq();
@@ -81,56 +81,94 @@ public class MyPageService {
     }
 
     @Transactional
-    public String putUserInformation(UserPrincipal userPrincipal, UserInformationRequestDto requestDto) {
-        User user = userPrincipal.getUser();
-        if(requestDto.getNickname() == null) {
-            return "닉네임을 입력해주세요";
-        } else if (requestDto.getLocation() == null && requestDto.getLocation2() == null && requestDto.getLocation3()==null) {
-            return "최소 1곳 이상의 동네를 입력해주세요";
-        } else {
-            user.update(requestDto);
-            userRepository.save(user);
-            return "회원 정보 등록/수정이 완료되었습니다.";
-        }
-    }
-
     public MyPageUserInformationResponseDto getUserInformation(UserPrincipal userPrincipal) {
-        User user = userPrincipal.getUser();
+        Long userSeq = userPrincipal.getUser().getUserSeq();
+        User user = userRepository.findByUserSeq(userSeq);
         LocalDateTime start = LocalDateTime.now().minusMonths(2);
         LocalDateTime end = LocalDateTime.now();
         int cntActivity = catDetailRepository.countAllByUserAndModifiedAtBetween(user, start, end);
         return MyPageUserInformationResponseDto.builder()
-                .location(user.getLocation())
-                .location2(user.getLocation2())
-                .location3(user.getLocation3())
                 .nickname(user.getNickname())
                 .username(user.getUsername())
                 .profileImageUrl(user.getProfileImageUrl())
                 .userLevel(user.getUserLevel())
                 .cntActivity(cntActivity)
+                .userLocationList(user.getUserLocationList())
                 .build();
     }
 
-    public List<MyPageCalendarResponseDto> myAllActivities(UserPrincipal userPrincipal, String month) {
+    @Transactional
+    public void putUserInformation(UserPrincipal userPrincipal, UserInformationRequestDto requestDto) {
         User user = userPrincipal.getUser();
-        LocalDateTime start = LocalDateTime.now().minusMonths(1);
-        LocalDateTime end = LocalDateTime.now();
-        ArrayList<CatDetail> catDetails = catDetailRepository.findAllByUserAndModifiedAtBetween(user, start, end);
-        List<MyPageCalendarResponseDto> myPageCalendarResponseDtoList = new ArrayList<>();
-        for(CatDetail catDetail : catDetails) {
-            myPageCalendarResponseDtoList.add(MyPageCalendarResponseDto.builder()
-                    .food(catDetail.isFood())
-                    .snack(catDetail.isSnack())
-                    .water(catDetail.isWater())
-                    .catName(catDetail.getCat().getCatName())
-                    .modifiedAt(String.valueOf(catDetail.getModifiedAt()).replace('T',' '))
-                    .createdAt(String.valueOf(catDetail.getCreatedAt()).replace('T',' '))
-                    .catDetailId(catDetail.getId())
-                    .catId(catDetail.getCat().getId())
-                    .build());
-        }
-        return myPageCalendarResponseDtoList;
+        user.update(requestDto);
+
+        //user_Location 데이터들을 다 없애주고 다시 등록하게 해줘야한다.
+        userLocationRepository.deleteAllByUser_UserSeq(user.getUserSeq());
+
+        List<UserLocation> userLocationList = convertLocation(user, requestDto.getLocation());
+        saveUserLocationList(userLocationList);
+        user.addUserLocationList(userLocationList);
+        userRepository.save(user);
     }
 
+    public List<UserLocation> convertLocation(User user, List<String> locationStringList) {
+        List<UserLocation> userLocationList = new ArrayList<>();
+        for (String location : locationStringList) {
+            userLocationList.add(new UserLocation(user, location));
+        }
+        return userLocationList;
+    }
+
+    public void saveUserLocationList(List<UserLocation> userLocationList){
+        for(UserLocation location : userLocationList){
+            userLocationRepository.save(location);
+        }
+    }
+
+
+/*
+    private List<String> convertToStringList(List<UserLocation> userLocationList) {
+        List<String> userLocationStringList = new ArrayList<>();
+        for(UserLocation location : userLocationList) {
+            userLocationStringList.add(location.getLocation());
+        }
+        return userLocationStringList;
+    }*/
+
+    public List<CalendarResponseDto> myAllActivities(UserPrincipal userPrincipal, int year, int month) {
+        User user = userPrincipal.getUser();
+        LocalDate startDate = LocalDate.of(year,month,1);
+        LocalDate endDate = LocalDate.of(year,month,startDate.lengthOfMonth());
+        List<CatCalender> catCalenders = catCalenderRepository.findALLByLocalDateBetweenAndUser(startDate, endDate, user);
+        List<CalendarResponseDto> calendarResponseDtos = new ArrayList<>();
+        for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)){
+            CalendarResponseDto calendarResponseDto = new CalendarResponseDto();
+            calendarResponseDto.setLocalDate(date);
+            for (CatCalender catCalender : catCalenders) {
+                if(catCalender.getLocalDate().equals(date)){
+                    calendarResponseDto.update(catCalender);
+                }
+            }
+            calendarResponseDtos.add(calendarResponseDto);
+        }
+        return calendarResponseDtos;
+    }
+
+    public List<MyPageCalendarResponseDto> myActivity(UserPrincipal userPrincipal, int year, int month, int day) {
+        User user = userPrincipal.getUser();
+        LocalDate date = LocalDate.of(year, month, day);
+        List<CatCalender> catCalenders = catCalenderRepository.findByLocalDateAndUser(date, user);
+        List<MyPageCalendarResponseDto> myPageCalendarResponseDtos = new ArrayList<>();
+        for( CatCalender catCalender: catCalenders) {
+            myPageCalendarResponseDtos.add(MyPageCalendarResponseDto.builder()
+                    .food(catCalender.isFood())
+                    .snack(catCalender.isSnack())
+                    .water(catCalender.isWater())
+                    .catName(catCalender.getCat().getCatName())
+                    .catId(catCalender.getCat().getId())
+                    .build());
+        }
+        return myPageCalendarResponseDtos;
+    }
 
 }

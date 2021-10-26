@@ -29,12 +29,17 @@ public class CatCalender {
     @JoinColumn(name = "CAT_ID")
     private Cat cat;
 
-    public CatCalender(LocalDate localDate, boolean food, boolean snack, boolean water, Cat cat ) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_USER_SEQ")
+    private User user;
+
+    public CatCalender(LocalDate localDate, boolean food, boolean snack, boolean water, Cat cat , User user) {
         this.localDate = localDate;
         this.food = food;
         this.snack = snack;
         this.water = water;
         this.cat = cat;
+        this.user = user;
     }
 
     public void update(CatDetailRequestDto requestDto) {

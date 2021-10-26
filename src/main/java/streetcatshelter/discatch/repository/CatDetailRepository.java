@@ -15,7 +15,6 @@ public interface CatDetailRepository extends JpaRepository<CatDetail, Long> {
     List<CatDetail>findAllByCatId(Long catId);
     Page<CatDetail> findAllByCatId(Pageable pageable, Long catId);
     ArrayList<CatDetail> findAllByUser(User user);
-    ArrayList<CatDetail> findAllByUserAndModifiedAtBetween(User user, LocalDateTime start, LocalDateTime end);
     CatDetail findFirstByOrderByIdDesc();
     int countAllByUser_UserSeqAndCatId(Long userSeq, Long catId);
     int countAllByUserAndModifiedAtBetween(User user, LocalDateTime start, LocalDateTime end);
