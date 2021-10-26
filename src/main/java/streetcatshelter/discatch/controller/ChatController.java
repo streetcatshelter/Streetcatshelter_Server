@@ -6,7 +6,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import streetcatshelter.discatch.domain.ChatMessage;
-import streetcatshelter.discatch.oauth.token.JwtTokenProvider;
+import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
 import streetcatshelter.discatch.repository.ChatRoomRepository;
 import streetcatshelter.discatch.service.ChatService;
 

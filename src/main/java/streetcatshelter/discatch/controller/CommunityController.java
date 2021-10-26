@@ -8,7 +8,7 @@ import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CommunityRequestDto;
 import streetcatshelter.discatch.dto.responseDto.CommunityDetailResponseDto;
 import streetcatshelter.discatch.dto.responseDto.CommunityResponseDto;
-import streetcatshelter.discatch.oauth.entity.UserPrincipal;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.service.CommunityService;
 
 import java.util.ArrayList;

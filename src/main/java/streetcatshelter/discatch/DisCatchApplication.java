@@ -9,8 +9,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import streetcatshelter.discatch.config.properties.AppProperties;
-import streetcatshelter.discatch.config.properties.CorsProperties;
+import streetcatshelter.discatch.domain.config.properties.AppProperties;
+import streetcatshelter.discatch.domain.config.properties.CorsProperties;
 
 
 @SpringBootApplication

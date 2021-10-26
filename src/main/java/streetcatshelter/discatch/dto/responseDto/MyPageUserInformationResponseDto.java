@@ -3,8 +3,8 @@ package streetcatshelter.discatch.dto.responseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import streetcatshelter.discatch.domain.UserLevel;
-import streetcatshelter.discatch.domain.UserLocation;
+import streetcatshelter.discatch.domain.user.domain.UserLevel;
+import streetcatshelter.discatch.domain.user.domain.UserLocation;
 
 import java.util.List;
 
