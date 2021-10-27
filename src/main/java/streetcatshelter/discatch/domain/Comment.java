@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import streetcatshelter.discatch.domain.cat.domain.Cat;
 import streetcatshelter.discatch.domain.cat.domain.CatDetail;
+import streetcatshelter.discatch.domain.community.domain.Community;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
 
