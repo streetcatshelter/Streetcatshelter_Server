@@ -23,19 +23,19 @@ public class CatController {
     private final CatDetailService catDetailService;
 
     @GetMapping("/cat/{location}")
-    public List<CatResponseDto> getCatByLocation(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size,
-            @PathVariable String location) {
-        return catService.getCatByLocation(page, size, location);
+    public List<CatResponseDto> getCatByLocation(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                 @RequestParam("page") int page,
+                                                 @RequestParam("size") int size,
+                                                 @PathVariable String location) {
+        return catService.getCatByLocation(page, size, location, userPrincipal.getUser());
     }
 
     @GetMapping("/cat/comment/{catId}")
     public List<CommentResponseDto> getCatComment(@PathVariable Long catId,
-                              @RequestParam int page,
-                              @RequestParam int size){
+                                                  @RequestParam int page,
+                                                  @RequestParam int size) {
 
-        return catService.getCatComment(catId,page,size);
+        return catService.getCatComment(catId, page, size);
     }
 
     @PostMapping("/cat/create")
@@ -56,21 +56,21 @@ public class CatController {
     public List<CatGalleryResponseDto> getCatPhotoByCat(@PathVariable Long catId,
                                                         @RequestParam int page,
                                                         @RequestParam int size) {
-        return catService.getCatPhotos(page,size,catId);
+        return catService.getCatPhotos(page, size, catId);
     }
 
     @PostMapping("/cat/detail/comment/{catDetailId}")
     public void createCatDetailComment(@PathVariable Long catDetailId,
                                        @RequestBody CommentRequestDto commentRequestDto,
-                                       @AuthenticationPrincipal UserPrincipal userPrincipal){
-        catService.createDetailComment(catDetailId,commentRequestDto, userPrincipal.getUser());
+                                       @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        catService.createDetailComment(catDetailId, commentRequestDto, userPrincipal.getUser());
     }
 
     @PostMapping("/cat/comment/{catId}")
     public void createCatComment(@PathVariable Long catId,
                                  @RequestBody CommentRequestDto commentRequestDto,
-                                 @AuthenticationPrincipal UserPrincipal userPrincipal){
-        catService.createComment(catId,commentRequestDto, userPrincipal.getUser());
+                                 @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        catService.createComment(catId, commentRequestDto, userPrincipal.getUser());
     }
 
 
@@ -78,14 +78,14 @@ public class CatController {
     public List<CommentResponseDto> getCatCommentByCat(@PathVariable Long catDetailId,
                                                        @RequestParam int page,
                                                        @RequestParam int size) {
-        return catService.getCatCommentByCatDetail(catDetailId,page,size);
+        return catService.getCatCommentByCatDetail(catDetailId, page, size);
     }
 
     @GetMapping("/cat/diary/{catId}")
     public List<CatDiaryResponseDto> getCatDiaryByCat(@PathVariable Long catId,
                                                       @RequestParam int page,
                                                       @RequestParam int size) {
-        return catService.getCatDiaryByCat(catId,page,size);
+        return catService.getCatDiaryByCat(catId, page, size);
     }
 
     @GetMapping("/cat/detail/{catDetailId}")
@@ -96,38 +96,37 @@ public class CatController {
 
     @PostMapping("/cat/like/{catId}")
     public String likeCat(@PathVariable Long catId,
-                                    @AuthenticationPrincipal UserPrincipal userPrincipal){
-        return catService.addlike(catId,userPrincipal.getUser());
+                          @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return catService.addlike(catId, userPrincipal.getUser());
     }
 
     @PostMapping("/cat/detail/like/{catDetailId}")
-    public Map<String,Long> likeCatDetail(@PathVariable Long catDetailId,
-                                          @AuthenticationPrincipal UserPrincipal userPrincipal){
-        return catDetailService.addlike(catDetailId,userPrincipal.getUser());
+    public Map<String, Long> likeCatDetail(@PathVariable Long catDetailId,
+                                           @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return catDetailService.addlike(catDetailId, userPrincipal.getUser());
     }
 
     @DeleteMapping("/cat/detail/{catDetailId}")
     public void deleteCatDetail(@PathVariable Long catDetailId,
-                                @AuthenticationPrincipal UserPrincipal userPrincipal){
+                                @AuthenticationPrincipal UserPrincipal userPrincipal) {
         catDetailService.deleteCatDetail(catDetailId, userPrincipal.getUser());
     }
 
     @DeleteMapping("/cat/comment/{commentId}")
     public void deleteComment(@PathVariable Long commentId,
-                              @AuthenticationPrincipal UserPrincipal userPrincipal){
-        catService.deleteComment(commentId,userPrincipal.getUser());
+                              @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        catService.deleteComment(commentId, userPrincipal.getUser());
 
     }
 
     @GetMapping("/cat/calender/{catId}")
     public Result<CalendarResponseDto> getCalender(@PathVariable Long catId,
                                                    @RequestParam int year,
-                                                   @RequestParam int month){
+                                                   @RequestParam int month) {
         List<CalendarResponseDto> calender = catDetailService.getCalender(catId, year, month);
         Result<CalendarResponseDto> result = new Result<>();
         result.setDate(calender);
         return result;
-
 
 
     }

@@ -18,6 +18,7 @@ public class CatResponseDto {
     private String catName;
     private String catImage;
     private String neutering;
+    private boolean userLiked;
     private List<CatTag> catTagList;
 
 }
