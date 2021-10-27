@@ -8,10 +8,10 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
-import streetcatshelter.discatch.domain.ChatMessage;
+import streetcatshelter.discatch.domain.chat.domain.ChatMessage;
 import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
-import streetcatshelter.discatch.repository.ChatRoomRepository;
-import streetcatshelter.discatch.service.ChatService;
+import streetcatshelter.discatch.domain.chat.repository.ChatRoomRepository;
+import streetcatshelter.discatch.domain.chat.service.ChatService;
 
 import java.security.Principal;
 import java.util.Optional;

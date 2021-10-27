@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.config.properties.AppProperties;
 import streetcatshelter.discatch.domain.user.domain.User;
-import streetcatshelter.discatch.dto.responseDto.LoginResponseDto;
+import streetcatshelter.discatch.domain.chat.dto.LoginResponseDto;
 import streetcatshelter.discatch.domain.oauth.entity.ProviderType;
 import streetcatshelter.discatch.domain.oauth.entity.RoleType;
 import streetcatshelter.discatch.domain.oauth.social.KakaoOAuth2;

@@ -5,7 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import streetcatshelter.discatch.dto.responseDto.LoginResponseDto;
+import streetcatshelter.discatch.domain.chat.dto.LoginResponseDto;
 import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.domain.user.service.UserService;
 
