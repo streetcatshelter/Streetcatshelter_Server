@@ -37,18 +37,47 @@ public class CatService {
     private final LikedRepository likedRepository;
     private final CatCalenderRepository catCalenderRepository;
 
-    public List<CatResponseDto> getCatByLocation(int page, int size, String location) {
+    public List<CatResponseDto> getCatByLocation(int page, int size, String location, User user) {
         Pageable pageable = PageRequest.of(page -1, size);
         Page<Cat> cats = catRepository.findAllByLocation(pageable,location);
         List<CatResponseDto> responseDtoList = new ArrayList<>();
+        List<Liked> likeds = likedRepository.findAllByUser_UserSeq(user.getUserSeq());
+
         for(Cat cat : cats) {
-            responseDtoList.add(CatResponseDto.builder()
-                    .catId(cat.getId())
-                    .catName(cat.getCatName())
-                    .catImage(cat.getCatImage())
-                    .neutering(cat.getNeutering())
-                    .catTagList(cat.getCatTagList())
-                    .build());
+            if(likeds.size()!=0){
+                for(Liked liked : likeds){
+                    if(liked.getCat().equals(cat)){
+                        responseDtoList.add(CatResponseDto.builder()
+                                .userLiked(true)
+                                .catId(cat.getId())
+                                .catName(cat.getCatName())
+                                .catImage(cat.getCatImage())
+                                .neutering(cat.getNeutering())
+                                .catTagList(cat.getCatTagList())
+                                .build());
+                    }else{
+                        responseDtoList.add(CatResponseDto.builder()
+                                .userLiked(false)
+                                .catId(cat.getId())
+                                .catName(cat.getCatName())
+                                .catImage(cat.getCatImage())
+                                .neutering(cat.getNeutering())
+                                .catTagList(cat.getCatTagList())
+                                .build());
+                    }
+                }
+            }else{
+                responseDtoList.add(CatResponseDto.builder()
+                        .userLiked(false)
+                        .catId(cat.getId())
+                        .catName(cat.getCatName())
+                        .catImage(cat.getCatImage())
+                        .neutering(cat.getNeutering())
+                        .catTagList(cat.getCatTagList())
+                        .build());
+            }
+
+
         }
         return responseDtoList;
     }
