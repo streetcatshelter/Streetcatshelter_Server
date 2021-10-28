@@ -16,6 +16,7 @@ import streetcatshelter.discatch.domain.cat.dto.responsedto.CatDiaryResponseDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.CatGalleryResponseDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.CatResponseDto;
 import streetcatshelter.discatch.domain.cat.repository.*;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
@@ -81,8 +82,9 @@ public class CatService {
         return responseDtoList;
     }
 
-    public void createCat(CatRequestDto requestDto) {
-        Cat cat = new Cat(requestDto);
+    public void createCat(CatRequestDto requestDto, UserPrincipal userPrincipal) {
+        User user = userPrincipal.getUser();
+        Cat cat = new Cat(requestDto, user);
         catRepository.save(cat);
 
         List<CatTag> catTagList = convertTag(cat, requestDto.getCatTag());

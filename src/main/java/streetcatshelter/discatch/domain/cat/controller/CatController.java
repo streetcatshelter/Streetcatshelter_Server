@@ -39,8 +39,9 @@ public class CatController {
     }
 
     @PostMapping("/cat/create")
-    public void createCat(@RequestBody CatRequestDto requestDto) {
-        catService.createCat(requestDto);
+    public void createCat(@RequestBody CatRequestDto requestDto,
+                          @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        catService.createCat(requestDto, userPrincipal);
     }
 
     @PostMapping("/cat/detail/{catId}")

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.domain.TimeStamped;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatRequestDto;
+import streetcatshelter.discatch.domain.user.domain.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -69,7 +70,11 @@ public class Cat extends TimeStamped {
     @OneToMany(mappedBy = "cat")
     private List<CatImage> catImages = new ArrayList<>();
 
-    public Cat(CatRequestDto requestDto) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_USER_SEQ")
+    private User user;
+
+    public Cat(CatRequestDto requestDto, User user) {
         this.neutering = requestDto.getNeutering();
         this.catName = requestDto.getCatName();
         this.location = requestDto.getLocation();
@@ -77,6 +82,7 @@ public class Cat extends TimeStamped {
         this.catImage = requestDto.getCatImage();
         this.latitude = requestDto.getLatitude();
         this.longitude = requestDto.getLongitude();
+        this.user = user;
     }
 
     public void addCatTagList(List<CatTag> catTagList) {
