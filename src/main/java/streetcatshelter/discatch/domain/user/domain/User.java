@@ -49,10 +49,11 @@ public class User extends TimeStamped {
     @Column(nullable = true)
     private String email;
 
-    @Column(columnDefinition = "varchar(255) default '아깽이'")
-    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "default 1")
     private UserLevel userLevel;
 
+    @Column(nullable = true)
+    private int score;
 
     @Column
     private String emailVerifiedYn;
@@ -123,11 +124,29 @@ public class User extends TimeStamped {
 
     public void update(UserInformationRequestDto requestDto) {
         this.nickname = requestDto.getNickname();
-        this.profileUrl = requestDto.getProfileUrl();
-
+        if(requestDto.getProfileUrl() != null) {
+            this.profileUrl = requestDto.getProfileUrl();
+        }
     }
 
     public void addUserLocationList(List<UserLocation> userLocationList) {
         this.userLocationList = userLocationList;
+    }
+
+    public void setUserLevel(UserLevel userLevel) {
+        this.userLevel = userLevel;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void updateUserLevel() {
+        final UserLevel nextLevel = this.userLevel.nextLevel();
+        if(nextLevel == null){
+            throw new IllegalStateException(this.userLevel + "은 업그레이드가 불가능합니다.");
+        }else{
+            this.userLevel = nextLevel;
+        }
     }
 }

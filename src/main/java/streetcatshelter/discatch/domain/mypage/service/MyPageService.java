@@ -118,6 +118,7 @@ public class MyPageService {
                 .userLevel(user.getUserLevel())
                 .cntActivity(cntActivity)
                 .LocationList(location)
+                .score(user.getScore())
                 .build();
     }
 
