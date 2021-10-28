@@ -104,11 +104,17 @@ public class MyPageService {
         for(UserLocation userLocation : orgLocationList) {
             location.add(userLocation.getLocation());
         }
+        String profileImageUrl = null;
+        if(user.getProfileUrl() == null) {
+            profileImageUrl = user.getProfileImageUrl();
+        } else {
+            profileImageUrl = user.getProfileUrl();
+        }
         int cntActivity = catDetailRepository.countAllByUserAndModifiedAtBetween(user, start, end);
         return MyPageUserInformationResponseDto.builder()
                 .nickname(user.getNickname())
                 .username(user.getUsername())
-                .profileImageUrl(user.getProfileImageUrl())
+                .profileImageUrl(profileImageUrl)
                 .userLevel(user.getUserLevel())
                 .cntActivity(cntActivity)
                 .LocationList(location)
