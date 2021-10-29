@@ -13,6 +13,8 @@ import streetcatshelter.discatch.repository.CommentRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static streetcatshelter.discatch.domain.user.domain.UserLevel.*;
+
 @Service
 @RequiredArgsConstructor
 public class UserLevelService {
@@ -35,18 +37,26 @@ public class UserLevelService {
     private boolean canUpgradeLevel(User user){// 레벨 업그레이드 가능한지 여부를 체크하는 함수이다.
         UserLevel currentLevel = user.getUserLevel();
         if(currentLevel == null) {
-            user.setUserLevel(UserLevel.아깽이);
+            user.setUserLevel(아깽이);
             return true;
         }
         int userLevelScore;
+        int MIN_POINT_FOR_SILVER = 20;
+        int MIN_POINT_FOR_GOLD = 50;
+        int MIN_POINT_FOR_PLATINUM = 100;
         int A = catRepository.countAllByUser_UserSeq(user.getUserSeq());
         int B = catDetailRepository.countAllByUser_UserSeq(user.getUserSeq());
         int C = commentRepository.countAllByUser_UserSeq(user.getUserSeq());
         userLevelScore = (A*5 + B*2 + C*2);
         user.setScore(userLevelScore);
-        int MIN_POINT_FOR_SILVER = 20;
-        int MIN_POINT_FOR_GOLD = 50;
-        int MIN_POINT_FOR_PLATINUM =100;
+        if(currentLevel == 아깽이) {
+            user.setScoreLeft(20 - userLevelScore);
+        } else if (currentLevel == 냥린이) {
+            user.setScoreLeft(50 - userLevelScore);
+        } else if (currentLevel == 대장냥) {
+            user.setScoreLeft(100 - userLevelScore);
+        }
+
         switch (currentLevel){
             case 아깽이: return (userLevelScore >= MIN_POINT_FOR_SILVER); //로그인한횟수
             case 냥린이: return (userLevelScore >= MIN_POINT_FOR_GOLD);
