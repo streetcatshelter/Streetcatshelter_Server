@@ -18,4 +18,6 @@ public class MyPageUserInformationResponseDto {
     private int cntActivity;
     private String username;
     private int score;
+    private int scoreLeft;
+    private String nextLevel;
 }

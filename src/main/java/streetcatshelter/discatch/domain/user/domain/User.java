@@ -55,6 +55,9 @@ public class User extends TimeStamped {
     @Column(nullable = true)
     private int score;
 
+    @Column(nullable = true)
+    private int scoreLeft;
+
     @Column
     private String emailVerifiedYn;
 
@@ -139,6 +142,10 @@ public class User extends TimeStamped {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public void setScoreLeft(int scoreLeft) {
+        this.scoreLeft = scoreLeft;
     }
 
     public void updateUserLevel() {

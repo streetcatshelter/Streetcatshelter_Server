@@ -119,6 +119,8 @@ public class MyPageService {
                 .cntActivity(cntActivity)
                 .LocationList(location)
                 .score(user.getScore())
+                .scoreLeft(user.getScoreLeft())
+                .nextLevel(String.valueOf(user.getUserLevel().nextLevel()))
                 .build();
     }
 
