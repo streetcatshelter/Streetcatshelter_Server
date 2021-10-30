@@ -5,6 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.cat.repository.CatDetailRepository;
 import streetcatshelter.discatch.domain.cat.repository.CatRepository;
+import streetcatshelter.discatch.domain.community.repository.CommunityRepository;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.user.domain.UserLevel;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
@@ -23,6 +24,7 @@ public class UserLevelService {
     private final CatRepository catRepository;
     private final CommentRepository commentRepository;
     private final CatDetailRepository catDetailRepository;
+    private final CommunityRepository communityRepository;
 
     @Scheduled(cron = "0 0 3 * * *")
     @Transactional
@@ -43,20 +45,20 @@ public class UserLevelService {
         int MIN_POINT_FOR_SILVER = 20;
         int MIN_POINT_FOR_GOLD = 50;
         int MIN_POINT_FOR_PLATINUM = 100;
-/*        int userLevelScore;
+        int userLevelScore;
         int A = catRepository.countAllByUser_UserSeq(user.getUserSeq());
         int B = catDetailRepository.countAllByUser_UserSeq(user.getUserSeq());
         int C = commentRepository.countAllByUser_UserSeq(user.getUserSeq());
-        userLevelScore = (A*5 + B*2 + C*2);
-        user.setScore(userLevelScore);*/
-        int userLevelScore = user.getScore();
-/*        if(currentLevel == 아깽이) {
+        int D = communityRepository.countAllByUser_UserSeq(user.getUserSeq());
+        userLevelScore = (A*5 + B*2 + C*2 + D*5);
+        user.setScore(userLevelScore);
+        if(currentLevel == 아깽이) {
             user.setScoreLeft(20 - userLevelScore);
         } else if (currentLevel == 냥린이) {
             user.setScoreLeft(50 - userLevelScore);
         } else if (currentLevel == 대장냥) {
             user.setScoreLeft(100 - userLevelScore);
-        }*/
+        }
 
         switch (currentLevel){
             case 아깽이: return (userLevelScore >= MIN_POINT_FOR_SILVER); //로그인한횟수
