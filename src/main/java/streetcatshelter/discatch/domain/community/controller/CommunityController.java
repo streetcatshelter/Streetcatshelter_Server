@@ -37,7 +37,7 @@ public class CommunityController {
 
     @PostMapping("/community/create")
     public void createCommunity(@RequestBody CommunityRequestDto requestDto, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        communityService.createCommunity(requestDto, userPrincipal);
+        communityService.createCommunity(requestDto, userPrincipal.getUser());
     }
 
 
@@ -47,14 +47,14 @@ public class CommunityController {
     }
 
     @DeleteMapping("/community/{communityId}")
-    public void deleteCommunity(@PathVariable Long communityId) {
-        communityService.delete(communityId);
+    public void deleteCommunity(@PathVariable Long communityId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        communityService.delete(communityId, userPrincipal.getUser());
     }
 
     //커뮤니티 코멘트들 다 모아놓음음
     @PostMapping("/community/comment/{communityId}")
     public void createComment(@PathVariable Long communityId, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        communityService.createComment(communityId, requestDto, userPrincipal);
+        communityService.createComment(communityId, requestDto, userPrincipal.getUser());
     }
 
     @PutMapping("/community/comment/{commentId}")
@@ -64,6 +64,6 @@ public class CommunityController {
 
     @DeleteMapping("/community/comment/{commentId}")
     public void deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        communityService.deleteComment(commentId, userPrincipal);
+        communityService.deleteComment(commentId, userPrincipal.getUser());
     }
 }

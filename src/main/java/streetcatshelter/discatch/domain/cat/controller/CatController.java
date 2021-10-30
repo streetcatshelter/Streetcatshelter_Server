@@ -41,7 +41,7 @@ public class CatController {
     @PostMapping("/cat/create")
     public void createCat(@RequestBody CatRequestDto requestDto,
                           @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        catService.createCat(requestDto, userPrincipal);
+        catService.createCat(requestDto, userPrincipal.getUser());
     }
 
     @PostMapping("/cat/detail/{catId}")
@@ -49,8 +49,7 @@ public class CatController {
                                 @PathVariable Long catId,
                                 @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        catDetailService.createCatDetail(requestDto, catId, userPrincipal);
-        // osiv 끄면 쿼리 2방??
+        catDetailService.createCatDetail(requestDto, catId, userPrincipal.getUser());
     }
 
     @GetMapping("/cat/gallery/{catId}")

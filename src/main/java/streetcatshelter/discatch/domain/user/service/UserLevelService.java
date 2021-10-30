@@ -40,22 +40,23 @@ public class UserLevelService {
             user.setUserLevel(아깽이);
             return true;
         }
-        int userLevelScore;
         int MIN_POINT_FOR_SILVER = 20;
         int MIN_POINT_FOR_GOLD = 50;
         int MIN_POINT_FOR_PLATINUM = 100;
+/*        int userLevelScore;
         int A = catRepository.countAllByUser_UserSeq(user.getUserSeq());
         int B = catDetailRepository.countAllByUser_UserSeq(user.getUserSeq());
         int C = commentRepository.countAllByUser_UserSeq(user.getUserSeq());
         userLevelScore = (A*5 + B*2 + C*2);
-        user.setScore(userLevelScore);
-        if(currentLevel == 아깽이) {
+        user.setScore(userLevelScore);*/
+        int userLevelScore = user.getScore();
+/*        if(currentLevel == 아깽이) {
             user.setScoreLeft(20 - userLevelScore);
         } else if (currentLevel == 냥린이) {
             user.setScoreLeft(50 - userLevelScore);
         } else if (currentLevel == 대장냥) {
             user.setScoreLeft(100 - userLevelScore);
-        }
+        }*/
 
         switch (currentLevel){
             case 아깽이: return (userLevelScore >= MIN_POINT_FOR_SILVER); //로그인한횟수

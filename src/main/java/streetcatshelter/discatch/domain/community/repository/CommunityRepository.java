@@ -8,4 +8,5 @@ import streetcatshelter.discatch.domain.community.domain.Community;
 public interface CommunityRepository extends JpaRepository<Community, Long> {
     Page<Community> findAllByCategoryAndLocation(Pageable pageable, String category, String location);
     Page<Community> findAllByCategory(Pageable pageable, String category);
+    int countAllByUser_UserSeq(Long userSeq);
 }

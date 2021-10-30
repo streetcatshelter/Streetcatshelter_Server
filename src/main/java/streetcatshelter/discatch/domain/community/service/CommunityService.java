@@ -5,20 +5,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import streetcatshelter.discatch.aop.UpdateUserScore;
 import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.domain.community.domain.Community;
 import streetcatshelter.discatch.domain.community.domain.CommunityImage;
-import streetcatshelter.discatch.domain.user.domain.User;
-import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
-import streetcatshelter.discatch.domain.community.dto.CommunityRequestDto;
-import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
 import streetcatshelter.discatch.domain.community.dto.CommunityDetailResponseDto;
+import streetcatshelter.discatch.domain.community.dto.CommunityRequestDto;
 import streetcatshelter.discatch.domain.community.dto.CommunityResponseDto;
-import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
-import streetcatshelter.discatch.repository.CommentRepository;
 import streetcatshelter.discatch.domain.community.repository.CommunityImageRepository;
 import streetcatshelter.discatch.domain.community.repository.CommunityLikeitRepository;
 import streetcatshelter.discatch.domain.community.repository.CommunityRepository;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
+import streetcatshelter.discatch.domain.user.domain.User;
+import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
+import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
+import streetcatshelter.discatch.repository.CommentRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -131,8 +132,8 @@ public class CommunityService {
                 .build();
     }
 
-    public void createCommunity(CommunityRequestDto requestDto, UserPrincipal userPrincipal) {
-        User user = userPrincipal.getUser();
+    @UpdateUserScore
+    public void createCommunity(CommunityRequestDto requestDto, User user) {
         Community community = new Community(requestDto, user);
         communityRepository.save(community);
 
@@ -142,9 +143,9 @@ public class CommunityService {
     }
 
     @Transactional
-    public void createComment(Long communityId, CommentRequestDto requestDto, UserPrincipal userPrincipal) {
+    @UpdateUserScore
+    public void createComment(Long communityId, CommentRequestDto requestDto, User user) {
         Community community = getCommunity(communityId);
-        User user = userPrincipal.getUser();
         Comment comment = new Comment(community, requestDto, user);
         commentRepository.save(comment);
         int cntComment = commentRepository.countAllByCommunityId(communityId);
@@ -165,13 +166,13 @@ public class CommunityService {
         }
     }
 
+    @UpdateUserScore
     @Transactional
-    public void deleteComment(Long commentId, UserPrincipal userPrincipal) {
+    public void deleteComment(Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(
                         () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
                 );
-        User user = userPrincipal.getUser();
         if(user.getUserSeq().equals(comment.getUser().getUserSeq())) {
             commentRepository.deleteById(commentId);
         } else {
@@ -200,8 +201,14 @@ public class CommunityService {
         return community;
     }
 
-    public void delete(Long communityId) {
-        communityRepository.deleteById(communityId);
+    @UpdateUserScore
+    public void delete(Long communityId, User user) {
+        Community community = communityRepository.findById(communityId).orElseThrow(() -> new NullPointerException("NO SUCH DATA"));
+        if(community.getUser().equals(user)) {
+            communityRepository.delete(community);
+        } else {
+            throw new IllegalArgumentException("권한이 없습니다.!");
+        }
     }
 
     public List<CommunityImage> convertImage(Community community, List<String> imageStringList) {
