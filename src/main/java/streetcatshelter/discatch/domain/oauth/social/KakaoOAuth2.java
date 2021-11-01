@@ -41,6 +41,7 @@ public class KakaoOAuth2 {
 //        params.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
 
         params.add("redirect_uri", "http://localhost:3000/user/kakao/callback");
+
         params.add("code", authorizedCode);
 
         // HttpHeader와 HttpBody를 하나의 오브젝트에 담기
@@ -96,5 +97,3 @@ public class KakaoOAuth2 {
     }
 
 }
-
-
