@@ -78,8 +78,6 @@ public class CatService {
                         .catTagList(cat.getCatTagList())
                         .build());
             }
-
-
         }
         return responseDtoList;
     }
