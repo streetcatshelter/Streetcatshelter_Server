@@ -6,21 +6,24 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import streetcatshelter.discatch.domain.*;
+import streetcatshelter.discatch.aop.UpdateUserScore;
+import streetcatshelter.discatch.domain.Comment;
+import streetcatshelter.discatch.domain.Liked;
 import streetcatshelter.discatch.domain.cat.domain.Cat;
 import streetcatshelter.discatch.domain.cat.domain.CatDetail;
 import streetcatshelter.discatch.domain.cat.domain.CatImage;
 import streetcatshelter.discatch.domain.cat.domain.CatTag;
+import streetcatshelter.discatch.domain.cat.dto.requestdto.CatRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.CatDetailResponseDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.CatDiaryResponseDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.CatGalleryResponseDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.CatResponseDto;
 import streetcatshelter.discatch.domain.cat.repository.*;
 import streetcatshelter.discatch.domain.user.domain.User;
-import streetcatshelter.discatch.domain.cat.dto.requestdto.CatRequestDto;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
-import streetcatshelter.discatch.dto.responseDto.*;
-import streetcatshelter.discatch.repository.*;
+import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
+import streetcatshelter.discatch.repository.CommentRepository;
+import streetcatshelter.discatch.repository.LikedRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,49 +70,12 @@ public class CatService {
             }
         }
 
-
-
-//        for(Cat cat : cats) {
-//            if(likeds.size()!=0){
-//                for(Liked liked : likeds){
-//                    if(liked.getCat().equals(cat)){
-//                        responseDtoList.add(CatResponseDto.builder()
-//                                .userLiked(true)
-//                                .catId(cat.getId())
-//                                .catName(cat.getCatName())
-//                                .catImage(cat.getCatImage())
-//                                .neutering(cat.getNeutering())
-//                                .catTagList(cat.getCatTagList())
-//                                .build());
-//                    }else{
-//                        responseDtoList.add(CatResponseDto.builder()
-//                                .userLiked(false)
-//                                .catId(cat.getId())
-//                                .catName(cat.getCatName())
-//                                .catImage(cat.getCatImage())
-//                                .neutering(cat.getNeutering())
-//                                .catTagList(cat.getCatTagList())
-//                                .build());
-//                    }
-//                }
-//            }else{
-//                responseDtoList.add(CatResponseDto.builder()
-//                        .userLiked(false)
-//                        .catId(cat.getId())
-//                        .catName(cat.getCatName())
-//                        .catImage(cat.getCatImage())
-//                        .neutering(cat.getNeutering())
-//                        .catTagList(cat.getCatTagList())
-//                        .build());
-//            }
-//
-//
-//        }
         return responseDtoList;
     }
 
-    public void createCat(CatRequestDto requestDto) {
-        Cat cat = new Cat(requestDto);
+    @UpdateUserScore
+    public void createCat(CatRequestDto requestDto, User user) {
+        Cat cat = new Cat(requestDto, user);
         catRepository.save(cat);
 
         List<CatTag> catTagList = convertTag(cat, requestDto.getCatTag());
@@ -195,6 +161,7 @@ public class CatService {
         return catGalleryResponseDtos;
     }
 
+    @UpdateUserScore
     @Transactional
     public void createDetailComment(Long catDetailId,CommentRequestDto commentRequestDto, User user) {
         CatDetail catDetail = catDetailRepository.findById(catDetailId).orElseThrow(
@@ -205,6 +172,7 @@ public class CatService {
         commentRepository.save(comment);
     }
 
+    @UpdateUserScore
     public void createComment(Long catId, CommentRequestDto commentRequestDto, User user) {
         Cat cat = catRepository.findById(catId).orElseThrow(
                 ()-> new NullPointerException("NO SUCH DATA")
@@ -264,6 +232,7 @@ public class CatService {
         return commentResponseDtos;
     }
 
+    @UpdateUserScore
     public void deleteComment(Long commentId, User user) {
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(
