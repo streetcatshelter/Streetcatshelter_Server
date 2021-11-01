@@ -44,7 +44,7 @@ public class CatService {
 
         for(Cat cat : cats){
             responseDtoList.add(CatResponseDto.builder()
-                                .userLiked(true)
+                                .userLiked(false)
                                 .catId(cat.getId())
                                 .catName(cat.getCatName())
                                 .catImage(cat.getCatImage())
