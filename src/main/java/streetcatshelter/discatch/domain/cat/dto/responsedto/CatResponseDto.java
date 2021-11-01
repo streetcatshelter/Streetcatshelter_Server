@@ -12,7 +12,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class CatResponseDto {
+public class
+CatResponseDto {
 
     private Long catId;
     private String catName;

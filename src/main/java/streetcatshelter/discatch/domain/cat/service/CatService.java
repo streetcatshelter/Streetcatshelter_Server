@@ -42,11 +42,8 @@ public class CatService {
         List<CatResponseDto> responseDtoList = new ArrayList<>();
         List<Liked> likeds = likedRepository.findAllByUser_UserSeq(user.getUserSeq());
 
-        for(Cat cat : cats) {
-            if(likeds.size()!=0){
-                for(Liked liked : likeds){
-                    if(liked.getCat().equals(cat)){
-                        responseDtoList.add(CatResponseDto.builder()
+        for(Cat cat : cats){
+            responseDtoList.add(CatResponseDto.builder()
                                 .userLiked(true)
                                 .catId(cat.getId())
                                 .catName(cat.getCatName())
@@ -54,30 +51,60 @@ public class CatService {
                                 .neutering(cat.getNeutering())
                                 .catTagList(cat.getCatTagList())
                                 .build());
-                    }else{
-                        responseDtoList.add(CatResponseDto.builder()
-                                .userLiked(false)
-                                .catId(cat.getId())
-                                .catName(cat.getCatName())
-                                .catImage(cat.getCatImage())
-                                .neutering(cat.getNeutering())
-                                .catTagList(cat.getCatTagList())
-                                .build());
-                    }
-                }
-            }else{
-                responseDtoList.add(CatResponseDto.builder()
-                        .userLiked(false)
-                        .catId(cat.getId())
-                        .catName(cat.getCatName())
-                        .catImage(cat.getCatImage())
-                        .neutering(cat.getNeutering())
-                        .catTagList(cat.getCatTagList())
-                        .build());
-            }
-
-
         }
+
+        if(likeds.size()!=0){
+            for (CatResponseDto catResponseDto : responseDtoList) {
+                for (Liked liked : likeds) {
+
+                    if(catResponseDto.getCatId().equals(liked.getCat().getId())){
+
+                        catResponseDto.setUserLiked(true);
+
+                    }
+
+                }
+            }
+        }
+
+
+
+//        for(Cat cat : cats) {
+//            if(likeds.size()!=0){
+//                for(Liked liked : likeds){
+//                    if(liked.getCat().equals(cat)){
+//                        responseDtoList.add(CatResponseDto.builder()
+//                                .userLiked(true)
+//                                .catId(cat.getId())
+//                                .catName(cat.getCatName())
+//                                .catImage(cat.getCatImage())
+//                                .neutering(cat.getNeutering())
+//                                .catTagList(cat.getCatTagList())
+//                                .build());
+//                    }else{
+//                        responseDtoList.add(CatResponseDto.builder()
+//                                .userLiked(false)
+//                                .catId(cat.getId())
+//                                .catName(cat.getCatName())
+//                                .catImage(cat.getCatImage())
+//                                .neutering(cat.getNeutering())
+//                                .catTagList(cat.getCatTagList())
+//                                .build());
+//                    }
+//                }
+//            }else{
+//                responseDtoList.add(CatResponseDto.builder()
+//                        .userLiked(false)
+//                        .catId(cat.getId())
+//                        .catName(cat.getCatName())
+//                        .catImage(cat.getCatImage())
+//                        .neutering(cat.getNeutering())
+//                        .catTagList(cat.getCatTagList())
+//                        .build());
+//            }
+//
+//
+//        }
         return responseDtoList;
     }
 
