@@ -65,7 +65,7 @@ public class CatDetail extends TimeStamped {
     @OneToMany(mappedBy = "catDetail", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Liked> likeds = new ArrayList<>();
 
-    @OneToMany(mappedBy = "catDetail",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "catDetail",cascade = {CascadeType.REMOVE})
     private List<CatTag> catTags = new ArrayList<>();
 
     @JoinColumn(name = "CAT_ID")
