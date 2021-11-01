@@ -7,5 +7,6 @@ import streetcatshelter.discatch.domain.cat.domain.Cat;
 
 public interface CatRepository extends JpaRepository<Cat, Long> {
     Page<Cat> findAllByLocation(Pageable pageable, String location);
+    int countAllByUser_UserSeq(Long userSeq);
 }
 

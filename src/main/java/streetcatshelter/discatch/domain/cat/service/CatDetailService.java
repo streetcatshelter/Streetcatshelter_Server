@@ -3,19 +3,20 @@ package streetcatshelter.discatch.domain.cat.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import streetcatshelter.discatch.domain.*;
+import streetcatshelter.discatch.aop.UpdateUserScore;
+import streetcatshelter.discatch.domain.Liked;
 import streetcatshelter.discatch.domain.cat.domain.Cat;
 import streetcatshelter.discatch.domain.cat.domain.CatCalender;
 import streetcatshelter.discatch.domain.cat.domain.CatDetail;
+import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailRequestDto;
+import streetcatshelter.discatch.domain.cat.dto.responsedto.CalendarResponseDto;
 import streetcatshelter.discatch.domain.cat.repository.CatCalenderRepository;
 import streetcatshelter.discatch.domain.cat.repository.CatDetailRepository;
 import streetcatshelter.discatch.domain.cat.repository.CatImageRepository;
 import streetcatshelter.discatch.domain.cat.repository.CatRepository;
 import streetcatshelter.discatch.domain.user.domain.User;
-import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailRequestDto;
-import streetcatshelter.discatch.domain.cat.dto.responsedto.CalendarResponseDto;
-import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
-import streetcatshelter.discatch.repository.*;
+import streetcatshelter.discatch.repository.CommentRepository;
+import streetcatshelter.discatch.repository.LikedRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -56,18 +57,14 @@ public class CatDetailService {
         return calendarResponseDtos;
     }
 
-
+    @UpdateUserScore
     @Transactional
-    public void createCatDetail(CatDetailRequestDto requestDto, Long catId, UserPrincipal userPrincipal) {
+    public void createCatDetail(CatDetailRequestDto requestDto, Long catId, User user) {
 
-        User user = userPrincipal.getUser();
         Cat cat = getCat(catId);
         addCallender(requestDto,cat, user);
         CatDetail catDetail = new CatDetail(requestDto,cat,user);
-
-
         catDetailRepository.save(catDetail);
-
     }
 
     private Cat getCat(Long catId) {
@@ -94,6 +91,7 @@ public class CatDetailService {
         }
     }
 
+    @UpdateUserScore
     public void deleteCatDetail(Long catDetailId, User user) {
         CatDetail catDetail = catDetailRepository.findById(catDetailId).orElseThrow(
                 () -> new NullPointerException("NO SUCH DATA")
