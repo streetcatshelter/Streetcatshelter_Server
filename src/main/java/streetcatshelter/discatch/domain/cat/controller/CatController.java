@@ -27,6 +27,10 @@ public class CatController {
                                                  @RequestParam("page") int page,
                                                  @RequestParam("size") int size,
                                                  @PathVariable String location) {
+        if(userPrincipal==null){
+            throw new IllegalArgumentException("유저정보가 없습니다.");
+        }
+
         return catService.getCatByLocation(page, size, location, userPrincipal.getUser());
     }
 

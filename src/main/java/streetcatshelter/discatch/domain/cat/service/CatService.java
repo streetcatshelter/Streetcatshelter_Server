@@ -60,11 +60,16 @@ public class CatService {
             for (CatResponseDto catResponseDto : responseDtoList) {
                 for (Liked liked : likeds) {
 
-                    if(catResponseDto.getCatId().equals(liked.getCat().getId())){
 
-                        catResponseDto.setUserLiked(true);
+                    if(liked.getCat()!=null){
 
+                        if(catResponseDto.getCatId().equals(liked.getCat().getId())){
+
+                            catResponseDto.setUserLiked(true);
+
+                        }
                     }
+
 
                 }
             }
