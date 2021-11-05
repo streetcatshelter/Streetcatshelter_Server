@@ -60,15 +60,60 @@ public class CatService {
             for (CatResponseDto catResponseDto : responseDtoList) {
                 for (Liked liked : likeds) {
 
-                    if(catResponseDto.getCatId().equals(liked.getCat().getId())){
 
-                        catResponseDto.setUserLiked(true);
+                    if(liked.getCat()!=null){
 
+                        if(catResponseDto.getCatId().equals(liked.getCat().getId())){
+
+                            catResponseDto.setUserLiked(true);
+
+                        }
                     }
+
 
                 }
             }
         }
+
+
+
+
+//        for(Cat cat : cats) {
+//            if(likeds.size()!=0){
+//                for(Liked liked : likeds){
+//                    if(liked.getCat().equals(cat)){
+//                        responseDtoList.add(CatResponseDto.builder()
+//                                .userLiked(true)
+//                                .catId(cat.getId())
+//                                .catName(cat.getCatName())
+//                                .catImage(cat.getCatImage())
+//                                .neutering(cat.getNeutering())
+//                                .catTagList(cat.getCatTagList())
+//                                .build());
+//                    }else{
+//                        responseDtoList.add(CatResponseDto.builder()
+//                                .userLiked(false)
+//                                .catId(cat.getId())
+//                                .catName(cat.getCatName())
+//                                .catImage(cat.getCatImage())
+//                                .neutering(cat.getNeutering())
+//                                .catTagList(cat.getCatTagList())
+//                                .build());
+//                    }
+//                }
+//            }else{
+//                responseDtoList.add(CatResponseDto.builder()
+//                        .userLiked(false)
+//                        .catId(cat.getId())
+//                        .catName(cat.getCatName())
+//                        .catImage(cat.getCatImage())
+//                        .neutering(cat.getNeutering())
+//                        .catTagList(cat.getCatTagList())
+//                        .build());
+//            }
+//
+//
+//        }
 
         return responseDtoList;
     }
