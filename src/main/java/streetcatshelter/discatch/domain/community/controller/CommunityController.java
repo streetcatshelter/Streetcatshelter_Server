@@ -48,7 +48,7 @@ public class CommunityController {
 
     @DeleteMapping("/community/{communityId}")
     public void deleteCommunity(@PathVariable Long communityId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        communityService.delete(communityId, userPrincipal.getUser());
+        communityService.deleteCommunity(communityId, userPrincipal.getUser());
     }
 
     //커뮤니티 코멘트들 다 모아놓음음

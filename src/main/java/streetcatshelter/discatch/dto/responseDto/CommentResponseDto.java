@@ -19,4 +19,5 @@ public class CommentResponseDto {
     private String profileImageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private Boolean isMine;
 }
