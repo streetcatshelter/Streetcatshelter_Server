@@ -102,6 +102,10 @@ public class CommunityService {
         List<Comment> commentList = community.getCommentList();
         List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
         for(Comment comment : commentList) {
+            Boolean isMine = null;
+            if(comment.getUser() == user) {
+                isMine = true;
+            }
             commentResponseDtos.add(CommentResponseDto.builder()
                     .username(comment.getUser().getUsername())
                     .nickname(comment.getUser().getNickname())
@@ -109,6 +113,7 @@ public class CommunityService {
                     .commentId(comment.getId())
                     .createdAt(comment.getCreatedAt())
                     .modifiedAt(comment.getModifiedAt())
+                    .isMine(isMine)
                     .build());
         }
 
@@ -202,7 +207,7 @@ public class CommunityService {
     }
 
     @UpdateUserScore
-    public void delete(Long communityId, User user) {
+    public void deleteCommunity(Long communityId, User user) {
         Community community = communityRepository.findById(communityId).orElseThrow(() -> new NullPointerException("NO SUCH DATA"));
         if(community.getUser().equals(user)) {
             communityRepository.delete(community);

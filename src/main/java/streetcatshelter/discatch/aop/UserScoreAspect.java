@@ -49,17 +49,33 @@ public class UserScoreAspect {
         int MIN_POINT_FOR_SILVER = 20;
         int MIN_POINT_FOR_GOLD = 50;
         int MIN_POINT_FOR_PLATINUM = 100;
-        int userLevelScore;
+/*        int userLevelScore;
         int A = catRepository.countAllByUser_UserSeq(user.getUserSeq());
         int B = catDetailRepository.countAllByUser_UserSeq(user.getUserSeq());
         int C = commentRepository.countAllByUser_UserSeq(user.getUserSeq());
         int D = communityRepository.countAllByUser_UserSeq(user.getUserSeq());
         userLevelScore = (A*5 + B*2 + C*2 + D*5);
-        user.setScore(userLevelScore);
+        user.setScore(userLevelScore);*/
 
-      /*  if(joinPoint.toShortString().contains("createCat")) {
+        if(joinPoint.toShortString().contains("createCat")) {
             user.setScore(user.getScore() + 5);
-        }*/
+        } else if(joinPoint.toShortString().contains("createCatDetail")) {
+            user.setScore(user.getScore() + 2);
+        } else if(joinPoint.toShortString().contains("deleteCatDetail")) {
+            user.setScore(user.getScore() - 2);
+        } else if(joinPoint.toShortString().contains("createComment")) {
+            user.setScore(user.getScore() + 2);
+        } else if(joinPoint.toShortString().contains("createDetailComment")) {
+            user.setScore(user.getScore() + 2);
+        } else if(joinPoint.toShortString().contains("deleteComment")) {
+            user.setScore(user.getScore() - 2);
+        } else if(joinPoint.toShortString().contains("createCommunity")) {
+            user.setScore(user.getScore() + 5);
+        } else if(joinPoint.toShortString().contains("deleteCommunity")) {
+            user.setScore(user.getScore() - 5);
+        }
+
+        int userLevelScore = user.getScore();
 
         if(currentLevel == 아깽이 && userLevelScore >= MIN_POINT_FOR_SILVER) {
             user.updateUserLevel();

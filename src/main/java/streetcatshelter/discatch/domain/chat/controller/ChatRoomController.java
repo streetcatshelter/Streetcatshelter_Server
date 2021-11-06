@@ -8,8 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.domain.chat.domain.ChatRoom;
 import streetcatshelter.discatch.domain.chat.domain.LoginInfo;
-import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
 import streetcatshelter.discatch.domain.chat.repository.ChatRoomRepository;
+import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
 
 import java.util.List;
 
@@ -41,9 +41,8 @@ public class ChatRoomController {
     }
 
     @GetMapping("/room/enter/{roomId}")
-    public String roomDetail(Model model, @PathVariable String roomId) {
+    public void roomDetail(Model model, @PathVariable String roomId) {
         model.addAttribute("roomId", roomId);
-        return "/chat/roomdetail";
     }
 
     @GetMapping("/room/{roomId}")
