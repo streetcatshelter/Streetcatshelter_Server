@@ -21,11 +21,6 @@ public class ChatRoomController {
     private final ChatRoomRepository chatRoomRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @GetMapping("/room")
-    public String rooms() {
-        return "/chat/room";
-    }
-
     @GetMapping("/rooms")
     @ResponseBody
     public List<ChatRoom> room() {
