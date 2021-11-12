@@ -7,4 +7,5 @@ import streetcatshelter.discatch.domain.user.domain.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUserId(String userID);
     User findByUserSeq(Long userSeq);
+    User findByNickname(String nickname);
 }
