@@ -3,13 +3,14 @@ package streetcatshelter.discatch.domain.chat.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import streetcatshelter.discatch.domain.TimeStamped;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
 @Entity
-public class ChatMessage {
+public class ChatMessage extends TimeStamped {
 
     public ChatMessage() {
     }
@@ -19,7 +20,6 @@ public class ChatMessage {
         this.type = type;
         this.roomId = roomId;
         this.userName = userName;
-        this.userProfile = userProfile;
         this.message = message;
     }
 
@@ -40,14 +40,6 @@ public class ChatMessage {
     @Column
     private String userName; // 메시지 보낸사람
 
-    private String userProfile;
-
     @Column
     private String message; // 메시지
-
-    @Column
-    private String timenow;
-
-    @Column
-    private String email;
 }

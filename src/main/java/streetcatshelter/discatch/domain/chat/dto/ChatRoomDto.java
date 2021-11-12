@@ -10,6 +10,5 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class ChatRoomDto {
-    private String roomName;
     private List<String> chatUser;
 }
