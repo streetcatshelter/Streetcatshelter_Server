@@ -17,9 +17,7 @@ import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,13 +37,13 @@ public class ChatController {//ChatService에서 입/퇴장을 처리하기 때�
     @GetMapping("/api/chat/message/{roomId}")
     @ResponseBody
     public List<ChatMessage> loadMessage(@PathVariable String roomId) {
-        List<ChatMessage> messages = chatMessageRepository.findAllByRoomIdOrderByTimenowDesc(roomId);
+        List<ChatMessage> messages = chatMessageRepository.findAllByRoomIdOrderByCreatedAtDesc(roomId);
         return messages;
     }
     //가장 최근에 채팅방에서 전송된 메세지 확인
     @GetMapping("/api/chat/message/last/{roomId}")
     public ChatMessage lastMessage(@PathVariable String roomId){
-        ChatMessage message = chatMessageRepository.findFirstByRoomIdOrderByTimenowDesc(roomId);
+        ChatMessage message = chatMessageRepository.findFirstByRoomIdOrderByCreatedAtDesc(roomId);
         return message;
     }
 
@@ -55,16 +53,11 @@ public class ChatController {//ChatService에서 입/퇴장을 처리하기 때�
         String userId = jwtTokenProvider.getUserPk(token); //회원의 대화명을 가져와 token 유효성 체크
         User member = userRepository.findByUserId(userId);
         String nickname = member.getNickname();
-        message.setEmail(userId);
         // 헤더에서 토큰을 읽어 로그인 회원 정보로 대화명 설정
         message.setUserName(nickname);
         System.out.println("토큰 유효성 확인 완료, 해당 닉네임 : "+ nickname);
         // 채팅방 인원수 세팅
         System.out.println(message);
-        long systemTime = System.currentTimeMillis();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
-        String dTime = formatter.format(systemTime);
-        message.setTimenow(dTime);
         System.out.println("DB 저장 완료");
         chatMessageRepository.save(message);
         // Websocket에 발행된 메시지를 redis로 발행(publish)

@@ -62,7 +62,7 @@ public class ChatRoomController {
     //특정 채팅방 입장. 채팅방에 저장된 메세지 반환
     @GetMapping("/enter/{roomId}")
     public List<ChatMessage> roomInfo(@PathVariable String roomId) {
-        List<ChatMessage> messages = chatMessageRepository.findAllByRoomIdOrderByTimenowDesc(roomId);
+        List<ChatMessage> messages = chatMessageRepository.findAllByRoomIdOrderByCreatedAtDesc(roomId);
         return messages;
     }
 

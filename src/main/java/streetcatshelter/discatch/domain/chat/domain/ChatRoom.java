@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -22,7 +23,7 @@ public class ChatRoom implements Serializable { // redis에 저장되는 객체�
     private Long id;
 
     @Column
-    private String roomName;
+    private String roomId;
 
     @ManyToMany
     @JoinColumn(name = "chet_room_user")
@@ -30,7 +31,7 @@ public class ChatRoom implements Serializable { // redis에 저장되는 객체�
 
     public static ChatRoom create(ChatRoomDto chatRoomDto) {
         ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomName = chatRoomDto.getRoomName();
+        chatRoom.roomId = UUID.randomUUID().toString();
         return chatRoom;
     }
 
