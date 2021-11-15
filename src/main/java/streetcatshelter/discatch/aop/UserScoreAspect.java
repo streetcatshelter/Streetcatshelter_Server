@@ -91,7 +91,10 @@ public class UserScoreAspect {
             user.setScoreLeft(50 - userLevelScore);
         } else if (currentLevel == 대장냥) {
             user.setScoreLeft(100 - userLevelScore);
+        } else if (currentLevel == 프로집사) {
+            user.setScoreLeft(0);
         }
+
         userRepository.save(user);
         return userLevelScore;
     }

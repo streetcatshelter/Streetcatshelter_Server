@@ -12,6 +12,7 @@ import streetcatshelter.discatch.domain.oauth.entity.ProviderType;
 import streetcatshelter.discatch.domain.oauth.entity.RoleType;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,7 +22,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
-public class User extends TimeStamped {
+public class User extends TimeStamped implements Serializable {
 
 
     @Id

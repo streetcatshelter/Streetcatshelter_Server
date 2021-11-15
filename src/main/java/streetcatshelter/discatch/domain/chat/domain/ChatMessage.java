@@ -3,21 +3,24 @@ package streetcatshelter.discatch.domain.chat.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import streetcatshelter.discatch.domain.TimeStamped;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
-public class ChatMessage {
+@Entity
+public class ChatMessage extends TimeStamped {
 
     public ChatMessage() {
     }
 
     @Builder
-    public ChatMessage(MessageType type, String roomId, String sender, String message, long userCount) {
+    public ChatMessage(MessageType type, String roomId, String userName, String userProfile, String message) {
         this.type = type;
         this.roomId = roomId;
-        this.sender = sender;
+        this.userName = userName;
         this.message = message;
-        this.userCount = userCount;
     }
 
     // 메시지 타입 : 입장, 퇴장, 채팅
@@ -25,9 +28,18 @@ public class ChatMessage {
         ENTER, QUIT, TALK
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private MessageType type; // 메시지 타입
+
+    @Column
     private String roomId; // 방번호
-    private String sender; // 메시지 보낸사람
+
+    @Column
+    private String userName; // 메시지 보낸사람
+
+    @Column
     private String message; // 메시지
-    private long userCount; // 채팅방 인원수, 채팅방 내에서 메시지가 전달될때 인원수 갱신시 사용
 }

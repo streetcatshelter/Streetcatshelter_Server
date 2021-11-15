@@ -48,7 +48,14 @@ public class CommunityService {
                     isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
                 }
                 String nickname = community.getUser().getNickname();
-                String profileImageUrl = community.getUser().getProfileImageUrl();
+
+                String profileImageUrl;
+                if(community.getUser().getProfileUrl() == null) {
+                    profileImageUrl = community.getUser().getProfileImageUrl();
+                } else {
+                    profileImageUrl = community.getUser().getProfileUrl();
+                }
+
                 String username = community.getUser().getUsername();
                 String title = community.getTitle();
                 LocalDateTime createdAt = community.getCreatedAt();
@@ -69,7 +76,14 @@ public class CommunityService {
             for (Community community : communities) {
                 boolean isLiked = false;
                 String nickname = community.getUser().getNickname();
-                String profileImageUrl = community.getUser().getProfileImageUrl();
+
+                String profileImageUrl;
+                if(community.getUser().getProfileUrl() == null) {
+                    profileImageUrl = community.getUser().getProfileImageUrl();
+                } else {
+                    profileImageUrl = community.getUser().getProfileUrl();
+                }
+
                 String username = community.getUser().getUsername();
                 if (user != null) {
                     isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
@@ -102,24 +116,42 @@ public class CommunityService {
         List<Comment> commentList = community.getCommentList();
         List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
         for(Comment comment : commentList) {
-            Boolean isMine = null;
-            if(comment.getUser() == user) {
-                isMine = true;
+
+            String profileImageUrl;
+            if(comment.getUser().getProfileUrl() == null) {
+                profileImageUrl = comment.getUser().getProfileImageUrl();
+            } else {
+                profileImageUrl = comment.getUser().getProfileUrl();
             }
+
+            String nickname;
+            if(comment.getUser().getNickname() == null) {
+                nickname = comment.getUser().getUsername();
+            } else {
+                nickname = comment.getUser().getNickname();
+            }
+
             commentResponseDtos.add(CommentResponseDto.builder()
                     .username(comment.getUser().getUsername())
-                    .nickname(comment.getUser().getNickname())
+                    .nickname(nickname)
                     .contents(comment.getContents())
                     .commentId(comment.getId())
                     .createdAt(comment.getCreatedAt())
                     .modifiedAt(comment.getModifiedAt())
-                    .isMine(isMine)
+                    .profileImageUrl(profileImageUrl)
+                    .userId(comment.getUser().getUserSeq())
                     .build());
+        }
+        String profileImageUrl;
+        if(community.getUser().getProfileUrl() == null) {
+            profileImageUrl = community.getUser().getProfileImageUrl();
+        } else {
+            profileImageUrl = community.getUser().getProfileUrl();
         }
 
         return CommunityDetailResponseDto.builder()
                 .category(community.getCategory())
-                .profileImageUrl(community.getUser().getProfileImageUrl())
+                .profileImageUrl(profileImageUrl)
                 .cntComment(community.getCntComment())
                 .communityId(community.getId())
                 .cntLikeit(community.getCntLikeit())
