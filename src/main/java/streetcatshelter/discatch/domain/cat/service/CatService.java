@@ -53,6 +53,8 @@ public class CatService {
                                 .catImage(cat.getCatImage())
                                 .neutering(cat.getNeutering())
                                 .catTagList(cat.getCatTagList())
+                                .longitude(cat.getLongitude())
+                                .latitude(cat.getLatitude())
                                 .build());
         }
 
