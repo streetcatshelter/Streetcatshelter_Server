@@ -6,6 +6,7 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import streetcatshelter.discatch.domain.TimeStamped;
+import streetcatshelter.discatch.domain.oauth.social.GoogleUserInfo;
 import streetcatshelter.discatch.domain.user.dto.UserInformationRequestDto;
 import streetcatshelter.discatch.domain.oauth.entity.ProviderType;
 import streetcatshelter.discatch.domain.oauth.entity.RoleType;
@@ -50,6 +51,7 @@ public class User extends TimeStamped {
     private String email;
 
     @Column(columnDefinition = "default 1")
+    @Enumerated(EnumType.STRING)
     private UserLevel userLevel;
 
     @Column(nullable = true)
@@ -80,8 +82,8 @@ public class User extends TimeStamped {
             @NotNull String emailVerifiedYn,
             @NotNull String profileImageUrl,
             @NotNull ProviderType providerType,
-            @NotNull RoleType roleType
-    ) {
+            @NotNull RoleType roleType,
+            UserLevel userLevel) {
         this.userId = userId;
         this.username = username;
         this.password = "NO_PASS";
@@ -90,6 +92,7 @@ public class User extends TimeStamped {
         this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
         this.providerType = providerType;
         this.roleType = roleType;
+        this.userLevel = userLevel;
     }
     public User(
             @NotNull String userId,
@@ -99,7 +102,8 @@ public class User extends TimeStamped {
             @NotNull String emailVerifiedYn,
             @NotNull String profileImageUrl,
             @NotNull ProviderType providerType,
-            @NotNull RoleType roleType
+            @NotNull RoleType roleType,
+            UserLevel userlevel
     ) {
         this.userId = userId;
         this.username = username;
@@ -110,6 +114,20 @@ public class User extends TimeStamped {
         this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
         this.providerType = providerType;
         this.roleType = roleType;
+        this.userLevel = userlevel;
+    }
+
+    public static User googleUserCreate(GoogleUserInfo googleUserInfo){
+        return new User(
+                googleUserInfo.getId(),
+                googleUserInfo.getName(),
+                googleUserInfo.getEmail(),
+                "Y",
+                googleUserInfo.getPicture(),
+                ProviderType.GOOGLE,
+                RoleType.USER,
+                UserLevel.아깽이
+                );
     }
 
     @Override

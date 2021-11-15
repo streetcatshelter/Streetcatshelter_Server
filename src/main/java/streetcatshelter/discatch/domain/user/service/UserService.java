@@ -4,15 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.config.properties.AppProperties;
+import streetcatshelter.discatch.domain.oauth.social.*;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.chat.dto.LoginResponseDto;
 import streetcatshelter.discatch.domain.oauth.entity.ProviderType;
 import streetcatshelter.discatch.domain.oauth.entity.RoleType;
-import streetcatshelter.discatch.domain.oauth.social.KakaoOAuth2;
-import streetcatshelter.discatch.domain.oauth.social.KakaoUserInfo;
-import streetcatshelter.discatch.domain.oauth.social.NaverOAuth2;
-import streetcatshelter.discatch.domain.oauth.social.NaverUserInfo;
 import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
+import streetcatshelter.discatch.domain.user.domain.UserLevel;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
 
 
@@ -26,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final NaverOAuth2 naverOAuth2;
+    private final GoogleOAuth2 googleOAuth2;
 
     public LoginResponseDto kakaoLogin(String code) {
         KakaoUserInfo kakaoUserInfo = kakaoOAuth2.getUserInfo(code);
@@ -58,7 +57,8 @@ public class UserService {
                     "y",
                     kakaoUserInfo.getKakao_account().getProfile().getProfile_image_url(),
                     ProviderType.KAKAO,
-                    RoleType.USER);
+                    RoleType.USER,
+                    UserLevel.아깽이);
 
             userRepository.save(kakaoUser);
         }
@@ -88,12 +88,31 @@ public class UserService {
                     "y",
                     naverUserInfo.getProfile_image(),
                     ProviderType.NAVER,
-                    RoleType.USER);
+                    RoleType.USER,
+                    UserLevel.아깽이);
 
             userRepository.save(naverUser);
         }
 
 
         return new LoginResponseDto(naverUser,jwtTokenProvider.createToken(id));
+    }
+
+
+    public LoginResponseDto googleLogin(String code) {
+        GoogleUserInfo googleUserInfo = googleOAuth2.getUserInfo(code);
+
+        String id = googleUserInfo.getId();
+
+        User googleUser = userRepository.findByUserId(id);
+
+        if(googleUser == null){
+            User user = User.googleUserCreate(googleUserInfo);
+            userRepository.save(user);
+        }
+
+        assert googleUser != null;
+        return new LoginResponseDto(googleUser,jwtTokenProvider.createToken(id));
+
     }
 }
