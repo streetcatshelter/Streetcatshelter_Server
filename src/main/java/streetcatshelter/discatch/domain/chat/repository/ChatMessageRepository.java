@@ -6,7 +6,7 @@ import streetcatshelter.discatch.domain.chat.domain.ChatMessage;
 import java.util.List;
 
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
-    List<ChatMessage> findAllByRoomIdOrderByCreatedAtDesc(String roomId);
+    List<ChatMessage> findAllByRoomIdOrderByCreatedAtAsc(String roomId);
 
     ChatMessage findFirstByRoomIdOrderByCreatedAtDesc(String roomId);
 

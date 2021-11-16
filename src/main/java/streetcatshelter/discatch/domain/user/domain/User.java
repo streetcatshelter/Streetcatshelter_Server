@@ -51,8 +51,7 @@ public class User extends TimeStamped implements Serializable {
     @Column(nullable = true)
     private String email;
 
-    @Column(columnDefinition = "default 1")
-    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "default 3")
     private UserLevel userLevel;
 
     @Column(nullable = true)
