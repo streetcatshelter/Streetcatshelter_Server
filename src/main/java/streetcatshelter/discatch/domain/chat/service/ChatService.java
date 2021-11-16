@@ -57,7 +57,7 @@ public class ChatService { //입장, 퇴장 처리
     }
 
     public List<ChatMessageResponseDto> loadMessage(String roomId, UserPrincipal userPrincipal) {
-        List<ChatMessage> messages = chatMessageRepository.findAllByRoomIdOrderByCreatedAtDesc(roomId);
+        List<ChatMessage> messages = chatMessageRepository.findAllByRoomIdOrderByCreatedAtAsc(roomId);
         List<ChatMessageResponseDto> responseDtoList = new ArrayList<>();
         for(ChatMessage chatMessage : messages) {
 
@@ -101,6 +101,7 @@ public class ChatService { //입장, 퇴장 처리
     public ChatMessageResponseDto lastMessage(String roomId) {
         ChatMessage chatMessage = chatMessageRepository.findFirstByRoomIdOrderByCreatedAtDesc(roomId);
         Date date = java.sql.Timestamp.valueOf(chatMessage.getCreatedAt());
+        System.out.println(date);
         String time = Time.calculateTime(date);
         return ChatMessageResponseDto.builder().message(chatMessage.getMessage())
                 .sender(chatMessage.getMessage())
