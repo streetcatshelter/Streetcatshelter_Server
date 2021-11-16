@@ -21,5 +21,7 @@ CatResponseDto {
     private String neutering;
     private boolean userLiked;
     private List<CatTag> catTagList;
+    private double latitude;
+    private double longitude;
 
 }
