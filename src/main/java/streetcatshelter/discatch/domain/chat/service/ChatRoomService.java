@@ -6,7 +6,9 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.chat.domain.ChatRoom;
 import streetcatshelter.discatch.domain.chat.dto.ChatRoomDto;
+import streetcatshelter.discatch.domain.chat.dto.ChatRoomResponseDto;
 import streetcatshelter.discatch.domain.chat.repository.ChatRoomRepository;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
 
@@ -22,7 +24,7 @@ public class ChatRoomService {
     public static final String ENTER_INFO = "ENTER_INFO"; // 채팅룸에 입장한 클라이언트의 sessionId와 채팅룸 id를 맵핑한 정보 저장
     private final UserRepository userRepository;
     private final ChatRoomRepository chatRoomRepository;
-
+    private final ChatService chatService;
 
     @Resource(name = "redisTemplate")
     private HashOperations<String, String, ChatRoom> hashOpsChatRoom;
@@ -80,4 +82,29 @@ public class ChatRoomService {
         hashOpsEnterInfo.delete(ENTER_INFO, sessionId);
     }
 
+    public ChatRoomResponseDto roomInfo(String roomId, UserPrincipal userPrincipal) {
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId);
+        User user = userPrincipal.getUser();
+        User opponent;
+        if(chatRoom.getUser().get(0).equals(user)) {
+            opponent = chatRoom.getUser().get(1);
+        } else {
+            opponent = chatRoom.getUser().get(0);
+        }
+
+        String opponentImage;
+        if(opponent.getProfileUrl() == null) {
+            opponentImage = opponent.getProfileImageUrl();
+        } else {
+            opponentImage = opponent.getProfileUrl();
+        }
+
+        String lastActivity = chatService.lastMessage(roomId).getTime();
+
+        return ChatRoomResponseDto.builder()
+                .opponent(opponent.getNickname())
+                .opponentImage(opponentImage)
+                .lastActivity(lastActivity)
+                .build();
+    }
 }

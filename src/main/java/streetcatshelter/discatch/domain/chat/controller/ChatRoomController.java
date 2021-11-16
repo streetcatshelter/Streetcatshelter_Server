@@ -1,14 +1,17 @@
 package streetcatshelter.discatch.domain.chat.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.domain.chat.domain.ChatMessage;
 import streetcatshelter.discatch.domain.chat.domain.ChatRoom;
 import streetcatshelter.discatch.domain.chat.dto.ChatRoomDto;
+import streetcatshelter.discatch.domain.chat.dto.ChatRoomResponseDto;
 import streetcatshelter.discatch.domain.chat.repository.ChatMessageRepository;
 import streetcatshelter.discatch.domain.chat.repository.ChatRoomRepository;
 import streetcatshelter.discatch.domain.chat.service.ChatRoomService;
 import streetcatshelter.discatch.domain.chat.service.ChatService;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
@@ -59,11 +62,10 @@ public class ChatRoomController {
 
     }
 
-    //특정 채팅방 입장. 채팅방에 저장된 메세지 반환
+    //특정 채팅방 입장. 채팅방정보 제공;
     @GetMapping("/enter/{roomId}")
-    public List<ChatMessage> roomInfo(@PathVariable String roomId) {
-        List<ChatMessage> messages = chatMessageRepository.findAllByRoomIdOrderByCreatedAtDesc(roomId);
-        return messages;
+    public ChatRoomResponseDto roomInfo(@PathVariable String roomId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return chatRoomService.roomInfo(roomId, userPrincipal);
     }
 
     //채팅방 퇴장 테스트 필요
