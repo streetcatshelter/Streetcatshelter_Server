@@ -68,7 +68,7 @@ public class ChatRoomService {
             opponentImage = opponent.getProfileUrl();
         }
 
-        LocalDateTime lastActivity;
+        String lastActivity;
         if(chatService.lastMessage(roomId) != null) {
             lastActivity = chatService.lastMessage(roomId).getTime();
         } else {
@@ -79,6 +79,7 @@ public class ChatRoomService {
                 .opponent(opponent.getNickname())
                 .opponentImage(opponentImage)
                 .lastActivity(lastActivity)
+                .roomId(chatRoom.getRoomId())
                 .build();
     }
 }

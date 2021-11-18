@@ -72,7 +72,7 @@ public class ChatService { //입장, 퇴장 처리
 
             responseDtoList.add(ChatMessageResponseDto.builder()
                     .message(chatMessage.getMessage())
-                    .time(chatMessage.getCreatedAt())
+                    .time(String.valueOf(chatMessage.getCreatedAt()))
                     .sender(chatMessage.getUserName())
                     .isMine(isMine)
                     .build());
@@ -110,7 +110,7 @@ public class ChatService { //입장, 퇴장 처리
         String time = Time.calculateTime(date);*/
         return ChatMessageResponseDto.builder().message(chatMessage.getMessage())
                 .sender(chatMessage.getMessage())
-                .time(chatMessage.getCreatedAt())
+                .time(String.valueOf(chatMessage.getCreatedAt()))
                 .sender(chatMessage.getUserName())
                 .build();
     }

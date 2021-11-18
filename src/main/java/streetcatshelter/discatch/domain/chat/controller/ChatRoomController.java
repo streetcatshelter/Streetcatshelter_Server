@@ -16,7 +16,6 @@ import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class ChatRoomController {
         List<ChatRoom> chatRooms = chatRoomRepository.findAllByUser(user);
         List<ChatRoomResponseDto> responseDtoList = new ArrayList<>();
         for(ChatRoom chatRoom : chatRooms) {
-            LocalDateTime lastActivity = chatService.lastMessage(chatRoom.getRoomId()).getTime();
+            String lastActivity = chatService.lastMessage(chatRoom.getRoomId()).getTime();
             String lastMessage = chatService.lastMessage(chatRoom.getRoomId()).getMessage();
             List<User> chatUsers = chatRoom.getUser();
             chatUsers.remove(user);

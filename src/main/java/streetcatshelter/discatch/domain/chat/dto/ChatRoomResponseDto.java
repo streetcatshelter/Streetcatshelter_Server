@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class ChatRoomResponseDto {
     private String opponent;
     private String opponentImage;
-    private LocalDateTime lastActivity;
+    private String lastActivity;
     private String roomId;
     private String lastMessage;
 }

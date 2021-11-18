@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 public class ChatMessageResponseDto {
     private String message;
     private String sender;
-    private LocalDateTime time;
+    private String time;
     private boolean isMine;
 }
