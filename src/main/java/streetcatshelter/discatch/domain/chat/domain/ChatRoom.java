@@ -2,7 +2,6 @@ package streetcatshelter.discatch.domain.chat.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import streetcatshelter.discatch.domain.chat.dto.ChatRoomDto;
 import streetcatshelter.discatch.domain.user.domain.User;
 
 import javax.persistence.*;
@@ -25,12 +24,16 @@ public class ChatRoom implements Serializable { // redis에 저장되는 객체�
     @Column
     private String roomId;
 
+    @Column
+    private String userSeqSum;
+
     @ManyToMany
     @JoinColumn(name = "chet_room_user")
     private List<User> user = new ArrayList<>();
 
-    public static ChatRoom create(ChatRoomDto chatRoomDto) {
+    public static ChatRoom create(String userSeqSum) {
         ChatRoom chatRoom = new ChatRoom();
+        chatRoom.userSeqSum = userSeqSum;
         chatRoom.roomId = UUID.randomUUID().toString();
         return chatRoom;
     }

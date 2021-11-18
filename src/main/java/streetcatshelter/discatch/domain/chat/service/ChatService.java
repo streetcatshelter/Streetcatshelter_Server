@@ -5,7 +5,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.chat.domain.ChatMessage;
-import streetcatshelter.discatch.domain.chat.domain.Time;
 import streetcatshelter.discatch.domain.chat.dto.ChatMessageResponseDto;
 import streetcatshelter.discatch.domain.chat.repository.ChatMessageRepository;
 import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
@@ -14,7 +13,6 @@ import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -61,8 +59,8 @@ public class ChatService { //입장, 퇴장 처리
         List<ChatMessageResponseDto> responseDtoList = new ArrayList<>();
         for(ChatMessage chatMessage : messages) {
 
-            Date date = java.sql.Timestamp.valueOf(chatMessage.getCreatedAt());
-            String time = Time.calculateTime(date);
+/*            Date date = java.sql.Timestamp.valueOf(chatMessage.getCreatedAt());
+            String time = Time.calculateTime(date);*/
 
             User user = userPrincipal.getUser();
             boolean isMine;
@@ -74,7 +72,7 @@ public class ChatService { //입장, 퇴장 처리
 
             responseDtoList.add(ChatMessageResponseDto.builder()
                     .message(chatMessage.getMessage())
-                    .time(time)
+                    .time(String.valueOf(chatMessage.getCreatedAt()))
                     .sender(chatMessage.getUserName())
                     .isMine(isMine)
                     .build());
@@ -99,13 +97,20 @@ public class ChatService { //입장, 퇴장 처리
     }
 
     public ChatMessageResponseDto lastMessage(String roomId) {
+        if(chatMessageRepository.findFirstByRoomIdOrderByCreatedAtDesc(roomId) == null) {
+            return ChatMessageResponseDto.builder()
+                    .message("메세지가없어요")
+                    .isMine(false)
+                    .sender("메세지가없어요")
+                    .build();
+        }
         ChatMessage chatMessage = chatMessageRepository.findFirstByRoomIdOrderByCreatedAtDesc(roomId);
-        Date date = java.sql.Timestamp.valueOf(chatMessage.getCreatedAt());
+/*        Date date = java.sql.Timestamp.valueOf(chatMessage.getCreatedAt());
         System.out.println(date);
-        String time = Time.calculateTime(date);
+        String time = Time.calculateTime(date);*/
         return ChatMessageResponseDto.builder().message(chatMessage.getMessage())
                 .sender(chatMessage.getMessage())
-                .time(time)
+                .time(String.valueOf(chatMessage.getCreatedAt()))
                 .sender(chatMessage.getUserName())
                 .build();
     }
