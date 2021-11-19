@@ -74,7 +74,7 @@ public class Comment  extends TimeStamped { // 생성,수정 시간을 자동으
 
     public boolean isSameUser(User user){
 
-        if(user.equals(this.user)){
+        if(user == this.user){
             return true;
         }else{
             return false;
