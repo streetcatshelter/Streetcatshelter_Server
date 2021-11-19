@@ -42,4 +42,7 @@ public class ChatMessage extends TimeStamped {
 
     @Column
     private String message; // 메시지
+
+    @Column
+    private String time; // 메시지
 }
