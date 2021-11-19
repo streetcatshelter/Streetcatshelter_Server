@@ -279,6 +279,7 @@ public class CatService {
                         .profileImageUrl(comment.getUser().getProfileImageUrl())
                         .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                         .modifiedAt(comment.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .nickname(comment.getUser().getNickname())
                         .isMine(true)
                         .build());
             }else{
@@ -290,6 +291,7 @@ public class CatService {
                         .profileImageUrl(comment.getUser().getProfileImageUrl())
                         .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                         .modifiedAt(comment.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .nickname(comment.getUser().getNickname())
                         .isMine(false)
                         .build());
             }
