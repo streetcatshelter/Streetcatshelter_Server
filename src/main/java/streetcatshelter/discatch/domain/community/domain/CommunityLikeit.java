@@ -12,6 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "communityLikeit")
 public class CommunityLikeit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

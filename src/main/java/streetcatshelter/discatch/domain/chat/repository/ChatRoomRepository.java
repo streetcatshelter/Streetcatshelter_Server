@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     List<ChatRoom> findAllByUser(User user);
-
+    ChatRoom findByRoomId(String roomId);
     @NotNull Optional<ChatRoom> findById(@NotNull Long roomId);
+    ChatRoom findByUserSeqSum(String userSeqSum);
 }

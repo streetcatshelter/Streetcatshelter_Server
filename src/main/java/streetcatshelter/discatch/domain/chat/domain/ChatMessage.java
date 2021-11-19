@@ -16,7 +16,7 @@ public class ChatMessage extends TimeStamped {
     }
 
     @Builder
-    public ChatMessage(MessageType type, String roomId, String userName, String userProfile, String message) {
+    public ChatMessage(MessageType type, String roomId, String userName, String message) {
         this.type = type;
         this.roomId = roomId;
         this.userName = userName;
@@ -42,4 +42,7 @@ public class ChatMessage extends TimeStamped {
 
     @Column
     private String message; // 메시지
+
+    @Column
+    private String time; // 메시지
 }

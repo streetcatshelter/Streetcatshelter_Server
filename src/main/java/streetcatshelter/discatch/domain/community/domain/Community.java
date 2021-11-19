@@ -60,8 +60,8 @@ public class Community extends TimeStamped {
     @OneToMany(mappedBy = "community", cascade = {CascadeType.REMOVE})
     private List<Comment> commentList = new ArrayList<>();
 
-   /* @OneToMany(mappedBy = "communitylikeit", cascade = {CascadeType.REMOVE})
-    private List<CommunityLikeit> communityLikeitList = new ArrayList<>();*/
+    @OneToMany(mappedBy = "community", cascade = {CascadeType.REMOVE})
+    private List<CommunityLikeit> communityLikeitList = new ArrayList<>();
 
     public Community(CommunityRequestDto requestDto, User user) {
         this.user = user;

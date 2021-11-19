@@ -1,20 +1,22 @@
 package streetcatshelter.discatch.domain.chat.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import streetcatshelter.discatch.domain.chat.domain.ChatMessage;
 import streetcatshelter.discatch.domain.chat.domain.ChatRoom;
 import streetcatshelter.discatch.domain.chat.dto.ChatRoomDto;
+import streetcatshelter.discatch.domain.chat.dto.ChatRoomResponseDto;
 import streetcatshelter.discatch.domain.chat.repository.ChatMessageRepository;
 import streetcatshelter.discatch.domain.chat.repository.ChatRoomRepository;
 import streetcatshelter.discatch.domain.chat.service.ChatRoomService;
 import streetcatshelter.discatch.domain.chat.service.ChatService;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -39,35 +41,51 @@ public class ChatRoomController {
 //    }
     //참여중인 채팅방 조회
     @GetMapping("/rooms")
-    public List<ChatRoom> profileChange(HttpServletRequest httpServletRequest){
+    public List<ChatRoomResponseDto> profileChange(HttpServletRequest httpServletRequest){
         //토큰에서 사용자 정보 추출
         String token = jwtTokenProvider.resolveToken(httpServletRequest);
         String socialId = jwtTokenProvider.getUserPk(token);
         User user = userRepository.findByUserId(socialId);
         List<ChatRoom> chatRooms = chatRoomRepository.findAllByUser(user);
-        return chatRooms;
+        List<ChatRoomResponseDto> responseDtoList = new ArrayList<>();
+        for(ChatRoom chatRoom : chatRooms) {
+            String lastActivity = chatService.lastMessage(chatRoom.getRoomId()).getTime();
+            String lastMessage = chatService.lastMessage(chatRoom.getRoomId()).getMessage();
+            List<User> chatUsers = chatRoom.getUser();
+            chatUsers.remove(user);
+            User opponent = chatUsers.get(0);
+            String opponentImage;
+            if(opponent.getProfileUrl() == null) {
+                opponentImage = opponent.getProfileImageUrl();
+            } else {
+                opponentImage = opponent.getProfileUrl();
+            }
+            responseDtoList.add(ChatRoomResponseDto.builder()
+                    .opponent(opponent.getNickname())
+                    .lastActivity(lastActivity)
+                    .opponentImage(opponentImage)
+                    .roomId(chatRoom.getRoomId())
+                    .lastMessage(lastMessage)
+                    .build());
+        }
+        return responseDtoList;
     }
 
 
     //채팅방 생성(parameter : roomName, user_email)
     @PostMapping("/create")
     public ChatRoom createRoom(@RequestBody ChatRoomDto chatRoomDto) {
-
-        ChatRoom chatRoom = chatRoomService.createChatRoom(chatRoomDto);
-
-        return chatRoom;
-
+        return chatRoomService.createChatRoom(chatRoomDto);
     }
 
-    //특정 채팅방 입장. 채팅방에 저장된 메세지 반환
+    //특정 채팅방 입장. 채팅방정보 제공;
     @GetMapping("/enter/{roomId}")
-    public List<ChatMessage> roomInfo(@PathVariable String roomId) {
-        List<ChatMessage> messages = chatMessageRepository.findAllByRoomIdOrderByCreatedAtDesc(roomId);
-        return messages;
+    public ChatRoomResponseDto roomInfo(@PathVariable String roomId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return chatRoomService.roomInfo(roomId, userPrincipal);
     }
 
     //채팅방 퇴장 테스트 필요
-    @Transactional
+/*    @Transactional
     @PutMapping("/quit/{roomId}")
     public String quitRoom(@PathVariable String roomId, HttpServletRequest httpServletRequest){
         ChatRoom chatRoom  = chatRoomService.findRoomById(roomId);
@@ -91,7 +109,7 @@ public class ChatRoomController {
             chatService.sendChatMessage(ChatMessage.builder().type(ChatMessage.MessageType.QUIT).roomId(roomId).userName(user.getUsername()).build());
         }
         return "채팅방 나가기 완료";
-    }
+    }*/
 
 
 }

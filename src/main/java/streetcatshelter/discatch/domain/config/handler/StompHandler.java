@@ -8,10 +8,10 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
+import streetcatshelter.discatch.domain.chat.repository.ChatRoomRedisRepository;
 import streetcatshelter.discatch.domain.chat.service.ChatRoomService;
 import streetcatshelter.discatch.domain.chat.service.ChatService;
 import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
-import streetcatshelter.discatch.domain.user.repository.UserRepository;
 
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public class StompHandler implements ChannelInterceptor {
     private final JwtTokenProvider jwtTokenProvider;
     private final ChatRoomService chatRoomService;
     private final ChatService chatService;
-    private final UserRepository userRepository;
+    private final ChatRoomRedisRepository chatRoomRedisRepository;
 
     // websocket을 통해 들어온 요청이 처리 되기전 실행된다.
     @Override
@@ -40,14 +40,14 @@ public class StompHandler implements ChannelInterceptor {
             String roomId = chatService.getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
             // 채팅방에 들어온 클라이언트 sessionId를 roomId와 맵핑해 놓는다.(나중에 특정 세션이 어떤 채팅방에 들어가 있는지 알기 위함)
             String sessionId = (String) message.getHeaders().get("simpSessionId");
-            chatRoomService.setUserEnterInfo(sessionId, roomId);
+            chatRoomRedisRepository.setUserEnterInfo(sessionId, roomId);
             log.info("SUBSCRIBED {}, {}", sessionId,roomId);
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료
             // 연결이 종료된 클라이언트 sesssionId로 채팅방 id를 얻는다.
             String sessionId = (String) message.getHeaders().get("simpSessionId");
-            String roomId = chatRoomService.getUserEnterRoomId(sessionId);
+            String roomId = chatRoomRedisRepository.getUserEnterRoomId(sessionId);
             // 퇴장한 클라이언트의 roomId 맵핑 정보를 삭제한다.
-            chatRoomService.removeUserEnterInfo(sessionId);
+            chatRoomRedisRepository.removeUserEnterInfo(sessionId);
             log.info("DISCONNECTED {}, {}", sessionId, roomId);
         }
         return message;
