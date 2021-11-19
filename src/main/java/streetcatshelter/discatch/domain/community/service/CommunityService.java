@@ -23,6 +23,7 @@ import streetcatshelter.discatch.repository.CommentRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,7 +137,7 @@ public class CommunityService {
                     .nickname(nickname)
                     .contents(comment.getContents())
                     .commentId(comment.getId())
-                    .createdAt(comment.getCreatedAt())
+                    .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .modifiedAt(comment.getModifiedAt())
                     .profileImageUrl(profileImageUrl)
                     .userId(comment.getUser().getUserSeq())

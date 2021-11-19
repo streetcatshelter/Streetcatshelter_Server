@@ -17,7 +17,7 @@ public class CommentResponseDto {
     private String username;
     private String nickname;
     private String profileImageUrl;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private LocalDateTime modifiedAt;
     private Boolean isMine;
 }

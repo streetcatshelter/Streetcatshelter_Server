@@ -35,11 +35,15 @@ public class CatController {
     }
 
     @GetMapping("/cat/comment/{catId}")
-    public List<CommentResponseDto> getCatComment(@PathVariable Long catId,
+    public List<CommentResponseDto> getCatComment(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                  @PathVariable Long catId,
                                                   @RequestParam int page,
                                                   @RequestParam int size) {
+        if(userPrincipal==null){
+            throw new IllegalArgumentException("유저정보가 없습니다.");
+        }
 
-        return catService.getCatComment(catId, page, size);
+        return catService.getCatComment(catId, page, size, userPrincipal.getUser());
     }
 
     @PostMapping("/cat/create")
@@ -79,10 +83,10 @@ public class CatController {
 
 
     @GetMapping("/cat/detail/comment/{catDetailId}")
-    public List<CommentResponseDto> getCatCommentByCat(@PathVariable Long catDetailId,
+    public List<CommentResponseDto> getCatCommentByCat(@AuthenticationPrincipal UserPrincipal userPrincipal,@PathVariable Long catDetailId,
                                                        @RequestParam int page,
                                                        @RequestParam int size) {
-        return catService.getCatCommentByCatDetail(catDetailId, page, size);
+        return catService.getCatCommentByCatDetail(catDetailId, page, size, userPrincipal.getUser());
     }
 
     @GetMapping("/cat/diary/{catId}")

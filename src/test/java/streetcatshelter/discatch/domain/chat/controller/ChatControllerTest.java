@@ -6,8 +6,5 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ChatControllerTest {
 
-    @Test
-    void message() {
-        message();
-    }
+
 }

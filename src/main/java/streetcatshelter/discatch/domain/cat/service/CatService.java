@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import streetcatshelter.discatch.aop.UpdateUserScore;
@@ -25,6 +26,7 @@ import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
 import streetcatshelter.discatch.repository.CommentRepository;
 import streetcatshelter.discatch.repository.LikedRepository;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -230,11 +232,11 @@ public class CatService {
 
     }
 
-    public List<CommentResponseDto> getCatCommentByCatDetail(Long catDetailId, int page, int size) {
+    public List<CommentResponseDto> getCatCommentByCatDetail(Long catDetailId, int page, int size, User user) {
         page -= 1;
         Pageable pageable = PageRequest.of(page, size);
         Page<Comment> allByCatDetailId = commentRepository.findAllByCatDetailId(pageable, catDetailId);
-        return getCommentResponseDtos(allByCatDetailId);
+        return getCommentResponseDtos(allByCatDetailId, user);
     }
 
 
@@ -258,23 +260,40 @@ public class CatService {
         }return catDiaryResponseDtos;
     }
 
-    public List<CommentResponseDto> getCatComment(Long catId, int page, int size) {
+    public List<CommentResponseDto> getCatComment(Long catId, int page, int size, User user) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Comment> allByCatDetailId = commentRepository.findAllByCatId(pageable, catId);
-        return getCommentResponseDtos(allByCatDetailId);
+        return getCommentResponseDtos(allByCatDetailId, user);
     }
 
-    private List<CommentResponseDto> getCommentResponseDtos(Page<Comment> allByCatDetailId) {
+    public List<CommentResponseDto> getCommentResponseDtos(Page<Comment> allByCatDetailId, User user) {
         List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
         for (Comment comment : allByCatDetailId) {
-            commentResponseDtos.add(CommentResponseDto.builder()
-                    .commentId(comment.getId())
-                    .contents(comment.getContents())
-                    .username(comment.getUser().getUsername())
-                    .userId(comment.getUser().getUserSeq())
-                    .profileImageUrl(comment.getUser().getProfileImageUrl())
-                    .createdAt(comment.getCreatedAt())
-                    .build());
+
+            if(comment.isSameUser(user)){
+                commentResponseDtos.add(CommentResponseDto.builder()
+                        .commentId(comment.getId())
+                        .contents(comment.getContents())
+                        .username(comment.getUser().getUsername())
+                        .userId(comment.getUser().getUserSeq())
+                        .profileImageUrl(comment.getUser().getProfileImageUrl())
+                        .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .modifiedAt(comment.getModifiedAt())
+                        .isMine(true)
+                        .build());
+            }else{
+                commentResponseDtos.add(CommentResponseDto.builder()
+                        .commentId(comment.getId())
+                        .contents(comment.getContents())
+                        .username(comment.getUser().getUsername())
+                        .userId(comment.getUser().getUserSeq())
+                        .profileImageUrl(comment.getUser().getProfileImageUrl())
+                        .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .modifiedAt(comment.getModifiedAt())
+                        .isMine(false)
+                        .build());
+            }
+
         }
         return commentResponseDtos;
     }
