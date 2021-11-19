@@ -12,6 +12,7 @@ import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class ChatService { //입장, 퇴장 처리
 
             responseDtoList.add(ChatMessageResponseDto.builder()
                     .message(chatMessage.getMessage())
-                    .time(String.valueOf(chatMessage.getCreatedAt()))
+                    .time(chatMessage.getTime())
                     .sender(chatMessage.getUserName())
                     .isMine(isMine)
                     .build());
@@ -86,6 +87,7 @@ public class ChatService { //입장, 퇴장 처리
         String nickname = member.getNickname();
         // 헤더에서 토큰을 읽어 로그인 회원 정보로 대화명 설정
         message.setUserName(nickname);
+        message.setTime(String.valueOf(LocalDateTime.now()));
         System.out.println("토큰 유효성 확인 완료, 해당 닉네임 : "+ nickname);
         // 채팅방 인원수 세팅
         System.out.println(message);
@@ -110,7 +112,7 @@ public class ChatService { //입장, 퇴장 처리
         String time = Time.calculateTime(date);*/
         return ChatMessageResponseDto.builder().message(chatMessage.getMessage())
                 .sender(chatMessage.getMessage())
-                .time(String.valueOf(chatMessage.getCreatedAt()))
+                .time(chatMessage.getTime())
                 .sender(chatMessage.getUserName())
                 .build();
     }
