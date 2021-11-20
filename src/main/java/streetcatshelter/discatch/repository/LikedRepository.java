@@ -13,4 +13,6 @@ public interface LikedRepository extends JpaRepository<Liked,Long> {
     Liked findByCatIdAndUser_UserSeq(Long catId, Long userSeq);
     List<Liked> findAllByUser_UserSeq(Long userSeq);
     boolean existsByUser_UserSeqAndCatDetailId(Long userSeq,Long catDetailId);
+
+    boolean existsByCatIdAndUser_UserSeq(Long catId, Long userSeq);
 }

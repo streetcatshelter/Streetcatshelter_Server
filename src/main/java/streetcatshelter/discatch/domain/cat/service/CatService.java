@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import streetcatshelter.discatch.aop.UpdateUserScore;
@@ -315,4 +314,13 @@ public class CatService {
     }
 
 
+    public CatResponseDto getCatInfo(Long catId, User user) {
+
+        Cat cat = catRepository.findById(catId).orElseThrow(
+                ()-> new NullPointerException("NO SUCH CAT")
+        );
+        boolean b = likedRepository.existsByCatIdAndUser_UserSeq(catId, user.getUserSeq());
+        return cat.getCatInfo(b);
+
+    }
 }

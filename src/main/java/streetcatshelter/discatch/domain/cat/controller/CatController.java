@@ -27,9 +27,7 @@ public class CatController {
                                                  @RequestParam("page") int page,
                                                  @RequestParam("size") int size,
                                                  @PathVariable String location) {
-        if(userPrincipal==null){
-            throw new IllegalArgumentException("유저정보가 없습니다.");
-        }
+        userChecker(userPrincipal);
 
         return catService.getCatByLocation(page, size, location, userPrincipal.getUser());
     }
@@ -39,9 +37,7 @@ public class CatController {
                                                   @PathVariable Long catId,
                                                   @RequestParam int page,
                                                   @RequestParam int size) {
-        if(userPrincipal==null){
-            throw new IllegalArgumentException("유저정보가 없습니다.");
-        }
+        userChecker(userPrincipal);
 
         return catService.getCatComment(catId, page, size, userPrincipal.getUser());
     }
@@ -137,6 +133,20 @@ public class CatController {
         return result;
 
 
+    }
+
+    @GetMapping("cat/info/{catId}")
+    public CatResponseDto getCatInfo(@PathVariable Long catId,
+                                     @AuthenticationPrincipal UserPrincipal userPrincipal){
+
+        userChecker(userPrincipal);
+        return catService.getCatInfo(catId, userPrincipal.getUser());
+    }
+
+    private void userChecker(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        if (userPrincipal == null) {
+            throw new IllegalArgumentException("유저정보가 없습니다.");
+        }
     }
 
 }

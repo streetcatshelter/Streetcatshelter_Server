@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.domain.TimeStamped;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatRequestDto;
+import streetcatshelter.discatch.domain.cat.dto.responsedto.CatResponseDto;
 import streetcatshelter.discatch.domain.user.domain.User;
 
 import javax.persistence.*;
@@ -87,5 +88,22 @@ public class Cat extends TimeStamped {
 
     public void addCatTagList(List<CatTag> catTagList) {
         this.catTagList = catTagList;
+    }
+
+    public CatResponseDto getCatInfo(boolean b) {
+
+        CatResponseDto catResponseDto = CatResponseDto.builder()
+                .catId(this.id)
+                .catImage(this.catImage)
+                .location(this.location)
+                .catName(this.catName)
+                .neutering(this.neutering)
+                .catTagList(this.catTagList)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .userLiked(b)
+                .build();
+
+        return catResponseDto;
     }
 }

@@ -1,28 +1,20 @@
 package streetcatshelter.discatch.domain.cat.dto.responsedto;
 
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import streetcatshelter.discatch.domain.cat.domain.CatTag;
 
+import javax.persistence.Column;
 import java.util.List;
 
+@Data
+public class CatInfoResponseDto {
 
-@Getter
-@Setter
-@Builder
-public class
-CatResponseDto {
-
-    private Long catId;
     private String catName;
+    private String location;
     private String catImage;
     private String neutering;
-    private String location;
-    private boolean userLiked;
     private List<CatTag> catTagList;
-    private double latitude;
-    private double longitude;
+
 
 }
