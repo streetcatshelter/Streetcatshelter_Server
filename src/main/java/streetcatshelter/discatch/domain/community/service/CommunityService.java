@@ -138,7 +138,7 @@ public class CommunityService {
                     .contents(comment.getContents())
                     .commentId(comment.getId())
                     .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                    .modifiedAt(comment.getModifiedAt())
+                    .modifiedAt(comment.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .profileImageUrl(profileImageUrl)
                     .userId(comment.getUser().getUserSeq())
                     .build());
