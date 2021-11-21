@@ -2,8 +2,6 @@ package streetcatshelter.discatch.domain.mypage.dto;
 
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 public class MyPageCatsResponseDto {
 
@@ -14,8 +12,11 @@ public class MyPageCatsResponseDto {
     private int cntComment;
     private int cntCatDetail;
     private Long catId;
+    private String location;
+    private double latitude;
+    private double longitude;
 
-    public MyPageCatsResponseDto(String lastActivity, String myActivity, String catName, String catImage, Long catId,  int cntComment, int cntCatDetail) {
+    public MyPageCatsResponseDto(String lastActivity, String myActivity, String catName, String catImage, Long catId,  int cntComment, int cntCatDetail, String location, double latitude, double longitude) {
         this.catImage = catImage;
         this.catName = catName;
         this.cntCatDetail = cntCatDetail;

@@ -22,7 +22,6 @@ import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
 import streetcatshelter.discatch.repository.CommentRepository;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public class CommunityService {
 
                 String username = community.getUser().getUsername();
                 String title = community.getTitle();
-                LocalDateTime createdAt = community.getCreatedAt();
+                String createdAt = community.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 int cntComment = community.getCntComment();
                 int cntLikeit = community.getCntLikeit();
                 int cntView = community.getCntView();
@@ -90,7 +89,7 @@ public class CommunityService {
                     isLiked = communityLikeitRepository.existsByCommunityAndUser(community, user);
                 }
                 String title = community.getTitle();
-                LocalDateTime createdAt = community.getCreatedAt();
+                String createdAt = community.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 int cntComment = community.getCntComment();
                 int cntLikeit = community.getCntLikeit();
                 int cntView = community.getCntView();
@@ -165,8 +164,8 @@ public class CommunityService {
                 .title(community.getTitle())
                 .username(community.getUsername())
                 .nickname(community.getUser().getNickname())
-                .createdAt(community.getCreatedAt())
-                .modifiedAt(community.getModifiedAt())
+                .createdAt(community.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .modifiedAt(community.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .build();
     }
 
