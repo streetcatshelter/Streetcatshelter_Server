@@ -23,7 +23,7 @@ public class CatDetailResponseDto {
     private Long viewCnt;
     private Long commentCnt;
     private String diary;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private List<String> catTags;
     private List<String> catImages;
 
