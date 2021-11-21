@@ -190,7 +190,7 @@ public class CatService {
                 .viewCnt(catDetail.getViewCnt())
                 .catImages(catImages)
                 .catTags(catTags)
-                .createdAt(catDetail.getCreatedAt())
+                .createdAt(catDetail.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .build();
     }
 
@@ -246,7 +246,7 @@ public class CatService {
         List<CatDiaryResponseDto> catDiaryResponseDtos = new ArrayList<>();
         for (CatDetail catDetail : allByCatId) {
             catDiaryResponseDtos.add(CatDiaryResponseDto.builder()
-                    .createdAt(catDetail.getCreatedAt())
+                    .createdAt(catDetail.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                     .diary(catDetail.getDiary())
                     .catDetailId(catDetail.getId())
                     .commentCnt(catDetail.getCommentCnt())
@@ -276,8 +276,8 @@ public class CatService {
                         .username(comment.getUser().getUsername())
                         .userId(comment.getUser().getUserSeq())
                         .profileImageUrl(comment.getUser().getProfileImageUrl())
-                        .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                        .modifiedAt(comment.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                        .modifiedAt(comment.getModifiedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                         .nickname(comment.getUser().getNickname())
                         .isMine(true)
                         .build());
@@ -288,8 +288,8 @@ public class CatService {
                         .username(comment.getUser().getUsername())
                         .userId(comment.getUser().getUserSeq())
                         .profileImageUrl(comment.getUser().getProfileImageUrl())
-                        .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                        .modifiedAt(comment.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                        .modifiedAt(comment.getModifiedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                         .nickname(comment.getUser().getNickname())
                         .isMine(false)
                         .build());

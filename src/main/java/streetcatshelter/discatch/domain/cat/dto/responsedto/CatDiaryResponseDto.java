@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 public class CatDiaryResponseDto {
 
-    private LocalDateTime createdAt;
+    private String createdAt;
     private Long catDetailId;
     private String diary;
     private Long likeCnt;
