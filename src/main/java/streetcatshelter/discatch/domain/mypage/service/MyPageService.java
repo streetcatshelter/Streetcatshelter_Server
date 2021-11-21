@@ -55,7 +55,10 @@ public class MyPageService {
             Long catId = cat.getId();
             int cntComment = commentRepository.countAllByUser_UserSeqAndCatId(userSeq, catId);
             int cntCatDetail = catDetailRepository.countAllByUser_UserSeqAndCatId(userSeq, catId);
-            MyPageCatsResponseDto myPageCatsResponseDto = new MyPageCatsResponseDto(lastActivity, myActivity, catName, catImage, catId, cntComment, cntCatDetail);
+            String location = cat.getLocation();
+            double latitude = cat.getLatitude();
+            double longitude = cat.getLongitude();
+            MyPageCatsResponseDto myPageCatsResponseDto = new MyPageCatsResponseDto(lastActivity, myActivity, catName, catImage, catId, cntComment, cntCatDetail, location, latitude, longitude);
             responseDtoList.add(myPageCatsResponseDto);
         }
 

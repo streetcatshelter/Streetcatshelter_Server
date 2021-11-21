@@ -3,10 +3,12 @@ package streetcatshelter.discatch.domain.chat.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import streetcatshelter.discatch.domain.chat.domain.ChatMessage;
 import streetcatshelter.discatch.domain.chat.domain.ChatRoom;
 import streetcatshelter.discatch.domain.chat.dto.ChatRoomDto;
 import streetcatshelter.discatch.domain.chat.dto.ChatRoomResponseDto;
 import streetcatshelter.discatch.domain.chat.repository.ChatMessageRepository;
+import streetcatshelter.discatch.domain.chat.repository.ChatRoomRedisRepository;
 import streetcatshelter.discatch.domain.chat.repository.ChatRoomRepository;
 import streetcatshelter.discatch.domain.chat.service.ChatRoomService;
 import streetcatshelter.discatch.domain.chat.service.ChatService;
@@ -16,6 +18,7 @@ import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +33,7 @@ public class ChatRoomController {
     private final ChatService chatService;
     private final UserRepository userRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final ChatRoomRedisRepository chatRoomRedisRepository;
 
     //기존에 쓰이던 채팅방 리스트 조회 hash 사용
 //    @GetMapping("/rooms")
@@ -85,10 +89,10 @@ public class ChatRoomController {
     }
 
     //채팅방 퇴장 테스트 필요
-/*    @Transactional
+    @Transactional
     @PutMapping("/quit/{roomId}")
     public String quitRoom(@PathVariable String roomId, HttpServletRequest httpServletRequest){
-        ChatRoom chatRoom  = chatRoomService.findRoomById(roomId);
+        ChatRoom chatRoom  = chatRoomRepository.findByRoomId(roomId);
         //토큰에서 사용자 정보 추출
         String token = jwtTokenProvider.resolveToken(httpServletRequest);
         String userId = jwtTokenProvider.getUserPk(token);
@@ -97,19 +101,16 @@ public class ChatRoomController {
         chatRoom.getUser().remove(user);
         //남아있는 유저가 없을 경우 DB에서 삭제
         if(chatRoom.getUser().isEmpty()){
-
             chatRoomRepository.delete(chatRoom);
-            //redis상 채팅방 정보 삭제
-            chatRoomService.deleteChatRoom(roomId);
+            chatMessageRepository.deleteAllByRoomId(roomId);
             //DB에 저장된 메세지 삭제하기
-            chatMessageRepository.deleteById(chatRoom.getId());
         }
         else{
             //유저가 남아있다면 나가는 유저 정보를 가져와서 채팅방에 남아있는 인원에게 퇴장 메세지 전송
             chatService.sendChatMessage(ChatMessage.builder().type(ChatMessage.MessageType.QUIT).roomId(roomId).userName(user.getUsername()).build());
         }
         return "채팅방 나가기 완료";
-    }*/
+    }
 
 
 }

@@ -1,7 +1,8 @@
 package streetcatshelter.discatch.domain.user.domain;
 
 public enum UserLevel {
-    프로집사(4, null),
+    고양이신(5, null),
+    프로집사(4, 고양이신),
     대장냥(3, 프로집사),
     냥린이(2, 대장냥),
     아깽이(1, 냥린이)
