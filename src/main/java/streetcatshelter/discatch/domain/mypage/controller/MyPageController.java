@@ -10,6 +10,8 @@ import streetcatshelter.discatch.domain.user.dto.UserInformationRequestDto;
 
 import java.util.List;
 
+import static streetcatshelter.discatch.domain.user.service.UserService.userChecker;
+
 @RequiredArgsConstructor
 @RestController
 public class MyPageController {
@@ -18,6 +20,7 @@ public class MyPageController {
 
     @GetMapping("/mypage/mycat")
     public List<MyPageCatsResponseDto> findAllCats(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        userChecker(userPrincipal);
         return myPageService.findAllCats(userPrincipal);
     }
 

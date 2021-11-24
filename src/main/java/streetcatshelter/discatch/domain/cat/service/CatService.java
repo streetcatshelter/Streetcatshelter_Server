@@ -46,6 +46,7 @@ public class CatService {
         List<CatResponseDto> responseDtoList = new ArrayList<>();
         List<Liked> likeds = likedRepository.findAllByUser_UserSeq(user.getUserSeq());
 
+
         for(Cat cat : cats){
             responseDtoList.add(CatResponseDto.builder()
                                 .userLiked(false)
@@ -254,7 +255,7 @@ public class CatService {
                     .viewCnt(catDetail.getViewCnt())
                     .profileImageUrl(catDetail.getUser().getProfileImageUrl())
                     .userId(catDetail.getUser().getUserSeq())
-                    .username(catDetail.getUser().getUsername())
+                    .nickname(catDetail.getUser().getNickname())
                     .build());
         }return catDiaryResponseDtos;
     }

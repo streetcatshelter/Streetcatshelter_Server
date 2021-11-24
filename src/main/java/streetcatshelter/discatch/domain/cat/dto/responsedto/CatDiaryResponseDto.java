@@ -19,7 +19,7 @@ public class CatDiaryResponseDto {
     private Long viewCnt;
     private Long commentCnt;
     private Long userId;
-    private String username;
+    private String nickname;
     private String profileImageUrl;
 
 }

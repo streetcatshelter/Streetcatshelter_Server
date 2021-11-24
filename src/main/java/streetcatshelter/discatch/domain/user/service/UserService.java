@@ -1,9 +1,11 @@
 package streetcatshelter.discatch.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.config.properties.AppProperties;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.domain.oauth.social.*;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.chat.dto.LoginResponseDto;
@@ -114,5 +116,11 @@ public class UserService {
         assert googleUser != null;
         return new LoginResponseDto(googleUser,jwtTokenProvider.createToken(id));
 
+    }
+
+    public static void userChecker(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        if (userPrincipal == null) {
+            throw new IllegalArgumentException("유저정보가 없습니다. 토큰 잘못됨");
+        }
     }
 }

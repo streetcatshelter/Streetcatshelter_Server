@@ -18,6 +18,8 @@ public class CatDetailResponseDto {
     private boolean food;
     private boolean snack;
     private boolean isUserLiked;
+    private String nickname;
+    private String p
     private Long catDetailId;
     private Long likeCnt;
     private Long viewCnt;

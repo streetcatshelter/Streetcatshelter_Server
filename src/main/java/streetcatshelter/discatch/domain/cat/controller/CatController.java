@@ -15,6 +15,8 @@ import streetcatshelter.discatch.domain.cat.service.CatService;
 import java.util.List;
 import java.util.Map;
 
+import static streetcatshelter.discatch.domain.user.service.UserService.userChecker;
+
 @RequiredArgsConstructor
 @RestController
 public class CatController {
@@ -143,10 +145,6 @@ public class CatController {
         return catService.getCatInfo(catId, userPrincipal.getUser());
     }
 
-    private void userChecker(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        if (userPrincipal == null) {
-            throw new IllegalArgumentException("유저정보가 없습니다.");
-        }
-    }
+
 
 }
