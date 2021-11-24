@@ -24,7 +24,7 @@ public class JwtTokenProvider {
     private String secretKey = "Discatch";
 
     // 토큰 유효시간
-    private long tokenValidTime = 864000L;
+    private long tokenValidTime = 120*60*1000L;
     private final CustomUserDetailsService userDetailsService;
 
     // 객체 초기화, secretKey를 Base64로 인코딩
