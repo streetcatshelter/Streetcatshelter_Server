@@ -194,6 +194,7 @@ public class CatService {
                 .createdAt(catDetail.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .nickname(user.getNickname())
                 .profileImageUrl(user.getProfileImageUrl())
+                .userSeq(user.getUserSeq())
                 .build();
     }
 
