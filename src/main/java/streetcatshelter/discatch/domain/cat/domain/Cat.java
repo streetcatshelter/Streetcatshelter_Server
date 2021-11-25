@@ -6,10 +6,12 @@ import lombok.NoArgsConstructor;
 import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.domain.TimeStamped;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatRequestDto;
+import streetcatshelter.discatch.domain.cat.dto.requestdto.CatUpdateRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.CatResponseDto;
 import streetcatshelter.discatch.domain.user.domain.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +64,7 @@ public class Cat extends TimeStamped {
     @OneToMany(mappedBy = "cat", cascade = {CascadeType.REMOVE},orphanRemoval = true)
     private List<CatDetail> catDetailList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cat", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "cat", cascade = {CascadeType.ALL},orphanRemoval = true)
     private List<CatTag> catTagList = new ArrayList<>();
 
     @OneToMany(mappedBy = "cat", cascade = {CascadeType.REMOVE})
@@ -87,7 +89,7 @@ public class Cat extends TimeStamped {
     }
 
     public void addCatTagList(List<CatTag> catTagList) {
-        this.catTagList = catTagList;
+        this.catTagList.addAll(catTagList);
     }
 
     public CatResponseDto getCatInfo(boolean b) {
@@ -105,5 +107,14 @@ public class Cat extends TimeStamped {
                 .build();
 
         return catResponseDto;
+    }
+
+    public void updateCat(List<CatTag> catTags, CatUpdateRequestDto catUpdateRequestDto) {
+        updateModifiedAt();
+        this.catTagList.clear();
+        this.catImage = catUpdateRequestDto.getCatImage();
+        this.catName = catUpdateRequestDto.getCatName();
+        this.neutering = catUpdateRequestDto.getNeutering();
+        this.catTagList.addAll(catTags);
     }
 }

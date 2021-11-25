@@ -14,6 +14,7 @@ import streetcatshelter.discatch.domain.cat.domain.CatDetail;
 import streetcatshelter.discatch.domain.cat.domain.CatImage;
 import streetcatshelter.discatch.domain.cat.domain.CatTag;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatRequestDto;
+import streetcatshelter.discatch.domain.cat.dto.requestdto.CatUpdateRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.CatDetailResponseDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.CatDiaryResponseDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.CatGalleryResponseDto;
@@ -27,6 +28,7 @@ import streetcatshelter.discatch.repository.LikedRepository;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -45,6 +47,7 @@ public class CatService {
         Page<Cat> cats = catRepository.findAllByLocation(pageable,location);
         List<CatResponseDto> responseDtoList = new ArrayList<>();
         List<Liked> likeds = likedRepository.findAllByUser_UserSeq(user.getUserSeq());
+
 
         for(Cat cat : cats){
             responseDtoList.add(CatResponseDto.builder()
@@ -191,6 +194,9 @@ public class CatService {
                 .catImages(catImages)
                 .catTags(catTags)
                 .createdAt(catDetail.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
+                .userSeq(user.getUserSeq())
                 .build();
     }
 
@@ -254,7 +260,7 @@ public class CatService {
                     .viewCnt(catDetail.getViewCnt())
                     .profileImageUrl(catDetail.getUser().getProfileImageUrl())
                     .userId(catDetail.getUser().getUserSeq())
-                    .username(catDetail.getUser().getUsername())
+                    .nickname(catDetail.getUser().getNickname())
                     .build());
         }return catDiaryResponseDtos;
     }
@@ -321,6 +327,20 @@ public class CatService {
         );
         boolean b = likedRepository.existsByCatIdAndUser_UserSeq(catId, user.getUserSeq());
         return cat.getCatInfo(b);
+
+    }
+
+    @Transactional
+    public void updateCat(Long catId, CatUpdateRequestDto catUpdateRequestDto, User user) {
+
+        Cat cat = catRepository.findById(catId).orElseThrow(
+                ()-> new NullPointerException("NO SUCH CAT")
+        );
+
+        List<CatTag> catTags = convertTag(cat, catUpdateRequestDto.getCatTag());
+        cat.updateCat(catTags,catUpdateRequestDto);
+
+
 
     }
 }

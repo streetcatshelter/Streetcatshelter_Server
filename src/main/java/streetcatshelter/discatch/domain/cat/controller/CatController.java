@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailRequestDto;
+import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailUpdateRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatRequestDto;
+import streetcatshelter.discatch.domain.cat.dto.requestdto.CatUpdateRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.*;
+import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
 import streetcatshelter.discatch.dto.responseDto.*;
 import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
@@ -14,6 +17,8 @@ import streetcatshelter.discatch.domain.cat.service.CatService;
 
 import java.util.List;
 import java.util.Map;
+
+import static streetcatshelter.discatch.domain.user.service.UserService.userChecker;
 
 @RequiredArgsConstructor
 @RestController
@@ -45,6 +50,7 @@ public class CatController {
     @PostMapping("/cat/create")
     public void createCat(@RequestBody CatRequestDto requestDto,
                           @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        userChecker(userPrincipal);
         catService.createCat(requestDto, userPrincipal.getUser());
     }
 
@@ -143,10 +149,21 @@ public class CatController {
         return catService.getCatInfo(catId, userPrincipal.getUser());
     }
 
-    private void userChecker(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        if (userPrincipal == null) {
-            throw new IllegalArgumentException("유저정보가 없습니다.");
-        }
+    @PutMapping("cat/{catId}")
+    public void updateCatInfo(@PathVariable Long catId,
+                              @AuthenticationPrincipal UserPrincipal userPrincipal,
+                              @RequestBody CatUpdateRequestDto catUpdateRequestDto) {
+        userChecker(userPrincipal);
+        catService.updateCat(catId,catUpdateRequestDto,userPrincipal.getUser());
+    }
+
+    @PutMapping("cat/detail/{catDetailId}")
+    public void updateCatDetail(@PathVariable Long catDetailId,
+                                @AuthenticationPrincipal UserPrincipal userPrincipal,
+                                @RequestBody CatDetailUpdateRequestDto catDetailUpdateRequestDto){
+
+        userChecker(userPrincipal);
+        catDetailService.updateCatDetail(catDetailUpdateRequestDto,userPrincipal.getUser(),catDetailId);
     }
 
 }

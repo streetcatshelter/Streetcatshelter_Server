@@ -8,7 +8,9 @@ import streetcatshelter.discatch.domain.Liked;
 import streetcatshelter.discatch.domain.cat.domain.Cat;
 import streetcatshelter.discatch.domain.cat.domain.CatCalender;
 import streetcatshelter.discatch.domain.cat.domain.CatDetail;
+import streetcatshelter.discatch.domain.cat.domain.CatTag;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailRequestDto;
+import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailUpdateRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.CalendarResponseDto;
 import streetcatshelter.discatch.domain.cat.repository.CatCalenderRepository;
 import streetcatshelter.discatch.domain.cat.repository.CatDetailRepository;
@@ -74,7 +76,7 @@ public class CatDetailService {
     @Transactional
     public Map<String,Long> addlike(Long catDetailId,User user) {
         CatDetail catDetail = catDetailRepository.findById(catDetailId).orElseThrow(
-                () -> new NullPointerException("No Such Data")
+                () -> new NullPointerException("No Such CatDetail")
         );
         Liked byCatDetailIdAndUser_userSeq = likedRepository.findByCatDetailIdAndUser_UserSeq(catDetailId, user.getUserSeq());
 
@@ -115,5 +117,25 @@ public class CatDetailService {
             catCalenderRepository.save(catCalender);
         }
         catCalender.update(requestDto);
+    }
+
+
+    @Transactional
+    public void updateCatDetail(CatDetailUpdateRequestDto catDetailUpdateRequestDto, User user, Long catDetailId) {
+
+        CatDetail catDetail = catDetailRepository.findById(catDetailId).orElseThrow(
+                () -> new NullPointerException("No Such CatDetail")
+        );
+
+        List<CatTag> catTags = convertTag(catDetail, catDetailUpdateRequestDto.getCatTags());
+        catDetail.updateCatDetail(catDetailUpdateRequestDto,catTags,user);
+    }
+
+    public List<CatTag> convertTag(CatDetail catDetail, List<String> catTagStringList) {
+        List<CatTag> catTagList = new ArrayList<>();
+        for (String tag : catTagStringList) {
+            catTagList.add(new CatTag(catDetail, tag));
+        }
+        return catTagList;
     }
 }

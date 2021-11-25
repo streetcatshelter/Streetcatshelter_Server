@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.domain.Liked;
 import streetcatshelter.discatch.domain.TimeStamped;
+import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailUpdateRequestDto;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailRequestDto;
 
@@ -65,7 +66,7 @@ public class CatDetail extends TimeStamped {
     @OneToMany(mappedBy = "catDetail", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Liked> likeds = new ArrayList<>();
 
-    @OneToMany(mappedBy = "catDetail",cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "catDetail",cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<CatTag> catTags = new ArrayList<>();
 
     @JoinColumn(name = "CAT_ID")
@@ -114,6 +115,23 @@ public class CatDetail extends TimeStamped {
         this.likeCnt += cnt;
         return this.likeCnt;
     }
+
+    public void updateCatDetail(CatDetailUpdateRequestDto catDetailUpdateRequestDto, List<CatTag> catTags, User user) {
+        if(!this.user.equals(user)){
+            throw new IllegalArgumentException("cat detail을 수정할 권한이 없습니다!");
+        }
+        this.catImages.clear();
+        List<CatImage> catImages = CatImage.ConvertListStringToListCatImage(cat, this, catDetailUpdateRequestDto.getCatImages());
+        this.catImages.addAll(catImages);
+        this.catTags.clear();
+        this.catTags.addAll(catTags);
+        this.food = catDetailUpdateRequestDto.isFood();
+        this.diary = catDetailUpdateRequestDto.getDiary();
+        this.water = catDetailUpdateRequestDto.isWater();
+        this.snack = catDetailUpdateRequestDto.isSnack();
+        updateModifiedAt();
+    }
+
 
 /*    @OneToMany(mappedBy = "CatDetail", cascade = {CascadeType.REMOVE})
     private List<CatTag> catTagList  = new ArrayList<>();*/
