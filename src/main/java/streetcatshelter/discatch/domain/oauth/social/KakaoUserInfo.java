@@ -6,12 +6,32 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class KakaoUserInfo {
+public class KakaoUserInfo implements UserInfo{
 
     public Integer id;
     public String connected_at;
     public Properties properties;
     public Kakao_account kakao_account;
+
+    @Override
+    public String getUserId() {
+        return this.id.toString();
+    }
+
+    @Override
+    public String getUsername() {
+        return this.properties.nickname;
+    }
+
+    @Override
+    public String getEmail() {
+        return this.kakao_account.email;
+    }
+
+    @Override
+    public String getProfileImageUrl() {
+        return this.kakao_account.profile.profile_image_url;
+    }
 
 
     @Data

@@ -45,15 +45,19 @@ public class CatDetailService {
         int lengthOfMonth = startDate.lengthOfMonth();
 
         List<CalendarResponseDto> calendarResponseDtos = new ArrayList<>();
-        for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)){
-            CalendarResponseDto calendarResponseDto = new CalendarResponseDto();
-            calendarResponseDto.setLocalDate(date);
-            for (CatCalender catCalender : catCalenders) {
-                if(catCalender.getLocalDate().equals(date)){
-                    calendarResponseDto.update(catCalender);
-                }
-            }
-            calendarResponseDtos.add(calendarResponseDto);
+//        for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)){
+//            CalendarResponseDto calendarResponseDto = new CalendarResponseDto();
+//            calendarResponseDto.setDate(date);
+//            for (CatCalender catCalender : catCalenders) {
+//                if(catCalender.getLocalDate().equals(date)){
+//                    calendarResponseDto.update(catCalender);
+//                }
+//            }
+//            calendarResponseDtos.add(calendarResponseDto);
+//        }
+
+        for(CatCalender catCalender: catCalenders){
+            calendarResponseDtos.add(new CalendarResponseDto(catCalender));
         }
 
         return calendarResponseDtos;
