@@ -7,6 +7,8 @@ import net.minidev.json.annotate.JsonIgnore;
 import streetcatshelter.discatch.domain.TimeStamped;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -34,5 +36,16 @@ public class CatImage extends TimeStamped {
         this.cat = cat;
         this.catDetail = catDetail;
         this.image = image;
+    }
+
+    public static List<CatImage> ConvertListStringToListCatImage(Cat cat, CatDetail catDetail, List<String> catImages) {
+
+        List<CatImage> catImages1 = new ArrayList<>();
+        for(String catImage: catImages){
+
+            catImages1.add(new CatImage(cat,catDetail,catImage));
+        }
+        return catImages1;
+
     }
 }

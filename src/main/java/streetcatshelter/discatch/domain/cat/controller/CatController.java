@@ -163,7 +163,7 @@ public class CatController {
                                 @RequestBody CatDetailUpdateRequestDto catDetailUpdateRequestDto){
 
         userChecker(userPrincipal);
-
+        catDetailService.updateCatDetail(catDetailUpdateRequestDto,userPrincipal.getUser(),catDetailId);
     }
 
 }

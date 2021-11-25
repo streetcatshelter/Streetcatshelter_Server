@@ -11,6 +11,7 @@ import streetcatshelter.discatch.domain.cat.dto.responsedto.CatResponseDto;
 import streetcatshelter.discatch.domain.user.domain.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,6 +110,7 @@ public class Cat extends TimeStamped {
     }
 
     public void updateCat(List<CatTag> catTags, CatUpdateRequestDto catUpdateRequestDto) {
+        updateModifiedAt();
         this.catTagList.clear();
         this.catImage = catUpdateRequestDto.getCatImage();
         this.catName = catUpdateRequestDto.getCatName();

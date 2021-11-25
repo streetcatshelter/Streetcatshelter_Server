@@ -30,5 +30,9 @@ public abstract class TimeStamped {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime modifiedAt;
-    
+
+    public void updateModifiedAt(){
+        this.modifiedAt = LocalDateTime.now();
+
+    }
 }
