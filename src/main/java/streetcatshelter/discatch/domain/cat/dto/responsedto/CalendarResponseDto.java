@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CalendarResponseDto {
 
-    private LocalDate localDate;
+    private LocalDate date;
     private boolean food = false;
     private boolean water = false;
     private boolean snack = false;
