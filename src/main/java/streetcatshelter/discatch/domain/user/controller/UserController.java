@@ -2,12 +2,10 @@ package streetcatshelter.discatch.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.domain.chat.dto.LoginResponseDto;
 import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
+import streetcatshelter.discatch.domain.user.dto.UserInfoResponseDto;
 import streetcatshelter.discatch.domain.user.service.UserService;
 
 @RestController
@@ -37,6 +35,9 @@ public class UserController {
         return userService.googleLogin(code);
     }
 
-
+    @GetMapping("/userinfo/{userRandomId}")
+    public UserInfoResponseDto userInfo(@PathVariable String userRandomId){
+        return userService.getUserInfo(userRandomId);
+    }
 
 }

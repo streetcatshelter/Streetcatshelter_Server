@@ -46,10 +46,17 @@ public class MyPageService {
         for(Liked liked: LikedList) {
             Cat cat = liked.getCat();
             CatDetail catDetail = catDetailRepository.findFirstByOrderByIdDesc();
-            ArrayList<CatDetail> myCatDetailList = catDetailRepository.findAllByUser(userPrincipal.getUser());
-            CatDetail myCatDetail = myCatDetailList.get(myCatDetailList.size() -1);
             String lastActivity = String.valueOf(catDetail.getCreatedAt()).replace('T',' ');
-            String myActivity = String.valueOf(myCatDetail.getCreatedAt()).replace('T',' ');
+
+            ArrayList<CatDetail> myCatDetailList = catDetailRepository.findAllByUser(userPrincipal.getUser());
+            String myActivity;
+            if(myCatDetailList.size() == 0) {
+                myActivity = "catDetail이 없습니다.";
+            } else {
+                CatDetail myCatDetail = myCatDetailList.get(myCatDetailList.size() -1);
+                myActivity = String.valueOf(myCatDetail.getCreatedAt()).replace('T',' ');
+            }
+
             String catName = cat.getCatName();
             String catImage = cat.getCatImage();
             Long catId = cat.getId();
