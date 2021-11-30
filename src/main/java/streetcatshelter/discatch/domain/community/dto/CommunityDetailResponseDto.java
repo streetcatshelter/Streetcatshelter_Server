@@ -28,4 +28,5 @@ public class CommunityDetailResponseDto {
     private String createdAt;
     private String modifiedAt;
     private String nickname;
+    private String userRandomId;
 }

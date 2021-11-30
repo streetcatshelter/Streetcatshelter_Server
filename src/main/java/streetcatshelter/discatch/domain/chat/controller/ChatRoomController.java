@@ -56,16 +56,24 @@ public class ChatRoomController {
             String lastActivity = chatService.lastMessage(chatRoom.getRoomId()).getTime();
             String lastMessage = chatService.lastMessage(chatRoom.getRoomId()).getMessage();
             List<User> chatUsers = chatRoom.getUser();
-            chatUsers.remove(user);
-            User opponent = chatUsers.get(0);
+            String opponentNickname;
             String opponentImage;
-            if(opponent.getProfileUrl() == null) {
-                opponentImage = opponent.getProfileImageUrl();
+            if(chatUsers.size() == 1) {
+                opponentNickname = "";
+                opponentImage = null;
             } else {
-                opponentImage = opponent.getProfileUrl();
+                chatUsers.remove(user);
+                User opponent = chatUsers.get(0);
+                opponentNickname = opponent.getNickname();
+                if(opponent.getProfileUrl() == null) {
+                    opponentImage = opponent.getProfileImageUrl();
+                } else {
+                    opponentImage = opponent.getProfileUrl();
+                }
             }
+
             responseDtoList.add(ChatRoomResponseDto.builder()
-                    .opponent(opponent.getNickname())
+                    .opponent(opponentNickname)
                     .lastActivity(lastActivity)
                     .opponentImage(opponentImage)
                     .roomId(chatRoom.getRoomId())

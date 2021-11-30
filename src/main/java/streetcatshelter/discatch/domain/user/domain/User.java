@@ -13,10 +13,7 @@ import streetcatshelter.discatch.domain.user.dto.UserInformationRequestDto;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 
 @Getter
@@ -33,7 +30,7 @@ public class User extends TimeStamped implements Serializable {
     @Column
     private String userId;
 
-    @Column
+    @Column(nullable = true)
     private String userRandomId;
 
     @Column(nullable = true)
@@ -55,7 +52,8 @@ public class User extends TimeStamped implements Serializable {
     @Column(nullable = true)
     private String email;
 
-    @Column(columnDefinition = "default 3")
+    @Enumerated
+    @Column(columnDefinition = "smallint default 4")
     private UserLevel userLevel;
 
     @Column(nullable = true)
@@ -98,6 +96,8 @@ public class User extends TimeStamped implements Serializable {
         this.roleType = roleType;
         this.userLevel = userLevel;
         this.userRandomId = UUID.randomUUID().toString();
+        this.nickname = "뉴비" + randomNickname();
+        this.scoreLeft = 100;
     }
     public User(
             @NotNull String userId,
@@ -121,6 +121,7 @@ public class User extends TimeStamped implements Serializable {
         this.roleType = roleType;
         this.userLevel = userlevel;
         this.userRandomId = UUID.randomUUID().toString();
+        this.scoreLeft = 100;
     }
 
     public static User googleUserCreate(GoogleUserInfo googleUserInfo){
@@ -180,5 +181,27 @@ public class User extends TimeStamped implements Serializable {
         }else{
             this.userLevel = nextLevel;
         }
+    }
+    public String randomNickname() {
+        StringBuffer temp = new StringBuffer();
+        Random rnd = new Random();
+        for (int i = 0; i < 10; i++) {
+            int rIndex = rnd.nextInt(3);
+            switch (rIndex) {
+                case 0:
+                    // a-z
+                    temp.append((char) ((int) (rnd.nextInt(26)) + 97));
+                    break;
+                case 1:
+                    // A-Z
+                    temp.append((char) ((int) (rnd.nextInt(26)) + 65));
+                    break;
+                case 2:
+                    // 0-9
+                    temp.append((rnd.nextInt(10)));
+                    break;
+            }
+        }
+        return String.valueOf(temp);
     }
 }
