@@ -19,7 +19,4 @@ public interface CatDetailRepository extends JpaRepository<CatDetail, Long> {
     int countAllByUser_UserSeqAndCatId(Long userSeq, Long catId);
     int countAllByUserAndModifiedAtBetween(User user, LocalDateTime start, LocalDateTime end);
     int countAllByUser_UserSeq(Long userSeq);
-
-
-
 }
