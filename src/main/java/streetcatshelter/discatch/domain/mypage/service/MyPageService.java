@@ -24,6 +24,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -51,7 +52,7 @@ public class MyPageService {
             ArrayList<CatDetail> myCatDetailList = catDetailRepository.findAllByUser(userPrincipal.getUser());
             String myActivity;
             if(myCatDetailList.size() == 0) {
-                myActivity = "catDetail이 없습니다.";
+                myActivity = null;
             } else {
                 CatDetail myCatDetail = myCatDetailList.get(myCatDetailList.size() -1);
                 myActivity = String.valueOf(myCatDetail.getCreatedAt()).replace('T',' ');
@@ -62,7 +63,7 @@ public class MyPageService {
             Long catId = cat.getId();
             int cntComment = commentRepository.countAllByUser_UserSeqAndCatId(userSeq, catId);
             int cntCatDetail = catDetailRepository.countAllByUser_UserSeqAndCatId(userSeq, catId);
-            String location = cat.getLocation();
+            String location = cat.getLocation().split(" ")[(int) (Arrays.stream(cat.getLocation().split(" ")).count()-1)];
             double latitude = cat.getLatitude();
             double longitude = cat.getLongitude();
             MyPageCatsResponseDto myPageCatsResponseDto = new MyPageCatsResponseDto(lastActivity, myActivity, catName, catImage, catId, cntComment, cntCatDetail, location, latitude, longitude);
@@ -188,8 +189,6 @@ public class MyPageService {
                         .snack(catCalender.isSnack())
                         .water(catCalender.isWater())
                         .build());
-            } else {
-                continue;
             }
         }
         return calendarResponseDtos;
