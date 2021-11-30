@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import streetcatshelter.discatch.alarm.AlarmController;
+import streetcatshelter.discatch.alarm.AlarmRequestDto;
 import streetcatshelter.discatch.aop.UpdateUserScore;
 import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.domain.community.domain.Community;
@@ -34,6 +36,7 @@ public class CommunityService {
     private final CommunityImageRepository communityImageRepository;
     private final CommentRepository commentRepository;
     private final CommunityLikeitRepository communityLikeitRepository;
+    private final AlarmController alarmController;
 
     public ArrayList<CommunityResponseDto> getCommunityByCategory(int page, int size, String category, String location,UserPrincipal userPrincipal) {
         //1페이지 문제 해결완료
@@ -187,6 +190,11 @@ public class CommunityService {
         commentRepository.save(comment);
         int cntComment = commentRepository.countAllByCommunityId(communityId);
         community.updateCntComment(cntComment);
+        AlarmRequestDto alarmRequestDto = new AlarmRequestDto();
+        alarmRequestDto.setTarget("community");
+        alarmRequestDto.setWhat("comment");
+        alarmRequestDto.setUserRandomId(user.getUserRandomId());
+        alarmController.alarmToClient(alarmRequestDto);
     }
 
     @Transactional

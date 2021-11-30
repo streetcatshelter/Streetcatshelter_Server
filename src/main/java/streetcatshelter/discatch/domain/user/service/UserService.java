@@ -4,16 +4,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import streetcatshelter.discatch.domain.config.properties.AppProperties;
-import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
-import streetcatshelter.discatch.domain.oauth.social.*;
-import streetcatshelter.discatch.domain.user.domain.User;
+import streetcatshelter.discatch.domain.Liked;
+import streetcatshelter.discatch.domain.cat.repository.CatDetailRepository;
+import streetcatshelter.discatch.domain.cat.repository.CatRepository;
 import streetcatshelter.discatch.domain.chat.dto.LoginResponseDto;
+import streetcatshelter.discatch.domain.community.repository.CommunityRepository;
+import streetcatshelter.discatch.domain.config.properties.AppProperties;
 import streetcatshelter.discatch.domain.oauth.entity.ProviderType;
 import streetcatshelter.discatch.domain.oauth.entity.RoleType;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
+import streetcatshelter.discatch.domain.oauth.social.*;
 import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
+import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.user.domain.UserLevel;
+import streetcatshelter.discatch.domain.user.domain.UserLocation;
+import streetcatshelter.discatch.domain.user.dto.UserInfoResponseDto;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
+import streetcatshelter.discatch.repository.CommentRepository;
+import streetcatshelter.discatch.repository.LikedRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -27,6 +38,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final NaverOAuth2 naverOAuth2;
     private final GoogleOAuth2 googleOAuth2;
+    private final LikedRepository likedRepository;
+    private final CatRepository catRepository;
+    private final CommunityRepository communityRepository;
+    private final CatDetailRepository catDetailRepository;
+    private final CommentRepository commentRepository;
+
 
     public LoginResponseDto kakaoLogin(String code) {
         KakaoUserInfo kakaoUserInfo = kakaoOAuth2.getUserInfo(code);
@@ -122,5 +139,42 @@ public class UserService {
         if (userPrincipal == null) {
             throw new IllegalArgumentException("유저정보가 없습니다. 토큰 잘못됨");
         }
+    }
+
+
+    public UserInfoResponseDto getUserInfo(String userRandomId) {
+        User user = userRepository.findByUserRandomId(userRandomId);
+        Long userSeq = user.getUserSeq();
+        List<Liked> LikedList = likedRepository.findAllByUser_UserSeq(userSeq);
+        List<String> catImages = new ArrayList<>();
+        for(Liked liked: LikedList) {
+            String catImage = liked.getCat().getCatImage();
+            catImages.add(catImage);
+        }
+
+        List<UserLocation> userLocationList = user.getUserLocationList();
+        List<String> locationList = new ArrayList<>();
+        for(UserLocation userLocation : userLocationList) {
+            locationList.add(userLocation.getLocation());
+        }
+        int catDetailNum = catDetailRepository.countAllByUser_UserSeq(userSeq);
+        int communityNum = communityRepository.countAllByUser_UserSeq(userSeq);
+        int catNum = catRepository.countAllByUser_UserSeq(userSeq);
+        int commentNum = commentRepository.countAllByUser_UserSeq(userSeq);
+        int likedNum = likedRepository.countAllByUser_UserSeq(userSeq);
+
+
+
+        return UserInfoResponseDto.builder()
+                .cat(catImages)
+                .location(locationList)
+                .userLevel(user.getUserLevel())
+                .nickname(user.getNickname())
+                .score(user.getScore())
+                .catNum(catNum)
+                .postNum(catDetailNum + communityNum)
+                .commentNum(commentNum)
+                .likedNum(likedNum)
+                .build();
     }
 }

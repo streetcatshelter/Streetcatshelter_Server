@@ -6,16 +6,17 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import streetcatshelter.discatch.domain.TimeStamped;
-import streetcatshelter.discatch.domain.oauth.social.GoogleUserInfo;
-import streetcatshelter.discatch.domain.user.dto.UserInformationRequestDto;
 import streetcatshelter.discatch.domain.oauth.entity.ProviderType;
 import streetcatshelter.discatch.domain.oauth.entity.RoleType;
+import streetcatshelter.discatch.domain.oauth.social.GoogleUserInfo;
+import streetcatshelter.discatch.domain.user.dto.UserInformationRequestDto;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 
 @Getter
@@ -31,6 +32,9 @@ public class User extends TimeStamped implements Serializable {
 
     @Column
     private String userId;
+
+    @Column
+    private String userRandomId;
 
     @Column(nullable = true)
     private String username;
@@ -92,6 +96,7 @@ public class User extends TimeStamped implements Serializable {
         this.providerType = providerType;
         this.roleType = roleType;
         this.userLevel = userLevel;
+        this.userRandomId = UUID.randomUUID().toString();
     }
     public User(
             @NotNull String userId,
@@ -114,6 +119,7 @@ public class User extends TimeStamped implements Serializable {
         this.providerType = providerType;
         this.roleType = roleType;
         this.userLevel = userlevel;
+        this.userRandomId = UUID.randomUUID().toString();
     }
 
     public static User googleUserCreate(GoogleUserInfo googleUserInfo){
@@ -126,6 +132,7 @@ public class User extends TimeStamped implements Serializable {
                 ProviderType.GOOGLE,
                 RoleType.USER,
                 UserLevel.아깽이
+
                 );
     }
 

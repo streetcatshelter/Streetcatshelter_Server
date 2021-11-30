@@ -24,5 +24,8 @@ public class MyPageCatsResponseDto {
         this.lastActivity = lastActivity;
         this.myActivity = myActivity;
         this.catId = catId;
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }
