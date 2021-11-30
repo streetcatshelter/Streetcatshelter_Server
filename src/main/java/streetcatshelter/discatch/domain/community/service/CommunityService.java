@@ -143,6 +143,7 @@ public class CommunityService {
                     .modifiedAt(comment.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .profileImageUrl(profileImageUrl)
                     .userId(comment.getUser().getUserSeq())
+                    .userRandomId(comment.getUser().getUserRandomId())
                     .build());
         }
         String profileImageUrl;
@@ -169,6 +170,7 @@ public class CommunityService {
                 .nickname(community.getUser().getNickname())
                 .createdAt(community.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .modifiedAt(community.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .userRandomId(community.getUser().getUserRandomId())
                 .build();
     }
 

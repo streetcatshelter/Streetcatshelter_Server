@@ -21,4 +21,5 @@ public class UserInfoResponseDto {
     private int postNum;
     private int commentNum;
     private int likedNum;
+    private String userRandomId;
 }

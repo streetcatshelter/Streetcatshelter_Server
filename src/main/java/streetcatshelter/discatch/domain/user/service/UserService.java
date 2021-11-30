@@ -175,6 +175,7 @@ public class UserService {
                 .postNum(catDetailNum + communityNum)
                 .commentNum(commentNum)
                 .likedNum(likedNum)
+                .userRandomId(user.getUserRandomId())
                 .build();
     }
 }

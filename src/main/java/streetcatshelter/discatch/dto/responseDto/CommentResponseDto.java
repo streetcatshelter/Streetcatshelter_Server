@@ -20,4 +20,5 @@ public class CommentResponseDto {
     private String createdAt;
     private String modifiedAt;
     private Boolean isMine;
+    private String userRandomId;
 }
