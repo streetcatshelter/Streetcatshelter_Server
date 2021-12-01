@@ -11,14 +11,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CalendarResponseDto {
 
-    private LocalDate localDate;
+    private LocalDate date;
     private boolean food = false;
     private boolean water = false;
     private boolean snack = false;
 
-    public void update(CatCalender catCalender) {
+    public CalendarResponseDto(CatCalender catCalender){
+        this.date = catCalender.getLocalDate();
         this.food = catCalender.isFood();
-        this.snack = catCalender.isSnack();
         this.water = catCalender.isWater();
+        this.snack = catCalender.isSnack();
     }
 }

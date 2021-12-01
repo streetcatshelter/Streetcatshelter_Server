@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class GoogleUserInfo
+public class GoogleUserInfo implements UserInfo
 {
     public String id;
     public String email;
@@ -16,4 +16,19 @@ public class GoogleUserInfo
     public String family_name;
     public String picture;
     public String locale;
+
+    @Override
+    public String getUserId() {
+        return this.id;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.name;
+    }
+
+    @Override
+    public String getProfileImageUrl() {
+        return this.picture;
+    }
 }

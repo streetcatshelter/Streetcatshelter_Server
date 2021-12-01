@@ -76,7 +76,6 @@ public class User extends TimeStamped implements Serializable {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
-
     public User(
             @NotNull String userId,
             String username,
