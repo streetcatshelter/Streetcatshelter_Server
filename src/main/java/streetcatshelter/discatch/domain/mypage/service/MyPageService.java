@@ -1,6 +1,9 @@
 package streetcatshelter.discatch.domain.mypage.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.Liked;
 import streetcatshelter.discatch.domain.cat.domain.Cat;
@@ -39,9 +42,11 @@ public class MyPageService {
     private final CatCalenderRepository catCalenderRepository;
     private final UserLocationRepository userLocationRepository;
 
-    public List<MyPageCatsResponseDto> findAllCats(UserPrincipal userPrincipal) {
+    public List<MyPageCatsResponseDto> findAllCats(UserPrincipal userPrincipal, int page, int size) {
         Long userSeq = userPrincipal.getUser().getUserSeq();
-        List<Liked> LikedList = likedRepository.findAllByUser_UserSeq(userSeq);
+        Pageable pageable = PageRequest.of(page -1, size);
+
+        Page<Liked> LikedList = likedRepository.findAllByUser_UserSeq(userSeq, pageable);
         List<MyPageCatsResponseDto> responseDtoList = new ArrayList<>();
 
         for(Liked liked: LikedList) {

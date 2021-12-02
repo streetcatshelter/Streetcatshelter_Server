@@ -19,9 +19,9 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     @GetMapping("/mypage/mycat")
-    public List<MyPageCatsResponseDto> findAllCats(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public List<MyPageCatsResponseDto> findAllCats(@AuthenticationPrincipal UserPrincipal userPrincipal, int page, int size) {
         userChecker(userPrincipal);
-        return myPageService.findAllCats(userPrincipal);
+        return myPageService.findAllCats(userPrincipal, page, size);
     }
 
     @GetMapping("/mypage/notice")
