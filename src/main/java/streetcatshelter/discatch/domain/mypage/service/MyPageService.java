@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static streetcatshelter.discatch.service.profileImageUrl.getProfileImageUrl;
+
 @Service
 @RequiredArgsConstructor
 public class MyPageService {
@@ -120,12 +122,13 @@ public class MyPageService {
         for(UserLocation userLocation : orgLocationList) {
             location.add(userLocation.getLocation());
         }
-        String profileImageUrl = null;
+        /*String profileImageUrl = null;
         if(user.getProfileUrl() == null) {
             profileImageUrl = user.getProfileImageUrl();
         } else {
             profileImageUrl = user.getProfileUrl();
-        }
+        }*/
+        String profileImageUrl = getProfileImageUrl(user);
         int cntActivity = catDetailRepository.countAllByUserAndModifiedAtBetween(user, start, end);
         return MyPageUserInformationResponseDto.builder()
                 .nickname(user.getNickname())
@@ -204,13 +207,15 @@ public class MyPageService {
         LocalDate date = LocalDate.of(year, month, day);
         List<CatCalender> catCalenders = catCalenderRepository.findByLocalDateAndUser(date, user);
         List<MyPageCalendarResponseDto> myPageCalendarResponseDtos = new ArrayList<>();
-        for( CatCalender catCalender: catCalenders) {
+        for(CatCalender catCalender: catCalenders) {
             myPageCalendarResponseDtos.add(MyPageCalendarResponseDto.builder()
                     .food(catCalender.isFood())
                     .snack(catCalender.isSnack())
                     .water(catCalender.isWater())
                     .catName(catCalender.getCat().getCatName())
                     .catId(catCalender.getCat().getId())
+                    .catImage(catCalender.getCat().getCatImage())
+                    .location(catCalender.getCat().getLocation().split(" ")[(int) (Arrays.stream(catCalender.getCat().getLocation().split(" ")).count()-1)])
                     .build());
         }
         return myPageCalendarResponseDtos;

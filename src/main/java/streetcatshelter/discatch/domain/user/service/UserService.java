@@ -23,8 +23,9 @@ import streetcatshelter.discatch.domain.user.repository.UserRepository;
 import streetcatshelter.discatch.repository.CommentRepository;
 import streetcatshelter.discatch.repository.LikedRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static streetcatshelter.discatch.service.profileImageUrl.getProfileImageUrl;
 
 
 @Service
@@ -146,10 +147,16 @@ public class UserService {
         User user = userRepository.findByUserRandomId(userRandomId);
         Long userSeq = user.getUserSeq();
         List<Liked> LikedList = likedRepository.findAllByUser_UserSeq(userSeq);
-        List<String> catImages = new ArrayList<>();
+        List<Map<String, String>> cats = new ArrayList<>();
         for(Liked liked: LikedList) {
-            String catImage = liked.getCat().getCatImage();
-            catImages.add(catImage);
+            if(liked.getCat()!=null) {
+                Map<String, String> catinfo = new HashMap<>();
+                catinfo.put("catId", String.valueOf(liked.getCat().getId()));
+                catinfo.put("catLocation", liked.getCat().getLocation().split(" ")[(int) (Arrays.stream(liked.getCat().getLocation().split(" ")).count()-1)]);
+                catinfo.put("catImage", liked.getCat().getCatImage());
+                catinfo.put("catName", liked.getCat().getCatName());
+                cats.add(catinfo);
+            }
         }
 
         List<UserLocation> userLocationList = user.getUserLocationList();
@@ -163,13 +170,21 @@ public class UserService {
         int commentNum = commentRepository.countAllByUser_UserSeq(userSeq);
         int likedNum = likedRepository.countAllByUser_UserSeq(userSeq);
 
-
+/*        String profileImageUrl;
+        if(user.getProfileUrl() == null) {
+            profileImageUrl = user.getProfileImageUrl();
+        } else {
+            profileImageUrl = user.getProfileUrl();
+        }*/
+        String profileImageUrl = getProfileImageUrl(user);
 
         return UserInfoResponseDto.builder()
-                .cat(catImages)
+                .cat(cats)
                 .location(locationList)
                 .userLevel(user.getUserLevel())
+                .scoreLeft(user.getScoreLeft())
                 .nickname(user.getNickname())
+                .profileImageUrl(profileImageUrl)
                 .score(user.getScore())
                 .catNum(catNum)
                 .postNum(catDetailNum + communityNum)

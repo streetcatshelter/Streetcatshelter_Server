@@ -17,4 +17,5 @@ public interface CatCalenderRepository extends JpaRepository<CatCalender,Long> {
     CatCalender findByLocalDate(LocalDate localDate);
     CatCalender findByLocalDateAndCatAndUser(LocalDate localDate, Cat cat, User user);
     List<CatCalender> findByLocalDateAndUser(LocalDate localDate, User user);
+    List<CatCalender> findAllByLocalDateAndCatId(LocalDate date, Long catId);
 }
