@@ -42,22 +42,12 @@ public class CatDetailService {
         LocalDate endDate = LocalDate.of(year,month,startDate.lengthOfMonth());
         List<CatCalender> catCalenders = catCalenderRepository.findALLByLocalDateBetweenAndCatId(startDate, endDate, catId);
 
-        int lengthOfMonth = startDate.lengthOfMonth();
-
         List<CalendarResponseDto> calendarResponseDtos = new ArrayList<>();
-//        for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)){
-//            CalendarResponseDto calendarResponseDto = new CalendarResponseDto();
-//            calendarResponseDto.setDate(date);
-//            for (CatCalender catCalender : catCalenders) {
-//                if(catCalender.getLocalDate().equals(date)){
-//                    calendarResponseDto.update(catCalender);
-//                }
-//            }
-//            calendarResponseDtos.add(calendarResponseDto);
-//        }
 
         for(CatCalender catCalender: catCalenders){
-            calendarResponseDtos.add(new CalendarResponseDto(catCalender));
+            if(calendarResponseDtos.size() == 0 || !calendarResponseDtos.get(calendarResponseDtos.size()-1).getDate().equals(catCalender.getLocalDate())) {
+                calendarResponseDtos.add(new CalendarResponseDto(catCalender));
+            }
         }
 
         return calendarResponseDtos;
@@ -141,5 +131,15 @@ public class CatDetailService {
             catTagList.add(new CatTag(catDetail, tag));
         }
         return catTagList;
+    }
+
+    public List<CalendarResponseDto> getCalenderDetail(Long catId, int year, int month, int day) {
+        LocalDate date = LocalDate.of(year, month, day);
+        List<CatCalender> catCalenders = catCalenderRepository.findAllByLocalDateAndCatId(date, catId);
+        List<CalendarResponseDto> calendarResponseDtos = new ArrayList<>();
+        for(CatCalender catCalender: catCalenders){
+            calendarResponseDtos.add(new CalendarResponseDto(catCalender));
+        }
+        return calendarResponseDtos;
     }
 }

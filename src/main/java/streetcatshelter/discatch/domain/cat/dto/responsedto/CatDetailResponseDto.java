@@ -29,5 +29,6 @@ public class CatDetailResponseDto {
     private String createdAt;
     private List<String> catTags;
     private List<String> catImages;
+    private String userRandomId;
 
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 import streetcatshelter.discatch.domain.user.domain.UserLevel;
 
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Getter
@@ -16,10 +17,12 @@ public class UserInfoResponseDto {
     private int score;
     private String lastActivity;
     private List<String> location;
-    private List<String> cat;
+    private List<Map<String, String>> cat;
     private int catNum;
     private int postNum;
     private int commentNum;
     private int likedNum;
     private String userRandomId;
+    private String profileImageUrl;
+    private int scoreLeft;
 }

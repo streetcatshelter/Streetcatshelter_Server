@@ -24,5 +24,5 @@ CatResponseDto {
     private List<CatTag> catTagList;
     private double latitude;
     private double longitude;
-
+    private String userRandomId;
 }

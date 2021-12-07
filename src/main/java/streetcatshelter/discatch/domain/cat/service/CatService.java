@@ -28,8 +28,9 @@ import streetcatshelter.discatch.repository.LikedRepository;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import static streetcatshelter.discatch.service.profileImageUrl.getProfileImageUrl;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +41,6 @@ public class CatService {
     private final CommentRepository commentRepository;
     private final CatImageRepository catImageRepository;
     private final LikedRepository likedRepository;
-    private final CatCalenderRepository catCalenderRepository;
 
     public List<CatResponseDto> getCatByLocation(int page, int size, String location, User user) {
         Pageable pageable = PageRequest.of(page -1, size);
@@ -59,67 +59,22 @@ public class CatService {
                                 .catTagList(cat.getCatTagList())
                                 .longitude(cat.getLongitude())
                                 .latitude(cat.getLatitude())
+                                .userRandomId(cat.getUser().getUserRandomId())
                                 .build());
         }
 
         if(likeds.size()!=0){
             for (CatResponseDto catResponseDto : responseDtoList) {
                 for (Liked liked : likeds) {
-
-
                     if(liked.getCat()!=null){
-
                         if(catResponseDto.getCatId().equals(liked.getCat().getId())){
-
                             catResponseDto.setUserLiked(true);
-
                         }
                     }
-
-
                 }
             }
         }
 
-
-
-
-//        for(Cat cat : cats) {
-//            if(likeds.size()!=0){
-//                for(Liked liked : likeds){
-//                    if(liked.getCat().equals(cat)){
-//                        responseDtoList.add(CatResponseDto.builder()
-//                                .userLiked(true)
-//                                .catId(cat.getId())
-//                                .catName(cat.getCatName())
-//                                .catImage(cat.getCatImage())
-//                                .neutering(cat.getNeutering())
-//                                .catTagList(cat.getCatTagList())
-//                                .build());
-//                    }else{
-//                        responseDtoList.add(CatResponseDto.builder()
-//                                .userLiked(false)
-//                                .catId(cat.getId())
-//                                .catName(cat.getCatName())
-//                                .catImage(cat.getCatImage())
-//                                .neutering(cat.getNeutering())
-//                                .catTagList(cat.getCatTagList())
-//                                .build());
-//                    }
-//                }
-//            }else{
-//                responseDtoList.add(CatResponseDto.builder()
-//                        .userLiked(false)
-//                        .catId(cat.getId())
-//                        .catName(cat.getCatName())
-//                        .catImage(cat.getCatImage())
-//                        .neutering(cat.getNeutering())
-//                        .catTagList(cat.getCatTagList())
-//                        .build());
-//            }
-//
-//
-//        }
 
         return responseDtoList;
     }
@@ -181,6 +136,9 @@ public class CatService {
         for(CatTag catTag : catDetail.getCatTags()){
             catTags.add(catTag.getTag());
         }
+
+        String profileImageUrl = getProfileImageUrl(catDetail.getUser());
+
         return CatDetailResponseDto.builder()
                 .catDetailId(catDetail.getId())
                 .food(catDetail.isFood())
@@ -194,9 +152,10 @@ public class CatService {
                 .catImages(catImages)
                 .catTags(catTags)
                 .createdAt(catDetail.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .nickname(user.getNickname())
-                .profileImageUrl(user.getProfileImageUrl())
-                .userSeq(user.getUserSeq())
+                .nickname(catDetail.getUser().getNickname())
+                .profileImageUrl(profileImageUrl)
+                .userSeq(catDetail.getUser().getUserSeq())
+                .userRandomId(catDetail.getUser().getUserRandomId())
                 .build();
     }
 
@@ -251,6 +210,9 @@ public class CatService {
         Page<CatDetail> allByCatId = catDetailRepository.findAllByCatId(pageable, catId);
         List<CatDiaryResponseDto> catDiaryResponseDtos = new ArrayList<>();
         for (CatDetail catDetail : allByCatId) {
+
+            String profileImageUrl = getProfileImageUrl(catDetail.getUser());
+
             catDiaryResponseDtos.add(CatDiaryResponseDto.builder()
                     .createdAt(catDetail.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                     .diary(catDetail.getDiary())
@@ -258,7 +220,7 @@ public class CatService {
                     .commentCnt(catDetail.getCommentCnt())
                     .likeCnt(catDetail.getLikeCnt())
                     .viewCnt(catDetail.getViewCnt())
-                    .profileImageUrl(catDetail.getUser().getProfileImageUrl())
+                    .profileImageUrl(profileImageUrl)
                     .userId(catDetail.getUser().getUserSeq())
                     .nickname(catDetail.getUser().getNickname())
                     .build());
@@ -275,17 +237,20 @@ public class CatService {
         List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
         for (Comment comment : allByCatDetailId) {
 
+            String profileImageUrl = getProfileImageUrl(comment.getUser());
+
             if(comment.isSameUser(user)){
                 commentResponseDtos.add(CommentResponseDto.builder()
                         .commentId(comment.getId())
                         .contents(comment.getContents())
                         .username(comment.getUser().getUsername())
                         .userId(comment.getUser().getUserSeq())
-                        .profileImageUrl(comment.getUser().getProfileImageUrl())
+                        .profileImageUrl(profileImageUrl)
                         .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                         .modifiedAt(comment.getModifiedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                         .nickname(comment.getUser().getNickname())
                         .isMine(true)
+                        .userRandomId(comment.getUser().getUserRandomId())
                         .build());
             }else{
                 commentResponseDtos.add(CommentResponseDto.builder()
@@ -293,11 +258,12 @@ public class CatService {
                         .contents(comment.getContents())
                         .username(comment.getUser().getUsername())
                         .userId(comment.getUser().getUserSeq())
-                        .profileImageUrl(comment.getUser().getProfileImageUrl())
+                        .profileImageUrl(profileImageUrl)
                         .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                         .modifiedAt(comment.getModifiedAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                         .nickname(comment.getUser().getNickname())
                         .isMine(false)
+                        .userRandomId(comment.getUser().getUserRandomId())
                         .build());
             }
 

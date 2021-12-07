@@ -8,12 +8,12 @@ import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailUpdateReques
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatUpdateRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.responsedto.*;
-import streetcatshelter.discatch.domain.user.domain.User;
-import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
-import streetcatshelter.discatch.dto.responseDto.*;
-import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.domain.cat.service.CatDetailService;
 import streetcatshelter.discatch.domain.cat.service.CatService;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
+import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
+import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
+import streetcatshelter.discatch.dto.responseDto.Result;
 
 import java.util.List;
 import java.util.Map;
@@ -137,8 +137,14 @@ public class CatController {
         Result<CalendarResponseDto> result = new Result<>();
         result.setDate(calender);
         return result;
+    }
 
-
+    @GetMapping("/cat/calender/detail/{catId}")
+    public List<CalendarResponseDto> getCalender(@PathVariable Long catId,
+                                                   @RequestParam int year,
+                                                   @RequestParam int month,
+                                                   @RequestParam int day) {
+        return catDetailService.getCalenderDetail(catId, year, month, day);
     }
 
     @GetMapping("cat/info/{catId}")

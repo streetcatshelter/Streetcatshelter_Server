@@ -13,4 +13,6 @@ public class MyPageCalendarResponseDto {
     private boolean food;
     private boolean snack;
     private String catName;
+    private String location;
+    private String catImage;
 }
