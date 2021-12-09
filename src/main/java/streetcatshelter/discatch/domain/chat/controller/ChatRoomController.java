@@ -8,7 +8,6 @@ import streetcatshelter.discatch.domain.chat.domain.ChatRoom;
 import streetcatshelter.discatch.domain.chat.dto.ChatRoomDto;
 import streetcatshelter.discatch.domain.chat.dto.ChatRoomResponseDto;
 import streetcatshelter.discatch.domain.chat.repository.ChatMessageRepository;
-import streetcatshelter.discatch.domain.chat.repository.ChatRoomRedisRepository;
 import streetcatshelter.discatch.domain.chat.repository.ChatRoomRepository;
 import streetcatshelter.discatch.domain.chat.service.ChatRoomService;
 import streetcatshelter.discatch.domain.chat.service.ChatService;
@@ -33,7 +32,6 @@ public class ChatRoomController {
     private final ChatService chatService;
     private final UserRepository userRepository;
     private final ChatMessageRepository chatMessageRepository;
-    private final ChatRoomRedisRepository chatRoomRedisRepository;
 
     //기존에 쓰이던 채팅방 리스트 조회 hash 사용
 //    @GetMapping("/rooms")
@@ -58,12 +56,15 @@ public class ChatRoomController {
             List<User> chatUsers = chatRoom.getUser();
             String opponentNickname;
             String opponentImage;
+            String userRandomId;
             if(chatUsers.size() == 1) {
                 opponentNickname = "";
                 opponentImage = null;
+                userRandomId = null;
             } else {
                 chatUsers.remove(user);
                 User opponent = chatUsers.get(0);
+                userRandomId = opponent.getUserRandomId();
                 opponentNickname = opponent.getNickname();
                 if(opponent.getProfileUrl() == null) {
                     opponentImage = opponent.getProfileImageUrl();
@@ -78,6 +79,7 @@ public class ChatRoomController {
                     .opponentImage(opponentImage)
                     .roomId(chatRoom.getRoomId())
                     .lastMessage(lastMessage)
+                    .userRandomId(userRandomId)
                     .build());
         }
         return responseDtoList;
@@ -86,8 +88,8 @@ public class ChatRoomController {
 
     //채팅방 생성(parameter : roomName, user_email)
     @PostMapping("/create")
-    public ChatRoom createRoom(@RequestBody ChatRoomDto chatRoomDto) {
-        return chatRoomService.createChatRoom(chatRoomDto);
+    public ChatRoom createRoom(@RequestBody ChatRoomDto chatRoomDto, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return chatRoomService.createChatRoom(chatRoomDto, userPrincipal);
     }
 
     //특정 채팅방 입장. 채팅방정보 제공;
@@ -115,7 +117,11 @@ public class ChatRoomController {
         }
         else{
             //유저가 남아있다면 나가는 유저 정보를 가져와서 채팅방에 남아있는 인원에게 퇴장 메세지 전송
-            chatService.sendChatMessage(ChatMessage.builder().type(ChatMessage.MessageType.QUIT).roomId(roomId).userName(user.getUsername()).build());
+            chatService.sendChatMessage(ChatMessage.builder()
+                    .type(ChatMessage.MessageType.QUIT)
+                    .roomId(roomId)
+                    .sender(user)
+                    .build());
         }
         return "채팅방 나가기 완료";
     }

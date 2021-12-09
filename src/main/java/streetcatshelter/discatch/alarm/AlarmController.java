@@ -43,7 +43,7 @@ public class AlarmController {
     public void sendInitEvent(SseEmitter sseEmitter, UserPrincipal userPrincipal) {
         String userRandomId = userPrincipal.getUser().getUserRandomId();
         try {
-            sseEmitter.send(SseEmitter.event().name("알림기능입니다.").data(alarmRepository.findAllByUserRandomId(userRandomId)));
+            sseEmitter.send(SseEmitter.event().name("INIT").data(alarmRepository.findAllByUserRandomId(userRandomId)));
             alarmRepository.deleteAllByUserRandomId(userRandomId);
         } catch (IOException e) {
             e.printStackTrace();

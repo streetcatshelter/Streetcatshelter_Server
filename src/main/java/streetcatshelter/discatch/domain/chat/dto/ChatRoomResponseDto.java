@@ -15,4 +15,5 @@ public class ChatRoomResponseDto {
     private String lastActivity;
     private String roomId;
     private String lastMessage;
+    private String userRandomId;
 }

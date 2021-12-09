@@ -1,6 +1,7 @@
 package streetcatshelter.discatch.domain.user.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 import lombok.Getter;
@@ -28,27 +29,32 @@ public class User extends TimeStamped implements Serializable {
     private Long userSeq;
 
     @Column
+    @JsonIgnore
     private String userId;
 
     @Column(nullable = true)
     private String userRandomId;
 
+    @JsonIgnore
     @Column(nullable = true)
     private String username;
 
     @Column
+    @JsonIgnore
     private String password;
 
     @Column(nullable = true, unique = true)
     private String nickname;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "user",  cascade = {CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.EAGER ,mappedBy = "user",  cascade = {CascadeType.REMOVE})
     private List<UserLocation> userLocationList = new ArrayList<>();
 
+    @JsonIgnore
     @Column(nullable = true)
     private String profileUrl;
 
+    @JsonIgnore
     @Column(nullable = true)
     private String email;
 
@@ -56,22 +62,28 @@ public class User extends TimeStamped implements Serializable {
     @Column(columnDefinition = "smallint default 4")
     private UserLevel userLevel;
 
+    @JsonIgnore
     @Column(nullable = true)
     private int score;
 
+    @JsonIgnore
     @Column(nullable = true)
     private int scoreLeft;
 
+    @JsonIgnore
     @Column
     private String emailVerifiedYn;
 
+    @JsonIgnore
     @Column
     private String profileImageUrl;
 
+    @JsonIgnore
     @Column
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
 
+    @JsonIgnore
     @Column
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
