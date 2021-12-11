@@ -6,16 +6,14 @@ import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.chat.domain.ChatRoom;
 import streetcatshelter.discatch.domain.chat.dto.ChatRoomDto;
 import streetcatshelter.discatch.domain.chat.dto.ChatRoomResponseDto;
+import streetcatshelter.discatch.domain.chat.repository.ChatMessageRepository;
 import streetcatshelter.discatch.domain.chat.repository.ChatRoomRepository;
 import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.domain.user.repository.UserRepository;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -31,6 +29,7 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatService chatService;
     private final UserRepository userRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     public static final String ENTER_INFO = "ENTER_INFO";
     public static final String USER_INFO = "USER_INFO";
@@ -74,6 +73,8 @@ public class ChatRoomService {
         String opponentImage;
         String nickname;
         String userRandomId;
+        int cntChat = chatMessageRepository.countAllByRoomId(chatRoom.getRoomId());
+
 
         if(chatRoom.getUser().size() == 2) {
             if (chatRoom.getUser().get(0).equals(user)) {
@@ -89,9 +90,17 @@ public class ChatRoomService {
             nickname = opponent.getNickname();
             userRandomId = opponent.getUserRandomId();
         } else {
-            opponentImage = null;
-            nickname = null;
-            userRandomId = null;
+            String userSeq = String.valueOf(user.getUserSeq());
+            //상대방이 나갔을시에 userSeqSum을 이용해서 상대방을 찾아준다.
+            String opponentId = chatRoom.getUserSeqSum().replace(userSeq, "").replace("Ian", "");
+            opponent = userRepository.findByUserSeq(Long.valueOf(opponentId));
+            if(opponent.getProfileUrl() == null) {
+                opponentImage = opponent.getProfileImageUrl();
+            } else {
+                opponentImage = opponent.getProfileUrl();
+            }
+            nickname = opponent.getNickname();
+            userRandomId = opponent.getUserRandomId();
         }
 
         String lastActivity;
@@ -107,6 +116,7 @@ public class ChatRoomService {
                 .lastActivity(lastActivity)
                 .roomId(chatRoom.getRoomId())
                 .userRandomId(userRandomId)
+                .cntChat(cntChat)
                 .build();
     }
 

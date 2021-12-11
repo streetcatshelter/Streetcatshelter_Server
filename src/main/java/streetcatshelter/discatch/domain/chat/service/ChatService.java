@@ -1,6 +1,8 @@
 package streetcatshelter.discatch.domain.chat.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
@@ -41,16 +43,16 @@ public class ChatService { //입장, 퇴장 처리
      * 채팅방에 메시지 발송
      */
     public void sendChatMessage(ChatMessage message) {
-        if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
+        /*if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
             message.setMessage(message.getSender().getNickname() + "님이 방에 입장했습니다.");
         } else if (ChatMessage.MessageType.QUIT.equals(message.getType())) {
             message.setMessage(message.getSender().getNickname() + "님이 자리를 비웠어요.");
-        }
+        }*/
         redisTemplate.convertAndSend(channelTopic.getTopic(), message);
     }
 
-    public List<ChatMessageResponseDto> loadMessage(String roomId, UserPrincipal userPrincipal) {
-        List<ChatMessage> messages = chatMessageRepository.findAllByRoomIdOrderByCreatedAtAsc(roomId);
+    public List<ChatMessageResponseDto> loadMessage(String roomId, UserPrincipal userPrincipal, Pageable pageable) {
+        Page<ChatMessage> messages = chatMessageRepository.findByRoomIdOrderByIdAsc(roomId, pageable);
         List<ChatMessageResponseDto> responseDtoList = new ArrayList<>();
         for(ChatMessage chatMessage : messages) {
 

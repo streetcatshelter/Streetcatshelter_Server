@@ -43,7 +43,7 @@ public class ChatRoomController {
 //    }
     //참여중인 채팅방 조회
     @GetMapping("/rooms")
-    public List<ChatRoomResponseDto> profileChange(HttpServletRequest httpServletRequest){
+    public List<ChatRoomResponseDto> allChatRooms(HttpServletRequest httpServletRequest){
         //토큰에서 사용자 정보 추출
         String token = jwtTokenProvider.resolveToken(httpServletRequest);
         String socialId = jwtTokenProvider.getUserPk(token);
@@ -57,13 +57,24 @@ public class ChatRoomController {
             String opponentNickname;
             String opponentImage;
             String userRandomId;
+            User opponent;
+            int cntChat = chatMessageRepository.countAllByRoomId(chatRoom.getRoomId());
+
             if(chatUsers.size() == 1) {
-                opponentNickname = "";
-                opponentImage = null;
-                userRandomId = null;
+                String userSeq = String.valueOf(user.getUserSeq());
+                //상대방이 나갔을시에 userSeqSum을 이용해서 상대방을 찾아준다.
+                String opponentId = chatRoom.getUserSeqSum().replace(userSeq, "").replace("Ian", "");
+                opponent = userRepository.findByUserSeq(Long.valueOf(opponentId));
+                if(opponent.getProfileUrl() == null) {
+                    opponentImage = opponent.getProfileImageUrl();
+                } else {
+                    opponentImage = opponent.getProfileUrl();
+                }
+                opponentNickname = opponent.getNickname();
+                userRandomId = opponent.getUserRandomId();
             } else {
                 chatUsers.remove(user);
-                User opponent = chatUsers.get(0);
+                opponent = chatUsers.get(0);
                 userRandomId = opponent.getUserRandomId();
                 opponentNickname = opponent.getNickname();
                 if(opponent.getProfileUrl() == null) {
@@ -80,6 +91,7 @@ public class ChatRoomController {
                     .roomId(chatRoom.getRoomId())
                     .lastMessage(lastMessage)
                     .userRandomId(userRandomId)
+                    .cntChat(cntChat)
                     .build());
         }
         return responseDtoList;

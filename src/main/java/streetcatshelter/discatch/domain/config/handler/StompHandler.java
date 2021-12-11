@@ -8,7 +8,6 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
-import streetcatshelter.discatch.domain.chat.domain.ChatMessage;
 import streetcatshelter.discatch.domain.chat.service.ChatRoomService;
 import streetcatshelter.discatch.domain.chat.service.ChatService;
 import streetcatshelter.discatch.domain.oauth.token.JwtTokenProvider;
@@ -55,11 +54,11 @@ public class StompHandler implements ChannelInterceptor {
             }
             Long userId = user.getUserSeq();
             chatRoomService.setUserEnterInfo(sessionId, roomId,userId);
-            chatService.sendChatMessage(ChatMessage.builder()
+            /*chatService.sendChatMessage(ChatMessage.builder()
                     .type(ChatMessage.MessageType.ENTER)
                     .roomId(roomId)
                     .sender(user)
-                    .build());
+                    .build());*/
             log.info("SUBSCRIBED {}, {}", user.getUsername(), roomId);
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료
             // 연결이 종료된 클라이언트 sessionId 로 채팅방 id를 얻는다.
@@ -68,11 +67,11 @@ public class StompHandler implements ChannelInterceptor {
             // 저장했던 sessionId 로 유저 객체를 받아옴
             User user = chatRoomService.chkSessionUser(sessionId);
             String username = user.getUsername();
-            chatService.sendChatMessage(ChatMessage.builder()
+            /*chatService.sendChatMessage(ChatMessage.builder()
                     .type(ChatMessage.MessageType.QUIT)
                     .roomId(roomId)
                     .sender(user)
-                    .build());
+                    .build());*/
             // 퇴장한 클라이언트의 roomId 맵핑 정보를 삭제한다.
             chatRoomService.removeUserEnterInfo(sessionId);
             log.info("DISCONNECTED {}, {}", username, roomId);
