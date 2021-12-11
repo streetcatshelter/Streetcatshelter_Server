@@ -13,4 +13,5 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     ChatRoom findByRoomId(String roomId);
     @NotNull Optional<ChatRoom> findById(@NotNull Long roomId);
     ChatRoom findByUserSeqSum(String userSeqSum);
+    int countAllByRoomId(String roomId);
 }

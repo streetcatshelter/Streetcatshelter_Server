@@ -1,25 +1,23 @@
 package streetcatshelter.discatch.domain.chat.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import streetcatshelter.discatch.domain.TimeStamped;
+import streetcatshelter.discatch.domain.user.domain.User;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatMessage extends TimeStamped {
 
-    public ChatMessage() {
-    }
-
     @Builder
-    public ChatMessage(MessageType type, String roomId, String userName, String message) {
+    public ChatMessage(MessageType type, String roomId, User sender, String message) {
         this.type = type;
         this.roomId = roomId;
-        this.userName = userName;
+        this.sender = sender;
         this.message = message;
     }
 
@@ -37,8 +35,8 @@ public class ChatMessage extends TimeStamped {
     @Column
     private String roomId; // 방번호
 
-    @Column
-    private String userName; // 메시지 보낸사람
+    @ManyToOne
+    private User sender;
 
     @Column
     private String message; // 메시지
