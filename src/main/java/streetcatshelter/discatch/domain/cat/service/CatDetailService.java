@@ -3,6 +3,7 @@ package streetcatshelter.discatch.domain.cat.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import streetcatshelter.discatch.aop.UpdateUserLastActivity;
 import streetcatshelter.discatch.aop.UpdateUserScore;
 import streetcatshelter.discatch.domain.Liked;
 import streetcatshelter.discatch.domain.cat.domain.Cat;
@@ -53,6 +54,7 @@ public class CatDetailService {
         return calendarResponseDtos;
     }
 
+    @UpdateUserLastActivity
     @UpdateUserScore
     @Transactional
     public void createCatDetail(CatDetailRequestDto requestDto, Long catId, User user) {
@@ -88,6 +90,7 @@ public class CatDetailService {
     }
 
     @UpdateUserScore
+    @UpdateUserLastActivity
     public void deleteCatDetail(Long catDetailId, User user) {
         CatDetail catDetail = catDetailRepository.findById(catDetailId).orElseThrow(
                 () -> new NullPointerException("NO SUCH DATA")
@@ -115,6 +118,7 @@ public class CatDetailService {
 
 
     @Transactional
+    @UpdateUserLastActivity
     public void updateCatDetail(CatDetailUpdateRequestDto catDetailUpdateRequestDto, User user, Long catDetailId) {
 
         CatDetail catDetail = catDetailRepository.findById(catDetailId).orElseThrow(

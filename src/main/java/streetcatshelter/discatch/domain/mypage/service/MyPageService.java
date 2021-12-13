@@ -9,8 +9,10 @@ import streetcatshelter.discatch.domain.Liked;
 import streetcatshelter.discatch.domain.cat.domain.Cat;
 import streetcatshelter.discatch.domain.cat.domain.CatCalender;
 import streetcatshelter.discatch.domain.cat.domain.CatDetail;
+import streetcatshelter.discatch.domain.cat.dto.responsedto.ResponseDto;
 import streetcatshelter.discatch.domain.cat.repository.CatCalenderRepository;
 import streetcatshelter.discatch.domain.cat.repository.CatDetailRepository;
+import streetcatshelter.discatch.domain.cat.repository.CatRepository;
 import streetcatshelter.discatch.domain.mypage.domain.Notice;
 import streetcatshelter.discatch.domain.mypage.dto.*;
 import streetcatshelter.discatch.domain.mypage.repository.NoticeRepository;
@@ -37,6 +39,7 @@ import static streetcatshelter.discatch.service.profileImageUrl.getProfileImageU
 public class MyPageService {
 
     private final CatDetailRepository catDetailRepository;
+    private final CatRepository catRepository;
     private final LikedRepository likedRepository;
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
@@ -44,17 +47,24 @@ public class MyPageService {
     private final CatCalenderRepository catCalenderRepository;
     private final UserLocationRepository userLocationRepository;
 
-    public List<MyPageCatsResponseDto> findAllCats(UserPrincipal userPrincipal, int page, int size) {
+    public ResponseDto findAllCats(UserPrincipal userPrincipal, int page, int size) {
         Long userSeq = userPrincipal.getUser().getUserSeq();
         Pageable pageable = PageRequest.of(page -1, size);
 
         Page<Liked> LikedList = likedRepository.findAllByUser_UserSeq(userSeq, pageable);
+        Boolean isLast = LikedList.isLast();
         List<MyPageCatsResponseDto> responseDtoList = new ArrayList<>();
 
         for(Liked liked: LikedList) {
             Cat cat = liked.getCat();
             CatDetail catDetail = catDetailRepository.findFirstByOrderByIdDesc();
-            String lastActivity = String.valueOf(catDetail.getCreatedAt()).replace('T',' ');
+            String lastActivity;
+
+            if(catDetail != null) {
+                lastActivity = String.valueOf(catDetail.getCreatedAt()).replace('T',' ');
+            } else {
+                lastActivity = String.valueOf(cat.getCreatedAt()).replace('T',' ');
+            }
 
             ArrayList<CatDetail> myCatDetailList = catDetailRepository.findAllByUser(userPrincipal.getUser());
             String myActivity;
@@ -75,11 +85,14 @@ public class MyPageService {
             double longitude = cat.getLongitude();
             MyPageCatsResponseDto myPageCatsResponseDto = new MyPageCatsResponseDto(lastActivity, myActivity, catName, catImage, catId, cntComment, cntCatDetail, location, latitude, longitude);
             responseDtoList.add(myPageCatsResponseDto);
+
         }
 
-        return responseDtoList;
+        return ResponseDto.builder()
+                .responses(responseDtoList)
+                .isLast(isLast)
+                .build();
     }
-
 
     public List<MyPageNoticeResponseDto> getAllNotices() {
         List<Notice> noticeList = noticeRepository.findAllByOrderByIdDesc();

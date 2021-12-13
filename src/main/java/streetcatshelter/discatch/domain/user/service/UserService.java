@@ -177,7 +177,7 @@ public class UserService {
             profileImageUrl = user.getProfileUrl();
         }*/
         String profileImageUrl = getProfileImageUrl(user);
-
+        String lastActivity = String.valueOf(user.getLastActivity()).replace('T',' ');
         return UserInfoResponseDto.builder()
                 .cat(cats)
                 .location(locationList)
@@ -191,6 +191,7 @@ public class UserService {
                 .commentNum(commentNum)
                 .likedNum(likedNum)
                 .userRandomId(user.getUserRandomId())
+                .lastActivity(lastActivity)
                 .build();
     }
 }

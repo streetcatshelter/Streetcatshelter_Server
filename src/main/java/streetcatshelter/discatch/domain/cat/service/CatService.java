@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import streetcatshelter.discatch.aop.UpdateUserLastActivity;
 import streetcatshelter.discatch.aop.UpdateUserScore;
 import streetcatshelter.discatch.domain.Comment;
 import streetcatshelter.discatch.domain.Liked;
@@ -15,11 +16,11 @@ import streetcatshelter.discatch.domain.cat.domain.CatImage;
 import streetcatshelter.discatch.domain.cat.domain.CatTag;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatUpdateRequestDto;
-import streetcatshelter.discatch.domain.cat.dto.responsedto.CatDetailResponseDto;
-import streetcatshelter.discatch.domain.cat.dto.responsedto.CatDiaryResponseDto;
-import streetcatshelter.discatch.domain.cat.dto.responsedto.CatGalleryResponseDto;
-import streetcatshelter.discatch.domain.cat.dto.responsedto.CatResponseDto;
-import streetcatshelter.discatch.domain.cat.repository.*;
+import streetcatshelter.discatch.domain.cat.dto.responsedto.*;
+import streetcatshelter.discatch.domain.cat.repository.CatDetailRepository;
+import streetcatshelter.discatch.domain.cat.repository.CatImageRepository;
+import streetcatshelter.discatch.domain.cat.repository.CatRepository;
+import streetcatshelter.discatch.domain.cat.repository.CatTagRepository;
 import streetcatshelter.discatch.domain.user.domain.User;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
 import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
@@ -42,12 +43,13 @@ public class CatService {
     private final CatImageRepository catImageRepository;
     private final LikedRepository likedRepository;
 
-    public List<CatResponseDto> getCatByLocation(int page, int size, String location, User user) {
+    public ResponseDto getCatByLocation(int page, int size, String location, User user) {
         Pageable pageable = PageRequest.of(page -1, size);
         Page<Cat> cats = catRepository.findAllByLocation(pageable,location);
+        Boolean isLast = cats.isLast();
+
         List<CatResponseDto> responseDtoList = new ArrayList<>();
         List<Liked> likeds = likedRepository.findAllByUser_UserSeq(user.getUserSeq());
-
 
         for(Cat cat : cats){
             responseDtoList.add(CatResponseDto.builder()
@@ -76,10 +78,14 @@ public class CatService {
         }
 
 
-        return responseDtoList;
+        return ResponseDto.builder()
+                .isLast(isLast)
+                .responses(responseDtoList)
+                .build();
     }
 
     @UpdateUserScore
+    @UpdateUserLastActivity
     public void createCat(CatRequestDto requestDto, User user) {
         Cat cat = new Cat(requestDto, user);
         catRepository.save(cat);
@@ -160,10 +166,10 @@ public class CatService {
     }
 
 
-    public List<CatGalleryResponseDto> getCatPhotos(int page, int size, Long catId) {
-        page -= 1;
-        Pageable pageable = PageRequest.of(page, size);
-        List<CatImage> allByCatId = catImageRepository.findAllByCatId(pageable, catId);
+    public ResponseDto getCatPhotos(int page, int size, Long catId) {
+        Pageable pageable = PageRequest.of(page -1, size);
+        Page<CatImage> allByCatId = catImageRepository.findAllByCatId(pageable, catId);
+        Boolean isLast = allByCatId.isLast();
         List<CatGalleryResponseDto> catGalleryResponseDtos = new ArrayList<>();
         for (CatImage catImage : allByCatId) {
             catGalleryResponseDtos.add(CatGalleryResponseDto.builder()
@@ -171,11 +177,15 @@ public class CatService {
                     .CatImages(catImage.getImage())
                     .build());
         }
-        return catGalleryResponseDtos;
+        return ResponseDto.builder()
+                .isLast(isLast)
+                .responses(catGalleryResponseDtos)
+                .build();
     }
 
     @UpdateUserScore
     @Transactional
+    @UpdateUserLastActivity
     public void createDetailComment(Long catDetailId,CommentRequestDto commentRequestDto, User user) {
         CatDetail catDetail = catDetailRepository.findById(catDetailId).orElseThrow(
                 () -> new NullPointerException("No Such Data")
@@ -186,6 +196,7 @@ public class CatService {
     }
 
     @UpdateUserScore
+    @UpdateUserLastActivity
     public void createComment(Long catId, CommentRequestDto commentRequestDto, User user) {
         Cat cat = catRepository.findById(catId).orElseThrow(
                 ()-> new NullPointerException("NO SUCH DATA")
@@ -196,18 +207,20 @@ public class CatService {
 
     }
 
-    public List<CommentResponseDto> getCatCommentByCatDetail(Long catDetailId, int page, int size, User user) {
-        page -= 1;
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseDto getCatCommentByCatDetail(Long catDetailId, int page, int size, User user) {
+        Pageable pageable = PageRequest.of(page -1, size);
         Page<Comment> allByCatDetailId = commentRepository.findAllByCatDetailId(pageable, catDetailId);
-        return getCommentResponseDtos(allByCatDetailId, user);
+        Boolean isLast = allByCatDetailId.isLast();
+        return ResponseDto.builder()
+                .responses(getCommentResponseDtos(allByCatDetailId, user))
+                .isLast(isLast)
+                .build();
     }
 
-
-    public List<CatDiaryResponseDto> getCatDiaryByCat(Long catId, int page, int size) {
-        page -= 1;
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseDto getCatDiaryByCat(Long catId, int page, int size) {
+        Pageable pageable = PageRequest.of(page-1, size);
         Page<CatDetail> allByCatId = catDetailRepository.findAllByCatId(pageable, catId);
+        Boolean isLast = allByCatId.isLast();
         List<CatDiaryResponseDto> catDiaryResponseDtos = new ArrayList<>();
         for (CatDetail catDetail : allByCatId) {
 
@@ -224,13 +237,21 @@ public class CatService {
                     .userId(catDetail.getUser().getUserSeq())
                     .nickname(catDetail.getUser().getNickname())
                     .build());
-        }return catDiaryResponseDtos;
+        }
+        return ResponseDto.builder()
+                .responses(catDiaryResponseDtos)
+                .isLast(isLast)
+                .build();
     }
 
-    public List<CommentResponseDto> getCatComment(Long catId, int page, int size, User user) {
+    public ResponseDto getCatComment(Long catId, int page, int size, User user) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Comment> allByCatDetailId = commentRepository.findAllByCatId(pageable, catId);
-        return getCommentResponseDtos(allByCatDetailId, user);
+        Boolean isLast = allByCatDetailId.isLast();
+        return ResponseDto.builder()
+                .responses(getCommentResponseDtos(allByCatDetailId, user))
+                .isLast(isLast)
+                .build();
     }
 
     public List<CommentResponseDto> getCommentResponseDtos(Page<Comment> allByCatDetailId, User user) {
@@ -272,6 +293,7 @@ public class CatService {
     }
 
     @UpdateUserScore
+    @UpdateUserLastActivity
     public void deleteComment(Long commentId, User user) {
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(
@@ -297,6 +319,7 @@ public class CatService {
     }
 
     @Transactional
+    @UpdateUserLastActivity
     public void updateCat(Long catId, CatUpdateRequestDto catUpdateRequestDto, User user) {
 
         Cat cat = catRepository.findById(catId).orElseThrow(
@@ -305,8 +328,5 @@ public class CatService {
 
         List<CatTag> catTags = convertTag(cat, catUpdateRequestDto.getCatTag());
         cat.updateCat(catTags,catUpdateRequestDto);
-
-
-
     }
 }

@@ -3,6 +3,7 @@ package streetcatshelter.discatch.domain.mypage.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import streetcatshelter.discatch.domain.cat.dto.responsedto.ResponseDto;
 import streetcatshelter.discatch.domain.mypage.dto.*;
 import streetcatshelter.discatch.domain.mypage.service.MyPageService;
 import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
@@ -19,7 +20,7 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     @GetMapping("/mypage/mycat")
-    public List<MyPageCatsResponseDto> findAllCats(@AuthenticationPrincipal UserPrincipal userPrincipal, int page, int size) {
+    public ResponseDto findAllCats(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam int page, @RequestParam int size) {
         userChecker(userPrincipal);
         return myPageService.findAllCats(userPrincipal, page, size);
     }
