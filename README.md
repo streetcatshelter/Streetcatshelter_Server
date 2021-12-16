@@ -45,11 +45,11 @@ disCATch Link:https://discatch.site
 <!-- <img alt="Python" src ="https://img.shields.io/badge/기술명-원하는색상코드.svg?&style=for-the-badge&logo=로고명&logoColor=로고색상"/> -->
 
 <img src="https://img.shields.io/badge/Java-F7DF1E.svg?&style=for-the-badge&logo=Java&logoColor=white" /> &nbsp;
-<img src="https://img.shields.io/badge/Spring Boot-61DAFB.svg?&style=for-the-badge&logo=Spring Boot&logoColor=yellow" /> &nbsp;
-<img src="https://img.shields.io/badge/MySQL-764ABC.svg?&style=for-the-badge&logo=MySQL&logoColor=red" /> &nbsp;
-<img src="https://img.shields.io/badge/Redis-blueviolet.svg?&style=for-the-badge&logo=Redis&logoColor=purple" /> &nbsp;
-<img src="https://img.shields.io/badge/AWS-010101.svg?&style=for-the-badge&logo=AWS&logoColor=green" /> &nbsp;
-<img src="https://img.shields.io/badge/Socket.io-pink.svg?&style=for-the-badge&logo=Socket.io&logoColor=blue" /> &nbsp;
+<img src="https://img.shields.io/badge/Spring Boot-61DAFB.svg?&style=for-the-badge&logo=Spring Boot&logoColor=white" /> &nbsp;
+<img src="https://img.shields.io/badge/MySQL-764ABC.svg?&style=for-the-badge&logo=MySQL&logoColor=white" /> &nbsp;
+<img src="https://img.shields.io/badge/Redis-blueviolet.svg?&style=for-the-badge&logo=Redis&logoColor=white" /> &nbsp;
+<img src="https://img.shields.io/badge/AWS-010101.svg?&style=for-the-badge&logo=AWS&logoColor=white" /> &nbsp;
+<img src="https://img.shields.io/badge/Socket.io-pink.svg?&style=for-the-badge&logo=Socket.io&logoColor=white" /> &nbsp;
 
 ## ** 🐱기능 소개 및 서비스 소개 🐱 **
 
