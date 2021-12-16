@@ -22,7 +22,7 @@ disCATch Link:https://discatch.site
 
 #### **프론트엔드**
 [React]
-- FrontEnd github : https://github.com/streetcatshelter/Streetcatshelter_Server
+- FrontEnd github : https://github.com/streetcatshelter/disCATch_Client
 - 정진우 : https://github.com/happyeveryone96
 - 최수임 : https://github.com/leechoiswim1
 - 이선민 : https://github.com/sunm-in (12//01까지 프로젝트 진행)
@@ -44,18 +44,9 @@ disCATch Link:https://discatch.site
 
 <!-- <img alt="Python" src ="https://img.shields.io/badge/기술명-원하는색상코드.svg?&style=for-the-badge&logo=로고명&logoColor=로고색상"/> -->
 
-<img src="https://img.shields.io/badge/JavaScript-F7DF1E.svg?&style=for-the-badge&logo=JavaScript&logoColor=white" /> &nbsp;
-<img src="https://img.shields.io/badge/React-61DAFB.svg?&style=for-the-badge&logo=React&logoColor=white" /> &nbsp;
-<img src="https://img.shields.io/badge/Redux-764ABC.svg?&style=for-the-badge&logo=Redux&logoColor=white" /> &nbsp;
-<img src="https://img.shields.io/badge/ReduxToolkit-blueviolet.svg?&style=for-the-badge&logo=ReduxToolkit&logoColor=white" /> &nbsp;
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E.svg?&style=for-the-badge&logo=Java&logoColor=white" /> &nbsp;
 <img src="https://img.shields.io/badge/Socket.io-010101.svg?&style=for-the-badge&logo=Socket.io&logoColor=white" /> &nbsp;
-<img src="https://img.shields.io/badge/Axios-pink.svg?&style=for-the-badge&logo=Axios&logoColor=white" /> &nbsp;
-<img src="https://img.shields.io/badge/React Router-E34F26.svg?&style=for-the-badge&logo=React Router&logoColor=white" /> &nbsp;
 <img src="https://img.shields.io/badge/Amazon S3-569A31.svg?&style=for-the-badge&logo=Amazon S3&logoColor=white" /> &nbsp;
-<img src="https://img.shields.io/badge/styled--components-DB7093.svg?&style=for-the-badge&logo=styled-components&logoColor=white" /> &nbsp;
-<img src="https://img.shields.io/badge/Material Design Icons-2196F3.svg?&style=for-the-badge&logo=Material Design Icons&logoColor=white" /> &nbsp;
-<img src="https://img.shields.io/badge/HTML5-CA4245.svg?&style=for-the-badge&logo=HTML5&logoColor=white" /> &nbsp;
-<img src="https://img.shields.io/badge/CSS3-1572B6.svg?&style=for-the-badge&logo=CSS3&logoColor=white" /> &nbsp;
 
 ## ** 🐱기능 소개 및 서비스 소개 🐱 **
 
