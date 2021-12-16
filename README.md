@@ -44,7 +44,12 @@ disCATch Link:https://discatch.site
 
 <!-- <img alt="Python" src ="https://img.shields.io/badge/기술명-원하는색상코드.svg?&style=for-the-badge&logo=로고명&logoColor=로고색상"/> -->
 
-<img src="https://img.shields.io/badge/JavaScript-F7DF1E.svg?&style=for-the-badge&logo=Java&logoColor=white" /> &nbsp;
+<img src="https://img.shields.io/badge/Java-F7DF1E.svg?&style=for-the-badge&logo=Java&logoColor=white" /> &nbsp;
+<img src="https://img.shields.io/badge/Spring-F7DF1E.svg?&style=for-the-badge&logo=Spring&logoColor=white" /> &nbsp;
+<img src="https://img.shields.io/badge/MySQL-F7DF1E.svg?&style=for-the-badge&logo=MySQL&logoColor=white" /> &nbsp;
+<img src="https://img.shields.io/badge/Redis-F7DF1E.svg?&style=for-the-badge&logo=Redis&logoColor=white" /> &nbsp;
+<img src="https://img.shields.io/badge/JWT-F7DF1E.svg?&style=for-the-badge&logo=JWT&logoColor=white" /> &nbsp;
+
 <img src="https://img.shields.io/badge/Socket.io-010101.svg?&style=for-the-badge&logo=Socket.io&logoColor=white" /> &nbsp;
 <img src="https://img.shields.io/badge/Amazon S3-569A31.svg?&style=for-the-badge&logo=Amazon S3&logoColor=white" /> &nbsp;
 
