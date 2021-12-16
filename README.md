@@ -15,18 +15,17 @@ disCATch Link:https://discatch.site
   <p> 현재 서울 시내 길고양이는 11만6,000여 마리입니다. 캣맘과 캣대디 그리고 지자체의 노력으로 길고양이의 인식이 많이 좋아졌다고는 하지만 아직도 길고양이에 불만이 지속해서 제기되고 있는 것이 현실입니다.  서울시 동물보호과 조사에 따르면 2015년부터 지난해까지 신고된 전체 5만402건의 동물 민원 중 길고양이와 관련된 민원이 2만6,328건으로 절반이 넘습니다. <br/>  이처럼 수많은 길고양이와의 공생방안 모색은 우리에게 늘 숙제처럼 남아있습니다.  우리가 사는 동네부터 자발적으로 체계적인 고양이 돌봄 활동을 한다면 조금이나마 이 문제가 해결될 것이라 생각하여 이 프로젝트를 기획하게 됐습니다.  </p>
    
 ## **👨‍👨‍👦‍👦팀원소개**
-#### **프론트엔드**
-[React]
-- 정진우 : https://github.com/happyeveryone96
-- 최수임 : https://github.com/leechoiswim1
-- 이선민 : https://github.com/sunm-in (12//01까지 프로젝트 진행)
-
 #### **백엔드**
 [Spring]
-- BackEnd github : https://github.com/streetcatshelter/Streetcatshelter_Server
 - 김인섭 : https://github.com/Inseobkim3053
 - 채병훈 : https://github.com/timchae
 
+#### **프론트엔드**
+[React]
+- FrontEnd github : https://github.com/streetcatshelter/Streetcatshelter_Server
+- 정진우 : https://github.com/happyeveryone96
+- 최수임 : https://github.com/leechoiswim1
+- 이선민 : https://github.com/sunm-in (12//01까지 프로젝트 진행)
 <br>
 
 ### **개발 기간**
