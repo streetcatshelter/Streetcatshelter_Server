@@ -14,6 +14,7 @@ import streetcatshelter.discatch.domain.user.dto.UserInformationRequestDto;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -88,6 +89,10 @@ public class User extends TimeStamped implements Serializable {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
+    @JsonIgnore
+    @Column
+    private LocalDateTime lastActivity;
+
     public User(
             @NotNull String userId,
             String username,
@@ -109,6 +114,7 @@ public class User extends TimeStamped implements Serializable {
         this.userRandomId = UUID.randomUUID().toString();
         this.nickname = "뉴비" + randomNickname();
         this.scoreLeft = 100;
+        this.lastActivity = LocalDateTime.now();
     }
     public User(
             @NotNull String userId,
@@ -133,6 +139,7 @@ public class User extends TimeStamped implements Serializable {
         this.userLevel = userlevel;
         this.userRandomId = UUID.randomUUID().toString();
         this.scoreLeft = 100;
+        this.lastActivity = LocalDateTime.now();
     }
 
     public static User googleUserCreate(GoogleUserInfo googleUserInfo){
@@ -183,6 +190,10 @@ public class User extends TimeStamped implements Serializable {
 
     public void setScoreLeft(int scoreLeft) {
         this.scoreLeft = scoreLeft;
+    }
+
+    public void setLastActivity(LocalDateTime lastActivity) {
+        this.lastActivity = lastActivity;
     }
 
     public void updateUserLevel() {

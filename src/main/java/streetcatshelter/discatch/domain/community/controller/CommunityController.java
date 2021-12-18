@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import streetcatshelter.discatch.domain.community.domain.Community;
-import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
-import streetcatshelter.discatch.domain.community.dto.CommunityRequestDto;
 import streetcatshelter.discatch.domain.community.dto.CommunityDetailResponseDto;
+import streetcatshelter.discatch.domain.community.dto.CommunityRequestDto;
 import streetcatshelter.discatch.domain.community.dto.CommunityResponseDto;
-import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.domain.community.service.CommunityService;
+import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
+import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
 
 import java.util.ArrayList;
 

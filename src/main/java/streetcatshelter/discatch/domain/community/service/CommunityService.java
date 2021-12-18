@@ -7,8 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.alarm.AlarmController;
 import streetcatshelter.discatch.alarm.AlarmRequestDto;
+import streetcatshelter.discatch.aop.UpdateUserLastActivity;
 import streetcatshelter.discatch.aop.UpdateUserScore;
 import streetcatshelter.discatch.domain.Comment;
+import streetcatshelter.discatch.domain.cat.dto.responsedto.ResponseDto;
 import streetcatshelter.discatch.domain.community.domain.Community;
 import streetcatshelter.discatch.domain.community.domain.CommunityImage;
 import streetcatshelter.discatch.domain.community.dto.CommunityDetailResponseDto;
@@ -38,12 +40,13 @@ public class CommunityService {
     private final CommunityLikeitRepository communityLikeitRepository;
     private final AlarmController alarmController;
 
-    public ArrayList<CommunityResponseDto> getCommunityByCategory(int page, int size, String category, String location,UserPrincipal userPrincipal) {
+    public ArrayList<CommunityResponseDto> getCommunityByCategory(int page, int size, String category, String location, UserPrincipal userPrincipal) {
         //1페이지 문제 해결완료
         User user = userPrincipal.getUser();
         Pageable pageable = PageRequest.of(page -1, size);
         if(category.equals("고양이 정보글"))  {
             Page<Community> communities = communityRepository.findAllByCategory(pageable, category);
+            Boolean isLast = communities.isLast();
             ArrayList<CommunityResponseDto> responseDtoList = new ArrayList<>();
             for (Community community : communities) {
                 boolean isLiked = false;
@@ -70,11 +73,14 @@ public class CommunityService {
                 CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileImageUrl, communityId, username);
                 responseDtoList.add(responseDto);
             }
+            /*return ResponseDto.builder()
+                    .isLast(isLast)
+                    .responses(responseDtoList)
+                    .build();*/
             return responseDtoList;
         } else {
             Page<Community> communities = communityRepository.findAllByCategoryAndLocation(pageable, category, location);
-            //마지막 페이지 여부
-            //Boolean isLast = communities.isLast();
+            Boolean isLast = communities.isLast();
             ArrayList<CommunityResponseDto> responseDtoList = new ArrayList<>();
             for (Community community : communities) {
                 boolean isLiked = false;
@@ -101,7 +107,13 @@ public class CommunityService {
                 CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileImageUrl, communityId, username);
                 responseDtoList.add(responseDto);
             }
+
             return responseDtoList;
+
+/*            return ResponseDto.builder()
+                    .isLast(isLast)
+                    .responses(responseDtoList)
+                    .build();*/
         }
     }
 
@@ -175,6 +187,7 @@ public class CommunityService {
     }
 
     @UpdateUserScore
+    @UpdateUserLastActivity
     public void createCommunity(CommunityRequestDto requestDto, User user) {
         Community community = new Community(requestDto, user);
         communityRepository.save(community);
@@ -184,6 +197,7 @@ public class CommunityService {
         community.addCommunityImageList(communityImageList);
     }
 
+    @UpdateUserLastActivity
     @Transactional
     @UpdateUserScore
     public void createComment(Long communityId, CommentRequestDto requestDto, User user) {
@@ -214,6 +228,7 @@ public class CommunityService {
     }
 
     @UpdateUserScore
+    @UpdateUserLastActivity
     @Transactional
     public void deleteComment(Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId)
@@ -249,6 +264,7 @@ public class CommunityService {
     }
 
     @UpdateUserScore
+    @UpdateUserLastActivity
     public void deleteCommunity(Long communityId, User user) {
         Community community = communityRepository.findById(communityId).orElseThrow(() -> new NullPointerException("NO SUCH DATA"));
         if(community.getUser().equals(user)) {
