@@ -40,7 +40,7 @@ public class CommunityService {
     private final CommunityLikeitRepository communityLikeitRepository;
     private final AlarmController alarmController;
 
-    public ResponseDto getCommunityByCategory(int page, int size, String category, String location, UserPrincipal userPrincipal) {
+    public ArrayList<CommunityResponseDto> getCommunityByCategory(int page, int size, String category, String location, UserPrincipal userPrincipal) {
         //1페이지 문제 해결완료
         User user = userPrincipal.getUser();
         Pageable pageable = PageRequest.of(page -1, size);
@@ -73,10 +73,11 @@ public class CommunityService {
                 CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileImageUrl, communityId, username);
                 responseDtoList.add(responseDto);
             }
-            return ResponseDto.builder()
+            /*return ResponseDto.builder()
                     .isLast(isLast)
                     .responses(responseDtoList)
-                    .build();
+                    .build();*/
+            return responseDtoList;
         } else {
             Page<Community> communities = communityRepository.findAllByCategoryAndLocation(pageable, category, location);
             Boolean isLast = communities.isLast();
@@ -106,10 +107,13 @@ public class CommunityService {
                 CommunityResponseDto responseDto = new CommunityResponseDto(title, isLiked, nickname, createdAt, cntComment, cntLikeit, cntView, profileImageUrl, communityId, username);
                 responseDtoList.add(responseDto);
             }
-            return ResponseDto.builder()
+
+            return responseDtoList;
+
+/*            return ResponseDto.builder()
                     .isLast(isLast)
                     .responses(responseDtoList)
-                    .build();
+                    .build();*/
         }
     }
 

@@ -9,7 +9,6 @@ import streetcatshelter.discatch.domain.Liked;
 import streetcatshelter.discatch.domain.cat.domain.Cat;
 import streetcatshelter.discatch.domain.cat.domain.CatCalender;
 import streetcatshelter.discatch.domain.cat.domain.CatDetail;
-import streetcatshelter.discatch.domain.cat.dto.responsedto.ResponseDto;
 import streetcatshelter.discatch.domain.cat.repository.CatCalenderRepository;
 import streetcatshelter.discatch.domain.cat.repository.CatDetailRepository;
 import streetcatshelter.discatch.domain.cat.repository.CatRepository;
@@ -47,7 +46,7 @@ public class MyPageService {
     private final CatCalenderRepository catCalenderRepository;
     private final UserLocationRepository userLocationRepository;
 
-    public ResponseDto findAllCats(UserPrincipal userPrincipal, int page, int size) {
+    public List<MyPageCatsResponseDto> findAllCats(UserPrincipal userPrincipal, int page, int size) {
         Long userSeq = userPrincipal.getUser().getUserSeq();
         Pageable pageable = PageRequest.of(page -1, size);
 
@@ -56,42 +55,49 @@ public class MyPageService {
         List<MyPageCatsResponseDto> responseDtoList = new ArrayList<>();
 
         for(Liked liked: LikedList) {
-            Cat cat = liked.getCat();
-            CatDetail catDetail = catDetailRepository.findFirstByOrderByIdDesc();
-            String lastActivity;
+            if(liked.getCat() != null) {
+                Cat cat = liked.getCat();
+                CatDetail catDetail = catDetailRepository.findFirstByOrderByIdDesc();
+                String lastActivity;
 
-            if(catDetail != null) {
-                lastActivity = String.valueOf(catDetail.getCreatedAt()).replace('T',' ');
-            } else {
-                lastActivity = String.valueOf(cat.getCreatedAt()).replace('T',' ');
+                if(catDetail != null) {
+                    lastActivity = String.valueOf(catDetail.getCreatedAt()).replace('T',' ');
+                } else {
+                    lastActivity = String.valueOf(cat.getCreatedAt()).replace('T',' ');
+                }
+
+                ArrayList<CatDetail> myCatDetailList = catDetailRepository.findAllByUser(userPrincipal.getUser());
+                String myActivity;
+                if(myCatDetailList.size() == 0) {
+                    myActivity = null;
+                } else {
+                    CatDetail myCatDetail = myCatDetailList.get(myCatDetailList.size() -1);
+                    myActivity = String.valueOf(myCatDetail.getCreatedAt()).replace('T',' ');
+                }
+
+                String catName = cat.getCatName();
+                String catImage = cat.getCatImage();
+                Long catId = cat.getId();
+                int cntComment = commentRepository.countAllByUser_UserSeqAndCatId(userSeq, catId);
+                int cntCatDetail = catDetailRepository.countAllByUser_UserSeqAndCatId(userSeq, catId);
+                String location = cat.getLocation().split(" ")[(int) (Arrays.stream(cat.getLocation().split(" ")).count()-1)];
+                double latitude = cat.getLatitude();
+                double longitude = cat.getLongitude();
+                MyPageCatsResponseDto myPageCatsResponseDto = new MyPageCatsResponseDto(lastActivity, myActivity, catName, catImage, catId, cntComment, cntCatDetail, location, latitude, longitude);
+                responseDtoList.add(myPageCatsResponseDto);
+
             }
-
-            ArrayList<CatDetail> myCatDetailList = catDetailRepository.findAllByUser(userPrincipal.getUser());
-            String myActivity;
-            if(myCatDetailList.size() == 0) {
-                myActivity = null;
-            } else {
-                CatDetail myCatDetail = myCatDetailList.get(myCatDetailList.size() -1);
-                myActivity = String.valueOf(myCatDetail.getCreatedAt()).replace('T',' ');
+            else {
+                return responseDtoList;
             }
-
-            String catName = cat.getCatName();
-            String catImage = cat.getCatImage();
-            Long catId = cat.getId();
-            int cntComment = commentRepository.countAllByUser_UserSeqAndCatId(userSeq, catId);
-            int cntCatDetail = catDetailRepository.countAllByUser_UserSeqAndCatId(userSeq, catId);
-            String location = cat.getLocation().split(" ")[(int) (Arrays.stream(cat.getLocation().split(" ")).count()-1)];
-            double latitude = cat.getLatitude();
-            double longitude = cat.getLongitude();
-            MyPageCatsResponseDto myPageCatsResponseDto = new MyPageCatsResponseDto(lastActivity, myActivity, catName, catImage, catId, cntComment, cntCatDetail, location, latitude, longitude);
-            responseDtoList.add(myPageCatsResponseDto);
-
         }
 
-        return ResponseDto.builder()
+        return responseDtoList;
+
+        /*return ResponseDto.builder()
                 .responses(responseDtoList)
                 .isLast(isLast)
-                .build();
+                .build();*/
     }
 
     public List<MyPageNoticeResponseDto> getAllNotices() {

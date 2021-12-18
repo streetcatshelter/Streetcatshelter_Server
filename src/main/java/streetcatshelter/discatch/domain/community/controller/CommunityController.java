@@ -3,13 +3,15 @@ package streetcatshelter.discatch.domain.community.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import streetcatshelter.discatch.domain.cat.dto.responsedto.ResponseDto;
 import streetcatshelter.discatch.domain.community.domain.Community;
 import streetcatshelter.discatch.domain.community.dto.CommunityDetailResponseDto;
 import streetcatshelter.discatch.domain.community.dto.CommunityRequestDto;
+import streetcatshelter.discatch.domain.community.dto.CommunityResponseDto;
 import streetcatshelter.discatch.domain.community.service.CommunityService;
 import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
+
+import java.util.ArrayList;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,7 +20,7 @@ public class CommunityController {
     private final CommunityService communityService;
 
     @GetMapping("/community/category/{category}")
-    public ResponseDto getCommunityByCategory(
+    public ArrayList<CommunityResponseDto> getCommunityByCategory(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam ("location") String location,

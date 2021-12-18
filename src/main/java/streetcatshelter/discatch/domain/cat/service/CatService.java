@@ -43,7 +43,7 @@ public class CatService {
     private final CatImageRepository catImageRepository;
     private final LikedRepository likedRepository;
 
-    public ResponseDto getCatByLocation(int page, int size, String location, User user) {
+    public List<CatResponseDto> getCatByLocation(int page, int size, String location, User user) {
         Pageable pageable = PageRequest.of(page -1, size);
         Page<Cat> cats = catRepository.findAllByLocation(pageable,location);
         Boolean isLast = cats.isLast();
@@ -77,11 +77,12 @@ public class CatService {
             }
         }
 
+        return responseDtoList;
 
-        return ResponseDto.builder()
+        /*return ResponseDto.builder()
                 .isLast(isLast)
                 .responses(responseDtoList)
-                .build();
+                .build();*/
     }
 
     @UpdateUserScore
@@ -166,7 +167,7 @@ public class CatService {
     }
 
 
-    public ResponseDto getCatPhotos(int page, int size, Long catId) {
+    public List<CatGalleryResponseDto> getCatPhotos(int page, int size, Long catId) {
         Pageable pageable = PageRequest.of(page -1, size);
         Page<CatImage> allByCatId = catImageRepository.findAllByCatId(pageable, catId);
         Boolean isLast = allByCatId.isLast();
@@ -177,10 +178,12 @@ public class CatService {
                     .CatImages(catImage.getImage())
                     .build());
         }
-        return ResponseDto.builder()
+       return catGalleryResponseDtos;
+
+        /* return ResponseDto.builder()
                 .isLast(isLast)
                 .responses(catGalleryResponseDtos)
-                .build();
+                .build();*/
     }
 
     @UpdateUserScore
@@ -207,17 +210,20 @@ public class CatService {
 
     }
 
-    public ResponseDto getCatCommentByCatDetail(Long catDetailId, int page, int size, User user) {
+    public List<CommentResponseDto> getCatCommentByCatDetail(Long catDetailId, int page, int size, User user) {
         Pageable pageable = PageRequest.of(page -1, size);
         Page<Comment> allByCatDetailId = commentRepository.findAllByCatDetailId(pageable, catDetailId);
         Boolean isLast = allByCatDetailId.isLast();
-        return ResponseDto.builder()
+        List<CommentResponseDto> commentResponseDtos =getCommentResponseDtos(allByCatDetailId, user);
+
+        return commentResponseDtos;
+        /*return ResponseDto.builder()
                 .responses(getCommentResponseDtos(allByCatDetailId, user))
                 .isLast(isLast)
-                .build();
+                .build();*/
     }
 
-    public ResponseDto getCatDiaryByCat(Long catId, int page, int size) {
+    public List<CatDiaryResponseDto> getCatDiaryByCat(Long catId, int page, int size) {
         Pageable pageable = PageRequest.of(page-1, size);
         Page<CatDetail> allByCatId = catDetailRepository.findAllByCatId(pageable, catId);
         Boolean isLast = allByCatId.isLast();
@@ -238,20 +244,23 @@ public class CatService {
                     .nickname(catDetail.getUser().getNickname())
                     .build());
         }
-        return ResponseDto.builder()
+        return catDiaryResponseDtos;
+        /*return ResponseDto.builder()
                 .responses(catDiaryResponseDtos)
                 .isLast(isLast)
-                .build();
+                .build();*/
     }
 
-    public ResponseDto getCatComment(Long catId, int page, int size, User user) {
+    public List<CommentResponseDto> getCatComment(Long catId, int page, int size, User user) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Comment> allByCatDetailId = commentRepository.findAllByCatId(pageable, catId);
         Boolean isLast = allByCatDetailId.isLast();
-        return ResponseDto.builder()
+        List<CommentResponseDto> commentResponseDtos = getCommentResponseDtos(allByCatDetailId, user);
+        return commentResponseDtos;
+        /*return ResponseDto.builder()
                 .responses(getCommentResponseDtos(allByCatDetailId, user))
                 .isLast(isLast)
-                .build();
+                .build();*/
     }
 
     public List<CommentResponseDto> getCommentResponseDtos(Page<Comment> allByCatDetailId, User user) {

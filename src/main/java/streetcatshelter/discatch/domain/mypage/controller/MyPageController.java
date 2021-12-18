@@ -20,7 +20,7 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     @GetMapping("/mypage/mycat")
-    public ResponseDto findAllCats(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam int page, @RequestParam int size) {
+    public List<MyPageCatsResponseDto> findAllCats(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam int page, @RequestParam int size) {
         userChecker(userPrincipal);
         return myPageService.findAllCats(userPrincipal, page, size);
     }

@@ -7,14 +7,12 @@ import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatDetailUpdateRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatRequestDto;
 import streetcatshelter.discatch.domain.cat.dto.requestdto.CatUpdateRequestDto;
-import streetcatshelter.discatch.domain.cat.dto.responsedto.CalendarResponseDto;
-import streetcatshelter.discatch.domain.cat.dto.responsedto.CatDetailResponseDto;
-import streetcatshelter.discatch.domain.cat.dto.responsedto.CatResponseDto;
-import streetcatshelter.discatch.domain.cat.dto.responsedto.ResponseDto;
+import streetcatshelter.discatch.domain.cat.dto.responsedto.*;
 import streetcatshelter.discatch.domain.cat.service.CatDetailService;
 import streetcatshelter.discatch.domain.cat.service.CatService;
 import streetcatshelter.discatch.domain.oauth.entity.UserPrincipal;
 import streetcatshelter.discatch.dto.requestDto.CommentRequestDto;
+import streetcatshelter.discatch.dto.responseDto.CommentResponseDto;
 import streetcatshelter.discatch.dto.responseDto.Result;
 
 import java.util.List;
@@ -30,7 +28,7 @@ public class CatController {
     private final CatDetailService catDetailService;
 
     @GetMapping("/cat/{location}")
-    public ResponseDto getCatByLocation(@AuthenticationPrincipal UserPrincipal userPrincipal,
+    public List<CatResponseDto> getCatByLocation(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                                  @RequestParam("page") int page,
                                                  @RequestParam("size") int size,
                                                  @PathVariable String location) {
@@ -40,7 +38,7 @@ public class CatController {
     }
 
     @GetMapping("/cat/comment/{catId}")
-    public ResponseDto getCatComment(@AuthenticationPrincipal UserPrincipal userPrincipal,
+    public List<CommentResponseDto> getCatComment(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                                   @PathVariable Long catId,
                                                   @RequestParam int page,
                                                   @RequestParam int size) {
@@ -65,7 +63,7 @@ public class CatController {
     }
 
     @GetMapping("/cat/gallery/{catId}")
-    public ResponseDto getCatPhotoByCat(@PathVariable Long catId,
+    public List<CatGalleryResponseDto> getCatPhotoByCat(@PathVariable Long catId,
                                                         @RequestParam int page,
                                                         @RequestParam int size) {
         return catService.getCatPhotos(page, size, catId);
@@ -87,14 +85,14 @@ public class CatController {
 
 
     @GetMapping("/cat/detail/comment/{catDetailId}")
-    public ResponseDto getCatCommentByCat(@AuthenticationPrincipal UserPrincipal userPrincipal,@PathVariable Long catDetailId,
+    public List<CommentResponseDto> getCatCommentByCat(@AuthenticationPrincipal UserPrincipal userPrincipal,@PathVariable Long catDetailId,
                                                        @RequestParam int page,
                                                        @RequestParam int size) {
         return catService.getCatCommentByCatDetail(catDetailId, page, size, userPrincipal.getUser());
     }
 
     @GetMapping("/cat/diary/{catId}")
-    public ResponseDto getCatDiaryByCat(@PathVariable Long catId,
+    public List<CatDiaryResponseDto> getCatDiaryByCat(@PathVariable Long catId,
                                                       @RequestParam int page,
                                                       @RequestParam int size) {
         return catService.getCatDiaryByCat(catId, page, size);
