@@ -51,6 +51,10 @@ disCATch Link:https://discatch.site
 <img src="https://img.shields.io/badge/AWS-010101.svg?&style=for-the-badge&logo=AWS&logoColor=white" /> &nbsp;
 <img src="https://img.shields.io/badge/Socket.io-pink.svg?&style=for-the-badge&logo=Socket.io&logoColor=white" /> &nbsp;
 
+## ** ERD 🐱 **
+<img src="https://github.com/streetcatshelter/disCATch_Server/issues/64" /> 
+
+
 ## ** 🐱기능 소개 및 서비스 소개 🐱 **
 
 - 빠른 업로드를 위한 aws 람다를 통한 이미지 리사이징
