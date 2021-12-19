@@ -52,7 +52,7 @@ disCATch Link:https://discatch.site
 <img src="https://img.shields.io/badge/Socket.io-pink.svg?&style=for-the-badge&logo=Socket.io&logoColor=white" /> &nbsp;
 
 ## ** ERD 🐱 **
-<img width="80%" src="https://github.com/streetcatshelter/disCATch_Server/issues/64" /> 
+<img width="80%" src="https://user-images.githubusercontent.com/83901246/146672460-66dfb3cf-ba74-4f09-8186-f5064ffe8272.png" /> 
 
 
 ## ** 🐱기능 소개 및 서비스 소개 🐱 **
