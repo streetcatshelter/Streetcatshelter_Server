@@ -41,8 +41,8 @@ public class NaverOAuth2 {
         params.add("grant_type", "authorization_code");
         params.add("client_id", naverClientId);
         params.add("client_secret", naverSecret);
-//        params.add("redirect_uri", "https://discatch.site/user/naver/callback");
-        params.add("redirect_uri", "http://localhost:3000/user/naver/callback");
+        params.add("redirect_uri", "https://discatch.site/user/naver/callback");
+//        params.add("redirect_uri", "http://localhost:3000/user/naver/callback");
         params.add("code", authorizedCode);
 
 
