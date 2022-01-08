@@ -73,8 +73,8 @@ public class GoogleOAuth2 {
         params.add("code", code);
         params.add("client_id", googleClientId);
         params.add("client_secret", googleSecret);
-//        params.add("redirect_uri", "http://localhost:3000/user/google/callback");
-        params.add("redirect_uri", "http://discatch-274d1.web.app/user/google/callback");
+        params.add("redirect_uri", "http://localhost:3000/user/google/callback");
+//        params.add("redirect_uri", "https://discatch.site/user/google/callback");
         params.add("grant_type","authorization_code");
 
         RestTemplate rt = new RestTemplate();
