@@ -5,13 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
 
 
 @RequiredArgsConstructor
@@ -73,8 +74,8 @@ public class GoogleOAuth2 {
         params.add("code", code);
         params.add("client_id", googleClientId);
         params.add("client_secret", googleSecret);
-        params.add("redirect_uri", "http://localhost:3000/user/google/callback");
-//        params.add("redirect_uri", "https://discatch.site/user/google/callback");
+//        params.add("redirect_uri", "http://localhost:3000/user/google/callback");
+        params.add("redirect_uri", "https://discatch.site/user/google/callback");
         params.add("grant_type","authorization_code");
 
         RestTemplate rt = new RestTemplate();

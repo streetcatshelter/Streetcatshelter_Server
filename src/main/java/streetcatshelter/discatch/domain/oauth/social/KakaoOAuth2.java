@@ -39,8 +39,8 @@ public class KakaoOAuth2 {
         params.add("grant_type", "authorization_code");
         params.add("client_id", kaKaoClientId);
 //        params.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
-//        params.add("redirect_uri", "https://discatch.site/user/kakao/callback");
-        params.add("redirect_uri", "http://localhost:3000/user/kakao/callback");
+        params.add("redirect_uri", "https://discatch.site/user/kakao/callback");
+//        params.add("redirect_uri", "http://localhost:3000/user/kakao/callback");
 //        params.add("redirect_uri", "https://discatch-274d1.web.app/user/kakao/callback");
 
         params.add("code", authorizedCode);

@@ -54,6 +54,7 @@ public class MyPageService {
         Boolean isLast = LikedList.isLast();
         List<MyPageCatsResponseDto> responseDtoList = new ArrayList<>();
 
+        //무슨 에러지
         for(Liked liked: LikedList) {
             if(liked.getCat() != null) {
                 Cat cat = liked.getCat();
