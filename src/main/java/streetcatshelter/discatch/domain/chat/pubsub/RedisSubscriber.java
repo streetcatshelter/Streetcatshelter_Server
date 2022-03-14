@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import streetcatshelter.discatch.domain.chat.domain.ChatMessage;
 import streetcatshelter.discatch.domain.chat.repository.ChatMessageRepository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class RedisSubscriber {
             message.setRoomId(chatMessage.getRoomId());
             message.setSender(chatMessage.getSender());
             message.setMessage(chatMessage.getMessage());
-            message.setTime(String.valueOf(LocalDateTime.now()));
+            message.setTime(String.valueOf(ZonedDateTime.ofInstant(Instant.now(), ZoneId.of("Asia/Seoul"))));
             chatMessageRepository.save(message);
         } catch (Exception e) {
             log.error("Exception {}", e);
